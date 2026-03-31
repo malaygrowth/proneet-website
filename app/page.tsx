@@ -5,6 +5,10 @@ import { Manifesto } from "@/components/sections/manifesto";
 import { Method } from "@/components/sections/method";
 import { TeacherShowcase } from "@/components/sections/teacher-showcase";
 import { Programs } from "@/components/sections/programs";
+import { StudentJourneys } from "@/components/sections/student-journeys";
+import { Differentiator } from "@/components/sections/differentiator";
+import { FAQ } from "@/components/sections/faq";
+import { FinalCTA } from "@/components/sections/final-cta";
 
 export default function HomePage() {
   return (
@@ -16,9 +20,10 @@ export default function HomePage() {
       <Method />
       <TeacherShowcase />
       <Programs />
-      <div className="h-96 flex items-center justify-center text-slate-400">
-        More sections coming...
-      </div>
+      <StudentJourneys />
+      <Differentiator />
+      <FAQ />
+      <FinalCTA />
     </main>
   );
 }

@@ -3,6 +3,7 @@ import { inter, playfair, jetbrainsMono } from "@/lib/fonts";
 import { SITE } from "@/lib/constants";
 import { LenisProvider } from "@/components/layout/lenis-provider";
 import { Navbar } from "@/components/layout/navbar";
+import { Footer } from "@/components/layout/footer";
 import { FloatingCTA } from "@/components/layout/floating-cta";
 import "./globals.css";
 
@@ -36,6 +37,7 @@ export default function RootLayout({
         <LenisProvider>
           <Navbar />
           {children}
+          <Footer />
           <FloatingCTA />
         </LenisProvider>
       </body>
