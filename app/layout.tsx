@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { inter, playfair, jetbrainsMono } from "@/lib/fonts";
 import { SITE } from "@/lib/constants";
+import { LenisProvider } from "@/components/layout/lenis-provider";
+import { Navbar } from "@/components/layout/navbar";
+import { FloatingCTA } from "@/components/layout/floating-cta";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -30,7 +33,11 @@ export default function RootLayout({
       className={`${inter.variable} ${playfair.variable} ${jetbrainsMono.variable}`}
     >
       <body className="font-sans antialiased bg-white text-slate-900 overflow-x-hidden">
-        {children}
+        <LenisProvider>
+          <Navbar />
+          {children}
+          <FloatingCTA />
+        </LenisProvider>
       </body>
     </html>
   );
