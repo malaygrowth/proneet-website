@@ -5,6 +5,10 @@ import { LenisProvider } from "@/components/layout/lenis-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { FloatingCTA } from "@/components/layout/floating-cta";
+import {
+  OrganizationJsonLd,
+  LocalBusinessJsonLd,
+} from "@/components/seo/json-ld";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -34,6 +38,8 @@ export default function RootLayout({
       className={`${inter.variable} ${playfair.variable} ${jetbrainsMono.variable}`}
     >
       <body className="font-sans antialiased bg-white text-slate-900 overflow-x-hidden">
+        <OrganizationJsonLd />
+        <LocalBusinessJsonLd />
         <LenisProvider>
           <Navbar />
           {children}
