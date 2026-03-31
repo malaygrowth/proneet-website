@@ -11,6 +11,7 @@ export function FinalCTA() {
     <section className="relative py-30 overflow-hidden">
       {/* BG: Dark brand gradient */}
       <div
+        aria-hidden="true"
         className="absolute inset-0"
         style={{
           background: "linear-gradient(135deg, #2563EB 0%, #1E40AF 100%)",
@@ -19,6 +20,7 @@ export function FinalCTA() {
 
       {/* BG: Radial white wash */}
       <div
+        aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:

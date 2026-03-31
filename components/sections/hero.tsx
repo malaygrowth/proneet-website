@@ -40,10 +40,11 @@ export function Hero() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-b from-hero-bg via-hero-deep to-hero-mid">
       {/* Grid overlay */}
-      <div className="absolute inset-0 grid-lines pointer-events-none" />
+      <div aria-hidden="true" className="absolute inset-0 grid-lines pointer-events-none" />
 
       {/* Gradient blobs */}
       <div
+        aria-hidden="true"
         className="absolute top-1/4 -left-32 w-[500px] h-[500px] rounded-full opacity-20 blur-3xl pointer-events-none"
         style={{
           background:
@@ -51,6 +52,7 @@ export function Hero() {
         }}
       />
       <div
+        aria-hidden="true"
         className="absolute bottom-1/4 right-0 w-[400px] h-[400px] rounded-full opacity-15 blur-3xl pointer-events-none"
         style={{
           background:

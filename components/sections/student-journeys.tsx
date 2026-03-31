@@ -48,6 +48,7 @@ export function StudentJourneys() {
     <section className="relative py-30 overflow-hidden bg-hero-bg">
       {/* BG: Radial blue glow */}
       <div
+        aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:

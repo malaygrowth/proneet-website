@@ -34,8 +34,9 @@ export function Method() {
   return (
     <section id="method" className="relative py-30 overflow-hidden">
       {/* BG: dot-grid with opacity mask */}
-      <div className="absolute inset-0 dot-grid pointer-events-none" />
+      <div aria-hidden="true" className="absolute inset-0 dot-grid pointer-events-none" />
       <div
+        aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:

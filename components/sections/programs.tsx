@@ -54,6 +54,7 @@ export function Programs() {
     <section className="relative py-30 overflow-hidden bg-surface-secondary">
       {/* BG: Radial gradient wash */}
       <div
+        aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:

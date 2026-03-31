@@ -114,6 +114,7 @@ export function Footer() {
               {Array.from({ length: 5 }).map((_, i) => (
                 <svg
                   key={i}
+                  aria-hidden="true"
                   className="w-3.5 h-3.5 text-yellow-400 fill-current"
                   viewBox="0 0 20 20"
                 >

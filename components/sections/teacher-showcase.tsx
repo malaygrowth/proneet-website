@@ -32,6 +32,7 @@ export function TeacherShowcase() {
             <div className="relative mx-auto lg:mx-0 w-full max-w-[380px]">
               {/* Orbital ring accent */}
               <div
+                aria-hidden="true"
                 className="absolute -inset-6 rounded-full border border-brand/10 opacity-50 pointer-events-none"
                 style={{
                   borderRadius: "50%",

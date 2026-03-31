@@ -7,6 +7,7 @@ export function Manifesto() {
     <section className="relative py-30 overflow-hidden">
       {/* BG: subtle radial gradient */}
       <div
+        aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
