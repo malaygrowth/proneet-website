@@ -1,89 +1,68 @@
 import type { Metadata } from "next";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
-import { Target, Heart, BookOpen, Users, Award, Lightbulb } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn about ProNEET's story, mission, and values. Founded by Er. Neeraj Gupta with 25+ years of Physics teaching experience.",
+    "ProNEET — founded by Neeraj Gupta. 25+ years teaching, 1000+ NEET / AIIMS / IIT selections, and a small handpicked faculty covering Physics, Chemistry and Mathematics for NEET and JEE aspirants.",
 };
 
+// Chapters of the institute's journey — stated in arcs rather than
+// precise years because we don't have verified dated milestones.
 const TIMELINE = [
   {
-    year: "2000",
-    title: "The Beginning",
+    year: "The 1990s",
+    title: "Teaching at India's top institutes",
     description:
-      "Er. Neeraj Gupta starts teaching Physics to small groups of NEET aspirants in Jaipur. The first batch has just 8 students.",
+      "Neeraj Gupta begins teaching Physics at major coaching institutes in Rajasthan and Kota, building a reputation for explaining tough concepts in everyday language.",
   },
   {
-    year: "2005",
-    title: "Growing Reputation",
+    year: "Mid-2000s",
+    title: "A small-faculty conviction",
     description:
-      "Word spreads as students consistently score 150+ in Physics. Batch size grows but remains capped at 30 to maintain quality.",
+      "Watching students struggle in overstretched multi-thousand-student institutes, he decides to do the opposite — keep the batches small, keep the faculty small, and know every student by name.",
   },
   {
-    year: "2010",
-    title: "100+ Selections",
+    year: "ProNEET begins",
+    title: "Small-batch coaching in Jaipur",
     description:
-      "ProNEET crosses the milestone of 100 NEET selections. The unique teaching method - concept-first, formula-later - becomes the hallmark.",
+      "ProNEET starts in Jaipur with small classroom batches, Hindi & English medium, and a flat commitment: every student gets personal attention, every doubt gets same-day clearing. Neeraj Gupta is joined by R. K. Saini (Chemistry) and Vivek Patidar (Mathematics) to cover the full NEET and JEE syllabus.",
   },
   {
-    year: "2015",
-    title: "Expanding Programs",
+    year: "Online era",
+    title: "Recorded lectures, live online, distance learning",
     description:
-      "JEE Mains program launched alongside NEET. Dropper Batch introduced for gap-year students after seeing demand from post-12th aspirants.",
+      "As students spread across cities (and abroad), the institute adds live online classes, HD-quality recorded lectures and printed study material so students can keep up from anywhere.",
   },
   {
-    year: "2020",
-    title: "Digital Adaptation",
+    year: "Today",
+    title: "1000+ selections and counting",
     description:
-      "Seamless transition to hybrid learning during challenging times. Recorded lectures and online doubt sessions ensure no student is left behind.",
-  },
-  {
-    year: "2024",
-    title: "500+ Selections",
-    description:
-      "ProNEET reaches the landmark of 500+ NEET selections with AIR 45 as the best rank. The mission continues with the same small-batch, high-impact philosophy.",
+      "Over the years, 1000+ students taught here have cleared NEET, AIIMS, IITs and NITs — and many have gone on to become doctors, engineers and researchers. The method hasn't changed: small batches, concept-first teaching, personal mentorship.",
   },
 ];
 
-const VALUES = [
+// Two short argument blocks replace the earlier six-icon "values" grid.
+// They answer the two questions an Indian NEET/JEE parent actually has after
+// reading the founder story: (1) why is this different and (2) what does it
+// actually look like in practice.
+const WHY_SMALL_BATCH = [
   {
-    icon: Target,
-    title: "Concept-First Teaching",
-    description:
-      "We never start with formulas. Every topic begins with the 'why' — building intuition before introducing equations.",
+    heading: "Why 30 seats, not 300",
+    body: "In a 300-seater, the top ten students pull the median up and everyone else runs harder than they need to. The bottom half gets lost. At 30 seats the teacher sees which student stopped taking notes on Tuesday, and catches it on Wednesday. That's the single biggest difference between a good rank and a mediocre one.",
   },
   {
-    icon: Users,
-    title: "Small Batches",
-    description:
-      "Every batch is strictly capped at 30 students. This is non-negotiable. Personal attention is not a luxury — it is the method.",
+    heading: "Why senior faculty, every class",
+    body: "Big coaching runs on panels: senior faculty record the videos, junior teachers handle the live classes. Here, Neeraj Gupta teaches Physics himself. R. K. Saini handles Chemistry. Vivek Patidar handles Maths. No handoff, no substitution. The person who wrote your test is the person who explains where you went wrong.",
   },
-  {
-    icon: Heart,
-    title: "Genuine Mentorship",
-    description:
-      "Teachers here know every student by name. We track progress, identify struggles early, and intervene before it is too late.",
-  },
-  {
-    icon: BookOpen,
-    title: "Structured Curriculum",
-    description:
-      "No random topics. Every week, every test, every revision cycle is planned months in advance with a clear progression path.",
-  },
-  {
-    icon: Award,
-    title: "Results with Integrity",
-    description:
-      "We do not inflate numbers. Every selection we claim is verified. Our reputation is built on honesty, not marketing.",
-  },
-  {
-    icon: Lightbulb,
-    title: "Continuous Improvement",
-    description:
-      "We review our methods every year. What worked is refined. What did not is replaced. Teaching is a craft — we keep sharpening it.",
-  },
+];
+
+const WHAT_A_WEEK_LOOKS_LIKE = [
+  "Six days a week of classroom teaching, split between Physics, Chemistry, and Maths.",
+  "One topic test every week. Reviewed in class, not just graded.",
+  "Daily practice problems (DPPs) for every chapter.",
+  "Saturday: a dedicated doubt session. Stay as long as you want.",
+  "A short call or note to parents every fortnight, so nothing is a surprise at the end of the year.",
 ];
 
 export default function AboutPage() {
@@ -96,11 +75,13 @@ export default function AboutPage() {
             ABOUT US
           </span>
           <h1 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900">
-            The ProNEET Story
+            Small coaching. Senior faculty. No panel tricks.
           </h1>
           <p className="mt-4 text-base text-slate-500 max-w-2xl mx-auto">
-            Born from a belief that great teaching changes lives. 25 years later,
-            500+ NEET selections prove it right.
+            Twenty-five years inside the large coaching institutes taught
+            Neeraj Gupta what works and what goes missing. ProNEET is the
+            version of a Jaipur coaching that keeps what works and drops
+            everything else.
           </p>
         </ScrollReveal>
 
@@ -121,7 +102,7 @@ export default function AboutPage() {
                   NG
                 </div>
                 <p className="mt-3 text-sm font-bold text-slate-900">
-                  Er. Neeraj Gupta
+                  Neeraj Gupta
                 </p>
                 <p className="text-xs text-slate-500">Founder, ProNEET</p>
               </div>
@@ -129,31 +110,38 @@ export default function AboutPage() {
               {/* Story */}
               <div className="flex-1">
                 <h2 className="text-xl font-bold text-slate-900 mb-4">
-                  From a Small Room to 500+ Selections
+                  Small batches. Real mentorship. Done properly.
                 </h2>
                 <div className="space-y-3 text-sm text-slate-600 leading-relaxed">
                   <p>
-                    In 2000, Er. Neeraj Gupta left a comfortable engineering
-                    career to pursue what he cared about most — teaching
-                    Physics. The idea was simple: if you truly understand a
-                    concept, you can solve any problem built on it.
+                    Neeraj Gupta has been teaching Physics for over 25
+                    years — most of them at India&apos;s largest coaching
+                    institutes in Rajasthan and Kota. The idea behind ProNEET
+                    was simple: if you truly understand a concept, you can
+                    solve any problem built on it.
                   </p>
                   <p>
-                    He started with 8 students in a rented room in Jaipur. No
-                    fancy infrastructure, no marketing budget — just a
-                    blackboard, chalk, and an absolute commitment to making
-                    Physics make sense.
+                    So he stopped chasing the thousand-student, rotating-panel
+                    format and started his own institute in Jaipur. Small
+                    classroom batches. Hindi and English medium. Every doubt
+                    cleared the same day. One teacher per subject — he
+                    personally teaches Physics, alongside R. K. Saini
+                    (formerly of Bansal Classes, Jaipur) for Chemistry and
+                    Vivek Patidar, a trusted Maths name in the Mansarovar
+                    coaching circuit, for Mathematics.
                   </p>
                   <p>
-                    That first batch produced 6 selections. Students started
-                    telling their friends. Parents started trusting. And a
-                    philosophy became a movement.
+                    Students started telling their friends. Parents started
+                    trusting. Over the years, 1000+ students taught here have
+                    cleared NEET, AIIMS and the IITs — and many have gone on
+                    to be doctors, engineers and researchers.
                   </p>
                   <p>
-                    25 years later, the classroom has grown but the principle
-                    remains unchanged: keep batches small, teach concepts
-                    before formulas, know every student by name, and never
-                    compromise on depth for speed.
+                    The classroom has grown and we now also run live online
+                    and individual international 1-on-1 batches — but the
+                    principle hasn&apos;t changed. Keep batches small. Teach
+                    concepts before formulas. Know every student by name.
+                    Never compromise on depth for speed.
                   </p>
                 </div>
               </div>
@@ -161,47 +149,53 @@ export default function AboutPage() {
           </div>
         </ScrollReveal>
 
-        {/* Mission */}
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            <h2 className="text-2xl font-bold text-slate-900 mb-4">
-              Our Mission
-            </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              To make world-class Physics education accessible to every serious
-              NEET and JEE aspirant in Jaipur — through small batches, genuine
-              mentorship, and a teaching approach that prioritizes understanding
-              over memorization.
-            </p>
+        {/* Why small batches — two-block argument */}
+        <ScrollReveal className="mb-20">
+          <div className="grid md:grid-cols-2 gap-6">
+            {WHY_SMALL_BATCH.map((block) => (
+              <div
+                key={block.heading}
+                className="rounded-xl border border-slate-200 bg-white p-6 sm:p-8"
+              >
+                <h2 className="text-lg font-bold text-slate-900 mb-3">
+                  {block.heading}
+                </h2>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  {block.body}
+                </p>
+              </div>
+            ))}
           </div>
         </ScrollReveal>
 
-        {/* Values */}
-        <ScrollReveal className="mb-16">
-          <h2 className="text-2xl font-bold text-slate-900 text-center mb-10">
-            What We Believe In
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {VALUES.map((value, i) => (
-              <ScrollReveal key={value.title} delay={i * 0.06}>
-                <div className="rounded-xl border border-slate-100 bg-surface-secondary p-6 h-full">
-                  <value.icon className="w-6 h-6 text-brand mb-4" />
-                  <h3 className="text-sm font-bold text-slate-900 mb-2">
-                    {value.title}
-                  </h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">
-                    {value.description}
-                  </p>
-                </div>
-              </ScrollReveal>
-            ))}
+        {/* What a week at ProNEET looks like */}
+        <ScrollReveal className="mb-20">
+          <div className="rounded-xl bg-surface-secondary border border-slate-100 p-6 sm:p-10">
+            <h2 className="text-xl font-bold text-slate-900 mb-4">
+              What a week at ProNEET actually looks like
+            </h2>
+            <p className="text-sm text-slate-500 mb-6 leading-relaxed max-w-2xl">
+              No jargon, no flagship anything. Just a predictable rhythm so
+              you always know what Tuesday looks like.
+            </p>
+            <ul className="space-y-3">
+              {WHAT_A_WEEK_LOOKS_LIKE.map((line) => (
+                <li
+                  key={line}
+                  className="flex items-start gap-3 text-sm text-slate-700 leading-relaxed"
+                >
+                  <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand" />
+                  {line}
+                </li>
+              ))}
+            </ul>
           </div>
         </ScrollReveal>
 
         {/* Timeline */}
         <ScrollReveal>
           <h2 className="text-2xl font-bold text-slate-900 text-center mb-10">
-            The ProNEET Journey
+            How we got here
           </h2>
         </ScrollReveal>
 

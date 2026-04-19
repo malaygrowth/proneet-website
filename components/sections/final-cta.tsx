@@ -38,7 +38,7 @@ export function FinalCTA() {
 
         <ScrollReveal delay={0.15}>
           <p className="mt-5 text-base sm:text-lg text-white/60 max-w-xl mx-auto leading-relaxed">
-            Book a free counseling session with Er. Neeraj Gupta. No pressure,
+            Book a free counseling session with Neeraj Gupta. No pressure,
             no obligations — just an honest conversation about your goals.
           </p>
         </ScrollReveal>

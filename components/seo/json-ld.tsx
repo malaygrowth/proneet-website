@@ -24,7 +24,7 @@ export function OrganizationJsonLd() {
     foundingDate: "2000",
     founder: {
       "@type": "Person",
-      name: "Er. Neeraj Gupta",
+      name: "Neeraj Gupta",
     },
   };
 
@@ -60,7 +60,7 @@ export function LocalBusinessJsonLd() {
     foundingDate: "2000",
     founder: {
       "@type": "Person",
-      name: "Er. Neeraj Gupta",
+      name: "Neeraj Gupta",
     },
     openingHours: "Mo-Sa 08:00-20:00",
   };

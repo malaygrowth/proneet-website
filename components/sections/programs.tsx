@@ -7,44 +7,56 @@ import {
 } from "@/components/animations/stagger-children";
 import { ProgramCard } from "@/components/ui/program-card";
 
+// Four programmes, four different students. Cards are deliberately
+// not interchangeable.
 const PROGRAMS = [
   {
-    title: "NEET Regular",
-    target: "Class 11-12 · PCB",
-    duration: "2-Year Program",
+    title: "NEET Classroom",
+    target: "For Class 11 and 12, Pre-Medical",
+    duration: "2-Year classroom batch, Jaipur",
     featured: true,
     features: [
-      "Complete Physics, Chemistry, Biology",
-      "Small batch — max 30 students",
-      "Weekly tests + detailed analysis",
-      "NCERT + competitive-level problems",
-      "Doubt sessions every Saturday",
+      "Physics with Neeraj Gupta. Chemistry with R. K. Saini.",
+      "One batch. Same teacher for two years. No rotating panels.",
+      "Weekly tests, weekly parent update, doubts cleared the same day.",
+      "Hindi or English medium. Decide after the demo class.",
+      "Sits alongside your Biology coaching or self-study.",
     ],
   },
   {
-    title: "JEE Mains",
-    target: "Class 11-12 · PCM",
-    duration: "2-Year Program",
-    featured: false,
+    title: "JEE Classroom",
+    target: "For Class 11 and 12, Engineering track",
+    duration: "2-Year classroom batch, Jaipur",
     features: [
-      "Physics, Chemistry, Mathematics",
-      "JEE-focused problem solving",
-      "Concept clarity + speed building",
-      "Monthly mock tests",
-      "Personal performance tracking",
+      "All three subjects in one roof: Physics, Chemistry, Maths.",
+      "Maths taught by Vivek Patidar, a trusted name in Mansarovar.",
+      "Board prep runs inside the schedule, not after it.",
+      "Mocks graded against actual JEE Main cut-offs, not ours.",
+      "Plan built for JEE Main first, Advanced as a stretch.",
     ],
   },
   {
     title: "Dropper Batch",
-    target: "Post-12th · NEET / JEE",
-    duration: "1-Year Intensive",
-    featured: false,
+    target: "For students taking a gap year",
+    duration: "1-Year intensive",
     features: [
-      "Intensive 1-year revision program",
-      "Focus on weak areas + test strategy",
-      "Daily practice paper sessions",
-      "Previous year papers analysis",
-      "Mentorship & motivation support",
+      "Designed assuming you've already tried and it didn't land.",
+      "Diagnostic in week one. Syllabus re-built around your gaps.",
+      "Morning or evening slot so self-study doesn't get crushed.",
+      "Weekly full-length mocks. Weekly one-on-one with a mentor.",
+      "Last ten years of NEET and JEE Physics, walked through.",
+    ],
+  },
+  {
+    title: "1-on-1 Online",
+    target: "For students who need individual pace",
+    duration: "Live online, scheduled around you",
+    features: [
+      "Available for students in India, and for Indian families abroad.",
+      "Pick one subject, two, or all three.",
+      "Taught by the same senior faculty, not a junior stand-in.",
+      "We currently run this track for students in Dubai and the Gulf.",
+      "First call sets the schedule and the fees. No pressure.",
     ],
   },
 ] as const;
@@ -67,20 +79,20 @@ export function Programs() {
         {/* Header */}
         <ScrollReveal className="text-center mb-16">
           <span className="inline-block font-mono text-xs text-accent-orange tracking-widest uppercase">
-            PROGRAMS
+            BATCHES
           </span>
           <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900">
-            Choose your path to success.
+            Four batches. Four different students.
           </h2>
           <p className="mt-3 text-base text-slate-500 max-w-lg mx-auto">
-            Structured programs designed for every stage of your preparation
-            journey.
+            Pick the one that matches where you are right now. Not the one the
+            brochure pushes.
           </p>
         </ScrollReveal>
 
-        {/* Program cards */}
+        {/* Program cards — 2x2 on md, 4x1 on xl */}
         <StaggerChildren
-          className="grid md:grid-cols-3 gap-6 lg:gap-8"
+          className="grid gap-6 md:grid-cols-2 xl:grid-cols-4 lg:gap-8"
           staggerDelay={0.1}
         >
           {PROGRAMS.map((program) => (
@@ -89,7 +101,7 @@ export function Programs() {
                 title={program.title}
                 target={program.target}
                 duration={program.duration}
-                featured={program.featured}
+                featured={"featured" in program ? program.featured : false}
                 features={[...program.features]}
               />
             </StaggerItem>

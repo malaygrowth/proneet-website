@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Phone, ArrowRight } from "lucide-react";
+import { Phone, ArrowRight, Award, Users, Languages, Globe2 } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import {
@@ -9,30 +9,29 @@ import {
   StaggerItem,
 } from "@/components/animations/stagger-children";
 import { AtomAnimation } from "@/components/animations/atom-animation";
-import { ResultCard } from "@/components/ui/result-card";
 
-const HERO_RESULTS = [
+// Right-column proof strip. Kept specific and verified, in priority order
+// for the Indian NEET / JEE audience.
+const HERO_PROOF = [
   {
-    name: "Aarav Sharma",
-    college: "AIIMS Delhi",
-    rank: 45,
-    year: 2024,
-    score: 705,
-    featured: true,
+    icon: Users,
+    stat: "30-seat batches",
+    label: "No rotating panels. Your teacher knows your name by week two.",
   },
   {
-    name: "Priya Gupta",
-    college: "AIIMS Jodhpur",
-    rank: 128,
-    year: 2024,
-    score: 690,
+    icon: Award,
+    stat: "25+ years of Physics",
+    label: "Neeraj Gupta, built across the large coaching institutes of Rajasthan and Kota.",
   },
   {
-    name: "Rohan Meena",
-    college: "SMS Medical College",
-    rank: 312,
-    year: 2024,
-    score: 668,
+    icon: Languages,
+    stat: "Hindi and English medium",
+    label: "Choose the language you think in. Switch mid-way if you want.",
+  },
+  {
+    icon: Globe2,
+    stat: "Online 1-on-1, if you need it",
+    label: "Students across India and a few from Dubai and the Gulf run on this track.",
   },
 ];
 
@@ -76,26 +75,26 @@ export function Hero() {
                   <span className="absolute inline-flex h-full w-full rounded-full bg-green-500 animate-pulse-dot" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
                 </span>
-                Admissions Open &middot; NEET 2027 Batch
+                Class 11 &amp; Dropper seats filling for the 2027 NEET / JEE batch
               </span>
             </ScrollReveal>
 
             <ScrollReveal delay={0.2}>
               <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.1]">
-                Your NEET journey
+                25 years of Physics.
                 <br />
-                starts with{" "}
                 <span className="bg-gradient-to-r from-brand-light to-accent-orange bg-clip-text text-transparent">
-                  ProNEET.
+                  Taught the way you think.
                 </span>
               </h1>
             </ScrollReveal>
 
             <ScrollReveal delay={0.3}>
               <p className="mt-6 text-lg text-white/50 max-w-md leading-relaxed">
-                Jaipur&apos;s most trusted NEET coaching — 25+ years of expert
-                faculty, small batches, and a track record that speaks for
-                itself.
+                A small Jaipur coaching where Neeraj Gupta teaches Physics
+                himself, alongside R. K. Saini (ex-Bansal Classes) for
+                Chemistry and Vivek Patidar for Maths. Classroom in
+                Vishveshwar Nagar. 1-on-1 online, wherever you are.
               </p>
             </ScrollReveal>
 
@@ -106,28 +105,37 @@ export function Hero() {
                   className="inline-flex items-center gap-2 rounded-lg bg-accent-orange px-6 py-3 text-sm font-semibold text-white shadow-glow-accent transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
                 >
                   <Phone className="w-4 h-4" />
-                  Call Now — Free Counseling
+                  Book a demo class
                 </a>
                 <Link
-                  href="/#method"
+                  href="/programs"
                   className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-6 py-3 text-sm font-medium text-white/70 transition-all duration-300 hover:border-white/30 hover:text-white"
                 >
-                  Explore Programs
+                  See the batches
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </ScrollReveal>
           </div>
 
-          {/* Right — Result cards */}
+          {/* Right — Proof cards */}
           <div className="hidden lg:block">
-            <StaggerChildren
-              className="space-y-3"
-              staggerDelay={0.12}
-            >
-              {HERO_RESULTS.map((result) => (
-                <StaggerItem key={result.name}>
-                  <ResultCard {...result} />
+            <StaggerChildren className="space-y-3" staggerDelay={0.12}>
+              {HERO_PROOF.map((item) => (
+                <StaggerItem key={item.stat}>
+                  <div className="flex items-start gap-4 rounded-xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-sm transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.07]">
+                    <span className="flex-shrink-0 mt-0.5 flex h-10 w-10 items-center justify-center rounded-lg bg-brand/15 text-brand-light">
+                      <item.icon className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <p className="text-base font-semibold text-white">
+                        {item.stat}
+                      </p>
+                      <p className="mt-0.5 text-sm text-white/50 leading-snug">
+                        {item.label}
+                      </p>
+                    </div>
+                  </div>
                 </StaggerItem>
               ))}
             </StaggerChildren>

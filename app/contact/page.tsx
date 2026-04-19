@@ -13,9 +13,15 @@ export const metadata: Metadata = {
 const CONTACT_INFO = [
   {
     icon: Phone,
-    label: "Phone",
-    value: SITE.phone,
+    label: "Admissions",
+    value: SITE.phoneDisplay,
     href: `tel:${SITE.phone}`,
+  },
+  {
+    icon: Phone,
+    label: "General enquiries",
+    value: SITE.phoneSecondaryDisplay,
+    href: `tel:${SITE.phoneSecondary}`,
   },
   {
     icon: Mail,
@@ -24,15 +30,21 @@ const CONTACT_INFO = [
     href: `mailto:${SITE.email}`,
   },
   {
+    icon: Mail,
+    label: "Neeraj Gupta (direct)",
+    value: SITE.emailSecondary,
+    href: `mailto:${SITE.emailSecondary}`,
+  },
+  {
     icon: MapPin,
-    label: "Address",
-    value: "Jaipur, Rajasthan, India",
+    label: "Visit us",
+    value: SITE.address,
     href: null,
   },
   {
     icon: Clock,
-    label: "Hours",
-    value: "Mon - Sat, 8:00 AM - 8:00 PM",
+    label: "Office hours",
+    value: "Mon – Sat, 8:00 AM – 8:00 PM",
     href: null,
   },
 ];
@@ -91,15 +103,29 @@ export default function ContactPage() {
                 ))}
               </div>
 
-              {/* Extra info card */}
+              {/* Free demo card */}
               <div className="rounded-xl bg-surface-secondary border border-slate-100 p-6">
                 <h3 className="text-sm font-bold text-slate-900 mb-2">
-                  Free Demo Class
+                  Free demo class
                 </h3>
                 <p className="text-sm text-slate-500 leading-relaxed">
                   Not sure if ProNEET is right for you? Attend a free demo class
                   before making any commitment. No fees, no pressure — just
-                  experience our teaching firsthand.
+                  experience the teaching firsthand.
+                </p>
+              </div>
+
+              {/* 1-on-1 card */}
+              <div className="rounded-xl bg-brand/5 border border-brand/15 p-6">
+                <h3 className="text-sm font-bold text-slate-900 mb-2">
+                  Want 1-on-1 classes?
+                </h3>
+                <p className="text-sm text-slate-500 leading-relaxed">
+                  We run fully individual online classes for NEET and JEE
+                  students — in India and anywhere in the world. We currently
+                  teach students from Dubai, the UAE and the Middle East. Tell
+                  us your city, timezone and class, and we&apos;ll set up a
+                  one-on-one slot with the right faculty.
                 </p>
               </div>
             </div>

@@ -1,22 +1,33 @@
 export const SITE = {
   name: "ProNEET",
-  tagline: "Jaipur's Trusted NEET & JEE Coaching",
-  description: "Complete PCB & PCM coaching with 25+ years of proven results. Small batches. Real mentorship.",
-  url: "https://proneet.in",
-  phone: "+91XXXXXXXXXX",
-  whatsapp: "+91XXXXXXXXXX",
-  email: "info@proneet.in",
-  address: "Jaipur, Rajasthan",
+  tagline: "Small-batch NEET & JEE coaching, Jaipur",
+  description: "Senior faculty. 30-seat batches. 25 years of Physics by Neeraj Gupta, Chemistry by R. K. Saini (ex-Bansal Classes) and Maths by Vivek Patidar. Classroom in Vishveshwar Nagar, Jaipur. 1-on-1 online for students anywhere.",
+  url: "https://proneetphysics.com",
+  // Primary admissions line — lifted from the old proneetphysics.com contact page.
+  phone: "+919214314348",
+  phoneDisplay: "+91 92143 14348",
+  phoneSecondary: "+918112297734",
+  phoneSecondaryDisplay: "+91 81122 97734",
+  whatsapp: "+919214314348",
+  email: "admissions@proneetphysics.com",
+  emailSecondary: "1721neerajgupta@gmail.com",
+  address: "1-C-B, Vishvesheriya Nagar, Near Triveni Flyover, Gopalpura Bypass Rd, Jaipur, Rajasthan 302018",
+  addressShort: "Vishvesheriya Nagar, Jaipur",
   googleRating: 4.9,
   googleReviews: 200,
+  social: {
+    facebook: "https://facebook.com/proneetphysics",
+    instagram: "https://instagram.com/physicsneetclasses",
+    youtube: "https://youtube.com/channel/UChEWnrZjtwOYYKxI6HJQepw",
+    twitter: "https://twitter.com/PhysicsProneet",
+  },
 } as const;
 
+// Only verified numbers from the old proneetphysics.com site.
+// AIR/score data is intentionally omitted until the user provides real rankers.
 export const STATS = {
   yearsExperience: 25,
-  neetSelections: 500,
-  selectionRate: 95,
-  bestRank: 45,
-  totalStudents: 10000,
+  neetSelections: 1000,
 } as const;
 
 export const NAV_LINKS = [

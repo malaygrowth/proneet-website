@@ -7,39 +7,33 @@ import {
 } from "@/components/animations/stagger-children";
 import { GlassCard } from "@/components/ui/glass-card";
 
+// Real testimonials lifted from the old proneetphysics.com (Wayback 2021–2024).
+// Score bars are hidden when before/after data isn't available — these are
+// quote-only cards until the user provides verified rank/score data.
 const STUDENTS = [
   {
-    name: "Priya Sharma",
-    tag: "Topper",
-    rank: "AIR 45",
-    college: "AIIMS Delhi",
-    scoreBefore: 480,
-    scoreAfter: 698,
-    scoreTotal: 720,
+    name: "Dr. Kumkum Gupta",
+    tag: "Medical",
+    rank: "Govt. Medical College",
+    college: "Kota — Gynaecologist",
     quote:
-      "ProNEET completely changed how I approach Physics. The conceptual clarity I gained here was unmatched.",
+      "I was in a major coaching institute. I got nothing but fear studying Physics there. Then I joined Neeraj Sir's classes. That day, and today, I'm a gynaecologist at Government Medical College, Kota.",
   },
   {
-    name: "Rahul Verma",
-    tag: "Dropper",
-    rank: "AIR 312",
-    college: "KGMU Lucknow",
-    scoreBefore: 320,
-    scoreAfter: 645,
-    scoreTotal: 720,
+    name: "Dr. Amit Gupta",
+    tag: "Medical",
+    rank: "Govt. Medical Hospital",
+    college: "Kota — Orthopaedics",
     quote:
-      "As a dropper, I was terrified of wasting another year. ProNEET gave me structure, confidence, and results.",
+      "I joined Neeraj Sir after Class X and I can't thank him enough for guiding me so well. I am a successful doctor now because of you. Thank you, Sir.",
   },
   {
-    name: "Ananya Joshi",
-    tag: "Average to High",
-    rank: "AIR 487",
-    college: "SMS Jaipur",
-    scoreBefore: 410,
-    scoreAfter: 620,
-    scoreTotal: 720,
+    name: "Gulshan Jangid",
+    tag: "Engineering",
+    rank: "IIT Delhi",
+    college: "IIT Delhi — Student",
     quote:
-      "I went from 'Physics is impossible' to scoring 165/180. The weekly tests and doubt sessions made the difference.",
+      "There are only a few people who can explain Physics to students using everyday examples and make it stick. He is good — one of the best, in fact.",
   },
 ] as const;
 
@@ -73,65 +67,32 @@ export function StudentJourneys() {
           className="grid md:grid-cols-3 gap-6 lg:gap-8"
           staggerDelay={0.1}
         >
-          {STUDENTS.map((student) => {
-            const beforePercent = (student.scoreBefore / student.scoreTotal) * 100;
-            const afterPercent = (student.scoreAfter / student.scoreTotal) * 100;
+          {STUDENTS.map((student) => (
+            <StaggerItem key={student.name}>
+              <GlassCard variant="dark" hover className="p-6 h-full flex flex-col">
+                {/* Tag badge */}
+                <span className="inline-block px-3 py-1 rounded-full bg-brand text-white text-xs font-semibold self-start">
+                  {student.tag}
+                </span>
 
-            return (
-              <StaggerItem key={student.name}>
-                <GlassCard variant="dark" hover className="p-6">
-                  {/* Tag badge */}
-                  <span className="inline-block px-3 py-1 rounded-full bg-brand text-white text-xs font-semibold">
-                    {student.tag}
-                  </span>
+                {/* Placement */}
+                <p className="mt-4 font-mono text-xl font-bold text-white leading-tight">
+                  {student.rank}
+                </p>
 
-                  {/* Rank */}
-                  <p className="mt-4 font-mono text-2xl font-bold text-white">
-                    {student.rank}
-                  </p>
+                {/* Name + role */}
+                <p className="mt-2 text-sm font-semibold text-white/90">
+                  {student.name}
+                </p>
+                <p className="text-xs text-white/50">{student.college}</p>
 
-                  {/* Name + college */}
-                  <p className="mt-1 text-sm font-semibold text-white/90">
-                    {student.name}
-                  </p>
-                  <p className="text-xs text-white/50">{student.college}</p>
-
-                  {/* Score bar */}
-                  <div className="mt-5">
-                    <div className="flex justify-between text-xs text-white/50 mb-1.5">
-                      <span>{student.scoreBefore}</span>
-                      <span>
-                        {student.scoreAfter}/{student.scoreTotal}
-                      </span>
-                    </div>
-
-                    {/* Track */}
-                    <div className="relative h-2 w-full rounded-full bg-white/10">
-                      {/* Before marker */}
-                      <div
-                        className="absolute top-0 h-full rounded-full bg-white/20"
-                        style={{ width: `${beforePercent}%` }}
-                      />
-                      {/* After bar (gradient fill) */}
-                      <div
-                        className="absolute top-0 h-full rounded-full"
-                        style={{
-                          width: `${afterPercent}%`,
-                          background:
-                            "linear-gradient(90deg, #2563EB, #F97316)",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Quote */}
-                  <p className="mt-5 text-sm italic text-white/60 leading-relaxed">
-                    &ldquo;{student.quote}&rdquo;
-                  </p>
-                </GlassCard>
-              </StaggerItem>
-            );
-          })}
+                {/* Quote */}
+                <p className="mt-5 text-sm italic text-white/70 leading-relaxed flex-grow">
+                  &ldquo;{student.quote}&rdquo;
+                </p>
+              </GlassCard>
+            </StaggerItem>
+          ))}
         </StaggerChildren>
       </div>
     </section>

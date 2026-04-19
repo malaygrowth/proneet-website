@@ -40,7 +40,7 @@ export function Manifesto() {
             </p>
 
             <footer className="mt-8 font-mono text-sm text-slate-400">
-              — Er. Neeraj Gupta, Founder &middot; 25+ Years Teaching Physics
+              — Neeraj Gupta, Founder &middot; 25+ Years Teaching Physics
             </footer>
           </blockquote>
 

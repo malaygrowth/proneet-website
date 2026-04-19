@@ -5,64 +5,52 @@ import { Award, BookOpen, Users, GraduationCap } from "lucide-react";
 export const metadata: Metadata = {
   title: "Faculty",
   description:
-    "Meet the ProNEET faculty led by Er. Neeraj Gupta. 25+ years of teaching experience, 500+ NEET selections, and a passion for Physics.",
+    "Meet the ProNEET faculty — Neeraj Gupta (Physics, Founder), R. K. Saini (Chemistry) and Vivek Patidar (Mathematics). Experienced NEET and JEE teachers, small classroom batches.",
 };
 
+// ProNEET covers Physics, Chemistry and Mathematics for NEET & JEE aspirants.
+// Biology coverage is currently TBD pending confirmation from the institute.
 const FACULTY = [
   {
-    name: "Er. Neeraj Gupta",
-    role: "Founder & Head Faculty - Physics",
-    experience: "25+ Years",
+    name: "Neeraj Gupta",
+    role: "Founder. Teaches Physics.",
+    experience: "25+ years",
     credentials: [
-      "B.Tech with Physics specialization",
-      "25+ years of NEET/JEE coaching experience",
-      "Mentored 10,000+ students across career",
-      "500+ NEET selections including AIR 45",
+      "25 years of classroom Physics, most of it inside the large coaching institutes of Rajasthan and Kota",
+      "Takes every Physics class himself. No junior stand-in.",
+      "Teaches in Hindi or English, switches per student as needed",
+      "Known for sitting with anxious students long after class ends",
     ],
     philosophy:
-      "Physics is not about memorizing formulas. It is about understanding the language of nature. When a student truly grasps why F = ma works, they don't need to memorize — they can derive, predict, and solve anything. My job is to make that click happen for every student.",
+      "Physics isn't memorised. It's understood once, then used forever. If a student can explain why a pulley problem works, they'll solve twenty of them without looking at a formula sheet.",
     featured: true,
   },
   {
-    name: "Dr. Meera Saxena",
-    role: "Senior Faculty - Chemistry",
-    experience: "18+ Years",
+    name: "R. K. Saini",
+    role: "Teaches Chemistry. Formerly at Bansal Classes, Jaipur.",
+    experience: "Ex-Bansal Classes, Jaipur",
     credentials: [
-      "Ph.D. in Organic Chemistry",
-      "18+ years of competitive exam coaching",
-      "Specializes in Organic and Physical Chemistry",
-      "Published researcher in chemical education",
+      "Spent years at Bansal Classes, Jaipur, before ProNEET",
+      "Organic, Inorganic and Physical — all three, one teacher",
+      "Strong on NCERT-line questions and NEET-ready reaction chains",
+      "Same-day doubt clearing alongside his own classes",
     ],
     philosophy:
-      "Chemistry connects the abstract to the tangible. I teach students to see reactions as stories — each with a beginning, conflict, and resolution. Once they see that narrative, even complex mechanisms become intuitive.",
+      "Most students don't struggle with hard Chemistry. They struggle with the basics never getting locked in. Fix those, and the rest looks like pattern recognition.",
     featured: false,
   },
   {
-    name: "Prof. Rajesh Kumawat",
-    role: "Senior Faculty - Biology",
-    experience: "15+ Years",
+    name: "Vivek Patidar",
+    role: "Teaches Maths. A trusted name around Mansarovar.",
+    experience: "Trusted in Mansarovar, Jaipur",
     credentials: [
-      "M.Sc. in Zoology, NET qualified",
-      "15+ years of NEET Biology coaching",
-      "Expert in NCERT-based question patterns",
-      "Creator of visual learning modules for Biology",
+      "A Maths name parents ask each other about in Mansarovar, Jaipur",
+      "Year-on-year record of JEE Main qualifiers and top board scores",
+      "Covers Class 11, Class 12, droppers, and board exam students",
+      "Short-method drills, but only once the long method is clear",
     ],
     philosophy:
-      "Biology is the science of life, and it should feel alive in the classroom. I use diagrams, analogies, and real-world examples to make every topic memorable. My students don't just pass exams — they develop a genuine curiosity for life sciences.",
-    featured: false,
-  },
-  {
-    name: "Mr. Sunil Mathur",
-    role: "Faculty - Mathematics",
-    experience: "12+ Years",
-    credentials: [
-      "M.Sc. Mathematics, Gold Medalist",
-      "12+ years of JEE coaching experience",
-      "Specializes in Calculus and Coordinate Geometry",
-      "Developed shortcut methods for JEE problem-solving",
-    ],
-    philosophy:
-      "Mathematics rewards practice and clarity of thought. I break complex problems into simple, repeatable steps. Once students build that problem-solving muscle memory, speed and accuracy follow naturally.",
+      "Speed comes last. First we make the long method boring. Then we strip it to the short one. That order matters. Shortcuts taught first are the reason most JEE students fall apart in mocks.",
     featured: false,
   },
 ];
@@ -87,11 +75,12 @@ export default function FacultyPage() {
             FACULTY
           </span>
           <h1 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900">
-            Learn from the Best
+            Three teachers. Three subjects. No panel rotation.
           </h1>
-          <p className="mt-4 text-base text-slate-500 max-w-lg mx-auto">
-            Experienced educators who don&apos;t just teach subjects — they
-            mentor futures.
+          <p className="mt-4 text-base text-slate-500 max-w-xl mx-auto">
+            Most coaching runs on panels. Senior names record the videos,
+            junior faces run your class. ProNEET is the opposite. The
+            teacher on the brochure is the teacher at the board.
           </p>
         </ScrollReveal>
 
@@ -99,10 +88,10 @@ export default function FacultyPage() {
         <ScrollReveal>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
             {[
-              { icon: Award, label: "Years Combined Experience", value: "70+" },
-              { icon: Users, label: "Students Mentored", value: "10,000+" },
-              { icon: GraduationCap, label: "NEET Selections", value: "500+" },
-              { icon: BookOpen, label: "Subjects Covered", value: "PCB + M" },
+              { icon: Award, label: "Years Teaching (Founder)", value: "25+" },
+              { icon: Users, label: "Students Selected", value: "1000+" },
+              { icon: GraduationCap, label: "NEET / AIIMS / IIT", value: "All three" },
+              { icon: BookOpen, label: "Subjects Taught", value: "Phy · Chem · Maths" },
             ].map((stat) => (
               <div
                 key={stat.label}

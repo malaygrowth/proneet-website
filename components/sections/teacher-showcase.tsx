@@ -3,11 +3,12 @@
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { Check } from "lucide-react";
 
+// Credentials sourced from the old proneetphysics.com (About page + homepage).
 const CREDENTIALS = [
-  "B.Tech + M.Tech in Physics specialization",
-  "25+ years of classroom teaching experience",
-  "500+ NEET selections with top 1000 ranks",
-  "Author of conceptual Physics problem sets",
+  "25+ years teaching Physics in top coaching institutes of India",
+  "1000+ students cleared NEET, AIIMS, IIT / NIT",
+  "Teaches in both Hindi and English medium",
+  "Personally leads every Physics batch — no rotating panels",
 ];
 
 export function TeacherShowcase() {
@@ -18,7 +19,7 @@ export function TeacherShowcase() {
         {/* Section header */}
         <ScrollReveal className="text-center mb-16">
           <span className="inline-block font-mono text-xs text-accent-orange tracking-widest uppercase">
-            YOUR TEACHER
+            FOUNDER
           </span>
           <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold text-slate-900">
             Learn from someone who&apos;s done it.
@@ -69,7 +70,7 @@ export function TeacherShowcase() {
                   }}
                 >
                   <p className="text-lg font-bold text-white">
-                    Er. Neeraj Gupta
+                    Neeraj Gupta
                   </p>
                   <p className="text-sm text-white/60">
                     Founder &amp; Lead Faculty
@@ -87,11 +88,13 @@ export function TeacherShowcase() {
               </h3>
 
               <p className="mt-4 text-base text-slate-600 leading-relaxed">
-                Er. Neeraj Gupta has dedicated his career to transforming how
-                students understand Physics. His unique teaching methodology
-                breaks down complex concepts into intuitive, memorable
-                frameworks — turning fear into fascination, one student at a
-                time.
+                For over two decades, Neeraj Gupta has been nurturing the
+                aspirations of students chasing a career in medicine and
+                engineering. Every year his students clear NEET, AIIMS, JIPMER
+                and the IITs. He is known for a supportive attitude, a rare
+                blend of counselling and problem-solving, and walking the extra
+                mile to help students deal with stress, exam pressure and
+                anxiety.
               </p>
 
               {/* Credentials */}

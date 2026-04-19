@@ -2,10 +2,10 @@ import Link from "next/link";
 import { SITE, NAV_LINKS } from "@/lib/constants";
 
 const PROGRAMS = [
-  { label: "NEET Regular", href: "/programs" },
-  { label: "JEE Mains", href: "/programs" },
+  { label: "NEET Physics", href: "/programs" },
+  { label: "JEE Physics", href: "/programs" },
   { label: "Dropper Batch", href: "/programs" },
-  { label: "Online Classes", href: "/programs" },
+  { label: "1-on-1 Classes", href: "/programs" },
 ];
 
 export function Footer() {

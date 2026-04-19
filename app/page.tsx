@@ -11,38 +11,40 @@ import { FAQ } from "@/components/sections/faq";
 import { FinalCTA } from "@/components/sections/final-cta";
 import { FAQJsonLd } from "@/components/seo/json-ld";
 
+// Mirror of the FAQ content displayed in the FAQ section. Kept in sync so
+// that the rich-result JSON-LD doesn't drift from what's on the page.
 const FAQ_DATA = [
   {
-    q: "I'm a dropper. Is it too late?",
-    a: "Absolutely not. Many of our top rankers were droppers. Our Dropper Batch is specifically designed for students who want to make their gap year count — with intensive revision, daily practice, and mentorship to keep you motivated.",
+    q: "I'm a dropper. Is it too late for me?",
+    a: "Droppers are a regular part of every batch. The Dropper Batch starts with a diagnostic so we know exactly which chapters to rebuild. You're not starting over, you're starting smarter.",
   },
   {
-    q: "I'm weak in Physics basics. Will I keep up?",
-    a: "Yes. We start every batch with a Day 1 diagnostic test to understand exactly where you stand. From there, we rebuild your concepts brick by brick — no assumptions, no skipping.",
+    q: "My Physics is weak. Will I keep up in class?",
+    a: "That's the norm, not the exception. Neeraj sir rebuilds fundamentals from Class 9 level if needed. Nobody's been kicked out of a batch for asking a basic question.",
   },
   {
-    q: "How is this different from YouTube?",
-    a: "YouTube gives you content. ProNEET gives you structure, accountability, weekly tests, and same-day doubt clearing. You'll have a teacher who knows your name and tracks your progress.",
+    q: "How is this different from Unacademy or YouTube?",
+    a: "YouTube is free and you'll learn plenty from it, but it won't know you didn't finish your DPP, it won't call your parents, and it won't notice your face is off on Wednesday. A small live batch does all of that.",
   },
   {
-    q: "What if I miss a live class?",
-    a: "Every class is recorded and available within hours. You can watch at your own pace, and your doubts will still be cleared in the next session.",
+    q: "Is it Hindi medium or English medium?",
+    a: "Both. The teacher switches to Hindi when a concept needs it and back to English when problems need precision. You don't have to pick in advance.",
   },
   {
-    q: "How do I track my child's progress?",
-    a: "You'll receive a detailed weekly progress report covering test scores, attendance, and areas of improvement. You also get direct access to a student counselor.",
+    q: "How many students in each batch?",
+    a: "Capped at 30. That cap is the whole point of ProNEET, it is not a marketing claim we soften later.",
   },
   {
-    q: "What are the teacher's qualifications?",
-    a: "Er. Neeraj Gupta holds a B.Tech degree with a Physics specialization and has 25+ years of teaching experience. He has mentored 10,000+ students, with 500+ NEET selections.",
+    q: "Who actually teaches my child?",
+    a: "Neeraj Gupta takes Physics himself. R. K. Saini, formerly at Bansal Classes Jaipur, takes Chemistry. Vivek Patidar takes Maths. Same three teachers through the two-year programme, no panel rotation.",
   },
   {
-    q: "What is the fee structure?",
-    a: "We maintain transparent pricing with no hidden charges. EMI options are available. Please call us for specific program fees.",
+    q: "What are the fees?",
+    a: "Fees depend on the batch and the number of subjects. Call the Admissions line and we will send the breakdown for the specific programme. EMI options are available.",
   },
   {
-    q: "How many students per batch?",
-    a: "Every batch is strictly capped at 30 students. This ensures each student gets personal attention and their doubts are addressed the same day.",
+    q: "Where is the classroom?",
+    a: "Vishveshwar Nagar, off Gopalpura Bypass near the Triveni flyover in Jaipur. Easy reach from Mansarovar, Malviya Nagar, C-Scheme and Tonk Road.",
   },
 ];
 
