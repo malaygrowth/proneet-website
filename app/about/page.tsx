@@ -3,6 +3,8 @@ import Image from "next/image";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { PageByline } from "@/components/ui/page-byline";
 import { KeyTakeaways } from "@/components/ui/key-takeaways";
+import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "About",
@@ -72,6 +74,12 @@ const WHAT_A_WEEK_LOOKS_LIKE = [
 export default function AboutPage() {
   return (
     <main className="pt-24 pb-20 bg-white">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: SITE.url },
+          { name: "About", url: `${SITE.url}/about` },
+        ]}
+      />
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
         {/* Header */}
         <ScrollReveal className="text-center mb-16">

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { PageByline } from "@/components/ui/page-byline";
+import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
+import { SITE } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Results",
@@ -91,6 +93,12 @@ function getInitials(name: string): string {
 export default function ResultsPage() {
   return (
     <main className="pt-24 pb-20 bg-white">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: SITE.url },
+          { name: "Results", url: `${SITE.url}/results` },
+        ]}
+      />
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
         {/* Header */}
         <ScrollReveal className="text-center mb-12">

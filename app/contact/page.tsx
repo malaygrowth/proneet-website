@@ -3,6 +3,7 @@ import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { InquiryForm } from "@/components/forms/inquiry-form";
+import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -53,6 +54,12 @@ const CONTACT_INFO = [
 export default function ContactPage() {
   return (
     <main className="pt-24 pb-20 bg-white">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: SITE.url },
+          { name: "Contact", url: `${SITE.url}/contact` },
+        ]}
+      />
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
         {/* Header */}
         <ScrollReveal className="text-center mb-16">

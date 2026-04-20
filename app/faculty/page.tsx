@@ -4,6 +4,11 @@ import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { PageByline } from "@/components/ui/page-byline";
 import { KeyTakeaways } from "@/components/ui/key-takeaways";
 import { PageFaq } from "@/components/sections/page-faq";
+import {
+  BreadcrumbJsonLd,
+  PersonJsonLd,
+} from "@/components/seo/json-ld";
+import { SITE } from "@/lib/constants";
 
 const FACULTY_FAQS = [
   {
@@ -102,6 +107,40 @@ function getInitials(name: string): string {
 export default function FacultyPage() {
   return (
     <main className="pt-24 pb-20 bg-white">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: SITE.url },
+          { name: "Faculty", url: `${SITE.url}/faculty` },
+        ]}
+      />
+      <PersonJsonLd
+        name="Neeraj Gupta"
+        jobTitle="Founder and Physics Faculty"
+        description="20+ years teaching Physics for NEET and JEE. Previously with Bansal Classes, Narayana, and Excel Physics. Teaches every Physics batch at ProNEET personally."
+        image="/photos/neeraj-gupta.png"
+        knowsAbout={[
+          "Physics",
+          "NEET-UG Physics preparation",
+          "JEE Main Physics",
+          "JEE Advanced Physics",
+          "Class 11 Physics",
+          "Class 12 Physics",
+        ]}
+      />
+      <PersonJsonLd
+        name="Vivek Patidar"
+        jobTitle="Chemistry Faculty"
+        description="Chemistry teacher at ProNEET. Trusted name in the Mansarovar coaching circuit in Jaipur. Covers Organic, Inorganic, and Physical Chemistry for NEET and JEE aspirants."
+        image="/photos/vivek-patidar.jpeg"
+        knowsAbout={[
+          "Chemistry",
+          "NEET-UG Chemistry",
+          "JEE Main Chemistry",
+          "Organic Chemistry",
+          "Inorganic Chemistry",
+          "Physical Chemistry",
+        ]}
+      />
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
         {/* Header */}
         <ScrollReveal className="text-center mb-16">

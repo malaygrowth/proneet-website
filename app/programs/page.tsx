@@ -3,6 +3,8 @@ import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { ProgramCard } from "@/components/ui/program-card";
 import { PageByline } from "@/components/ui/page-byline";
 import { PageFaq } from "@/components/sections/page-faq";
+import { BreadcrumbJsonLd, CourseJsonLd } from "@/components/seo/json-ld";
+import { SITE } from "@/lib/constants";
 
 const PROGRAM_FAQS = [
   {
@@ -129,6 +131,48 @@ const PROGRAMS = [
 export default function ProgramsPage() {
   return (
     <main className="pt-24 pb-20 bg-white">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: SITE.url },
+          { name: "Programs", url: `${SITE.url}/programs` },
+        ]}
+      />
+      <CourseJsonLd
+        courses={[
+          {
+            name: "NEET Classroom (Class 11 + 12)",
+            description:
+              "Two-year classroom batch for NEET-UG. Physics by Neeraj Gupta, Chemistry by Vivek Patidar. Students pair ProNEET with their own Biology coaching. 30-seat cap, Hindi or English medium, weekly topic tests, daily practice problems, fortnightly parent updates.",
+            url: `${SITE.url}/programs#neet-classroom`,
+            duration: "P2Y",
+            educationalLevel: "Class 11 and 12",
+          },
+          {
+            name: "JEE Classroom (Class 11 + 12)",
+            description:
+              "Two-year classroom batch for JEE Main (with Advanced as a stretch). Physics by Neeraj Gupta, Chemistry by Vivek Patidar. Students pair with their own Maths prep. Board exam prep built in, monthly full-length mocks graded against real cut-offs.",
+            url: `${SITE.url}/programs#jee-classroom`,
+            duration: "P2Y",
+            educationalLevel: "Class 11 and 12",
+          },
+          {
+            name: "Dropper Batch (1-year intensive)",
+            description:
+              "One-year intensive for students repeating NEET or JEE. Week-one diagnostic, then syllabus rebuilt around gaps. Morning or evening slot, daily problem sets, weekly full-length mocks, mentor check-in each week.",
+            url: `${SITE.url}/programs#dropper-batch`,
+            duration: "P1Y",
+            educationalLevel: "Post-Class 12",
+          },
+          {
+            name: "1-on-1 Online (Physics or Chemistry)",
+            description:
+              "Live one-teacher-one-student online classes taught by the same senior faculty as the Jaipur classroom batches. Personalised study plan, DPPs, same test series. For students across India and Indian families in the Gulf.",
+            url: `${SITE.url}/programs#online-1-on-1`,
+            duration: "P1Y",
+            educationalLevel: "Class 11, 12, Dropper",
+          },
+        ]}
+      />
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
         {/* Header */}
         <ScrollReveal className="text-center mb-16">

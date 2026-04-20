@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { inter, playfair, jetbrainsMono } from "@/lib/fonts";
 import { SITE } from "@/lib/constants";
 import { LenisProvider } from "@/components/layout/lenis-provider";
@@ -10,6 +13,8 @@ import {
   LocalBusinessJsonLd,
 } from "@/components/seo/json-ld";
 import "./globals.css";
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -50,6 +55,9 @@ export default function RootLayout({
           <Footer />
           <FloatingCTA />
         </LenisProvider>
+        <Analytics />
+        <SpeedInsights />
+        {GA_ID ? <GoogleAnalytics gaId={GA_ID} /> : null}
       </body>
     </html>
   );
