@@ -85,7 +85,9 @@ GA4 Admin → **Data Streams** → click the web stream → **Configure tag sett
 Create a rule:
 - Rule name: `Internal`
 - Traffic type value: `internal`
-- IP address → **IP equals** → *(your home/office IP — Google "what is my ip")*
+- IP address → **IP equals** → `49.36.235.86` *(home IP, captured 2026-04-21)*
+
+Re-check this IP every 2-3 months — residential ISPs in India rotate IPs periodically. If GA4 suddenly shows a spike of internal-looking events, that's usually the sign your IP changed.
 
 Then GA4 Admin → **Data Filters** → if "Internal Traffic" filter exists, toggle it from "Testing" to **Active**. Otherwise create it as **Exclude** filter with parameter `traffic_type = internal`.
 
