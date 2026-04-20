@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
@@ -72,7 +73,15 @@ export default function ContactPage() {
           <p className="mt-4 text-base text-slate-500 max-w-lg mx-auto">
             Call admissions for batch fit and fees. Email Neeraj sir
             directly with a teaching question. Or send the form below
-            and we&apos;ll call you back within the same day.
+            and we&apos;ll call you back within the same day. Want to
+            know how far the classroom is from you? See{" "}
+            <Link
+              href="/locations"
+              className="text-brand font-medium underline underline-offset-2"
+            >
+              all catchment locations
+            </Link>
+            .
           </p>
         </ScrollReveal>
 

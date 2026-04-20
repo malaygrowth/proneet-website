@@ -22,7 +22,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "jee-coaching-in-jaipur",
     title: "JEE Coaching in Jaipur: The Honest Guide for Class 11 and 12",
     description:
-      "A working guide to JEE coaching in Jaipur. Who teaches, what fees look like, Kota vs Jaipur vs Sikar, JEE Main vs Advanced realism, and what parents regret choosing.",
+      "A working guide to JEE coaching in Jaipur. Who teaches, fees by tier, Kota vs Sikar vs Jaipur, JEE Main vs Advanced realism, parent regrets.",
     excerpt:
       "Jaipur has fewer dedicated JEE setups than NEET ones. Allen, Aakash, Resonance at the top, a handful of local mid-tier institutes, and a small-batch tail. Here is what to actually pick between, and the parts of the JEE conversation that brochures do not cover.",
     publishDate: "2026-04-20",
@@ -40,7 +40,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "best-neet-coaching-in-jaipur",
     title: "Best NEET Coaching in Jaipur: 7 Things to Check Before You Enrol",
     description:
-      "A 7-point checklist for choosing NEET coaching in Jaipur. Batch size, teacher names, fees in writing, demo class quality, Hindi medium, parent updates, exit terms.",
+      "A 7-point checklist for choosing the best NEET coaching in Jaipur. Batch size, teacher names, fees in writing, demo class, exit terms.",
     excerpt:
       "Every Jaipur NEET coaching says they are the best. Here is the parent checklist that separates the ones who actually are from the ones with good billboards. Seven things to verify before you sign.",
     publishDate: "2026-04-20",
@@ -58,7 +58,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: "neet-coaching-in-jaipur",
     title: "NEET Coaching in Jaipur: The Parent's Honest Guide",
     description:
-      "A working guide to NEET coaching in Jaipur. How the market splits, what fees look like, 30-seat vs 300-seat, Jaipur vs Kota, and what parents regret choosing.",
+      "A working guide to NEET coaching in Jaipur. Market breakdown, fees by tier, 30-seat vs 300-seat, Jaipur vs Kota, parent regrets.",
     excerpt:
       "Jaipur has roughly 40 NEET coaching centres advertising at any given time. Three national brands, eight mid-tier locals, and a long tail of small-batch setups. This guide is what a founder at one of those small setups would tell you if you sat down for chai.",
     publishDate: "2026-04-20",

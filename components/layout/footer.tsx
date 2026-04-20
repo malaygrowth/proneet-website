@@ -1,19 +1,20 @@
 import Link from "next/link";
 import { SITE, NAV_LINKS } from "@/lib/constants";
+import { LOCATIONS } from "@/lib/locations";
 
 const PROGRAMS = [
-  { label: "NEET Physics", href: "/programs" },
-  { label: "JEE Physics", href: "/programs" },
+  { label: "NEET Classroom", href: "/programs" },
+  { label: "JEE Classroom", href: "/programs" },
   { label: "Dropper Batch", href: "/programs" },
-  { label: "1-on-1 Classes", href: "/programs" },
+  { label: "1-on-1 Online", href: "/programs" },
 ];
 
 export function Footer() {
   return (
     <footer className="bg-hero-bg pt-16 pb-24 lg:pb-16">
       <div className="max-w-6xl mx-auto px-6 lg:px-10">
-        {/* 4-column grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+        {/* 5-column grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
           {/* Column 1: Brand */}
           <div>
             <Link href="/" className="text-xl font-extrabold tracking-tight">
@@ -74,7 +75,34 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Contact */}
+          {/* Column 4: Locations */}
+          <div>
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-white/50 mb-4">
+              Locations
+            </h4>
+            <ul className="space-y-2.5">
+              <li>
+                <Link
+                  href="/locations"
+                  className="text-sm text-white/40 hover:text-white/80 transition-colors"
+                >
+                  All locations
+                </Link>
+              </li>
+              {LOCATIONS.map((loc) => (
+                <li key={loc.slug}>
+                  <Link
+                    href={`/locations/${loc.slug}`}
+                    className="text-sm text-white/40 hover:text-white/80 transition-colors"
+                  >
+                    {loc.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 5: Contact */}
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider text-white/50 mb-4">
               Contact
