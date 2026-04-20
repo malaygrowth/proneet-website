@@ -9,7 +9,7 @@ export const SITE = {
   phoneSecondary: "+918112297734",
   phoneSecondaryDisplay: "+91 81122 97734",
   whatsapp: "+919214314348",
-  email: "admissions@proneetphysics.com",
+  email: "team@proneetphysics.com",
   emailSecondary: "1721neerajgupta@gmail.com",
   address: "84/255, Madhyam Marg, Ward 27, Mansarovar Sector 8, Mansarovar, Jaipur, Rajasthan 302020",
   addressShort: "Mansarovar Sector 8, Jaipur",
