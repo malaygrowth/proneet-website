@@ -18,7 +18,7 @@ const PROGRAM_FAQS = [
   {
     question: "Do you teach JEE Advanced as well?",
     answer:
-      "JEE Main is the primary scope of our JEE batch, with JEE Advanced as a stretch goal for top-quartile students. If your goal is IIT Bombay or Delhi, we will be straight about whether your current trajectory supports it and what extra work would be required.",
+      "JEE Main is the primary scope of our JEE batch, with JEE Advanced as a stretch goal for top-quartile students. If your goal is an IIT, we will be straight about whether your current trajectory supports it and what extra work would be required.",
   },
   {
     question: "What study material is included?",
@@ -31,7 +31,7 @@ const PROGRAM_FAQS = [
       "Fees vary by batch (NEET, JEE, Dropper, 1-on-1) and the number of subjects taken. Call admissions on +91 92143 14348 and we will share the breakdown for the specific programme you're considering. EMI options are available for two-year batches.",
   },
   {
-    question: "Can I take only Physics, or only Maths?",
+    question: "Can I take only Physics, or only Chemistry?",
     answer:
       "Yes. Many students join just for Physics with Neeraj sir while continuing other subjects at their existing coaching. The 1-on-1 online track is the most common single-subject route. Classroom batches usually take both subjects together.",
   },
@@ -45,11 +45,11 @@ const PROGRAM_FAQS = [
 export const metadata: Metadata = {
   title: "Programs",
   description:
-    "ProNEET programs: NEET, JEE, Dropper Batch and individual online classes for students outside India. Coaching for Physics and Mathematics by a small handpicked faculty.",
+    "ProNEET programs: NEET, JEE, Dropper Batch and individual online classes for students outside India. Coaching for Physics and Chemistry by a small handpicked faculty.",
 };
 
-// ProNEET covers Physics (Neeraj Gupta) and Mathematics (Vivek Patidar).
-// Chemistry and Biology are not offered at this time.
+// ProNEET covers Physics (Neeraj Gupta) and Chemistry (Vivek Patidar).
+// Maths and Biology are not offered at this time.
 const PROGRAMS = [
   {
     title: "NEET Classroom",
@@ -63,11 +63,11 @@ const PROGRAMS = [
       "Chapter-wise DPPs and printed study material.",
       "Recorded lectures if you miss a class.",
       "Hindi or English medium, decided after the demo.",
-      "Designed to sit alongside your own Chemistry and Biology coaching.",
+      "Designed to sit alongside your own Biology coaching.",
       "Parent update every fortnight, not only at term end.",
     ],
     description:
-      "The two-year classroom batch for Class 11 and 12 students preparing for NEET-UG. NEET has 180 questions across Physics, Chemistry and Biology. ProNEET covers Physics tightly inside the batch, while students pair it with their preferred Chemistry and Biology setup. The argument for joining is not that we're the biggest. It's that for two years, the same senior teacher will know your work.",
+      "The two-year classroom batch for Class 11 and 12 students preparing for NEET-UG. NEET has 180 questions across Physics, Chemistry and Biology. ProNEET covers Physics and Chemistry tightly inside the batch, while students pair it with their preferred Biology setup. The argument for joining is not that we're the biggest. It's that for two years, the same senior teacher will know your work.",
   },
   {
     title: "JEE Classroom",
@@ -75,8 +75,8 @@ const PROGRAMS = [
     duration: "2-year classroom batch, Jaipur",
     featured: false,
     features: [
-      "Physics and Maths, taught end-to-end by senior faculty.",
-      "Maths taught by Vivek Patidar, a Mansarovar name.",
+      "Physics and Chemistry, taught end-to-end by senior faculty.",
+      "Chemistry taught by Vivek Patidar, a Mansarovar name.",
       "JEE Main plus BITSAT and VITEEE in scope.",
       "Board exam prep built into the schedule, not after it.",
       "Monthly full-length mocks graded against real JEE cut-offs.",
@@ -85,7 +85,7 @@ const PROGRAMS = [
       "Hindi or English medium.",
     ],
     description:
-      "The two-year classroom batch for JEE Main aspirants (with JEE Advanced as a stretch). Physics with Neeraj Gupta. Maths with Vivek Patidar. Both subjects taught by one dedicated senior teacher each, Class 11 through Class 12. No rotating panels, no pre-recorded stand-ins. Students pair this with their own Chemistry prep.",
+      "The two-year classroom batch for JEE Main aspirants (with JEE Advanced as a stretch). Physics with Neeraj Gupta. Chemistry with Vivek Patidar. Both subjects taught by one dedicated senior teacher each, Class 11 through Class 12. No rotating panels, no pre-recorded stand-ins. Students pair this with their own Maths prep.",
   },
   {
     title: "Dropper Batch",
@@ -97,7 +97,7 @@ const PROGRAMS = [
       "Week-one diagnostic, then a syllabus rebuilt around gaps.",
       "Morning or evening slot so self-study survives.",
       "Daily problem sets. Weekly full-length mocks.",
-      "Last 10 years of NEET and JEE Physics and Maths, walked through.",
+      "Last 10 years of NEET and JEE Physics and Chemistry, walked through.",
       "Mentor check-in every week on stress and pacing.",
       "Test strategy sessions, not just content.",
       "Progress review every month with a written note.",
@@ -114,7 +114,7 @@ const PROGRAMS = [
       "One student, one teacher, live online.",
       "Available to students anywhere in India first.",
       "Also run for Indian families in Dubai and the Gulf.",
-      "Pick Physics, Maths, or both.",
+      "Pick Physics, Chemistry, or both.",
       "Taught by the same senior faculty, not junior stand-ins.",
       "Personalised study plan and DPPs.",
       "Same test series as the Jaipur batches.",

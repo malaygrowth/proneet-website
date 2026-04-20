@@ -6,7 +6,7 @@ import { PageByline } from "@/components/ui/page-byline";
 export const metadata: Metadata = {
   title: "Results",
   description:
-    "ProNEET students have gone on to AIIMS, IIT Delhi, BITS Pilani, NIT Allahabad, Govt Medical Colleges and more. Past students share their story.",
+    "ProNEET students have gone on to AIIMS, IIT, BITS, NIT, Govt Medical Colleges and more. Past students share their story.",
 };
 
 // Past students of Neeraj Gupta / ProNEET Physics Classes.
@@ -23,7 +23,7 @@ const STUDENT_STORIES: {
 }[] = [
   {
     name: "Dr. Kumkum Gupta",
-    placement: "Government Medical College, Kota",
+    placement: "Government Medical College",
     role: "Gynaecologist",
     stream: "Medical",
     image: "/photos/alumni/kumkum-gupta.jpg",
@@ -32,7 +32,7 @@ const STUDENT_STORIES: {
   },
   {
     name: "Dr. Amit Gupta",
-    placement: "Govt. Medical Hospital, Kota",
+    placement: "Govt. Medical Hospital",
     role: "Orthopaedics",
     stream: "Medical",
     image: "/photos/alumni/amit-gupta.jpg",
@@ -42,7 +42,7 @@ const STUDENT_STORIES: {
   {
     name: "Gulshan Jangid",
     placement: "Lead Engineer · Major Indian startup",
-    role: "IIT Delhi alum",
+    role: "IIT alum",
     stream: "Engineering",
     image: "/photos/alumni/gulshan-jangid.jpg",
     quote:
@@ -51,7 +51,7 @@ const STUDENT_STORIES: {
   {
     name: "Aman Jain",
     placement: "Director · Humans of Bombay",
-    role: "BITS Pilani alum",
+    role: "BITS alum",
     stream: "Engineering",
     image: "/photos/alumni/aman-jain.jpg",
     quote:
@@ -60,7 +60,7 @@ const STUDENT_STORIES: {
   {
     name: "Abhishek Jha",
     placement: "Lead Engineer · Nokia",
-    role: "NIT Allahabad alum",
+    role: "NIT alum",
     stream: "Engineering",
     image: "/photos/alumni/abhishek-jha.jpg",
     quote:
@@ -105,9 +105,9 @@ export default function ResultsPage() {
             lastUpdated="April 20, 2026"
           />
           <p className="mt-4 text-base text-slate-500 max-w-xl mx-auto">
-            AIIMS. IIT Delhi. BITS Pilani. NIT Allahabad. Government Medical
-            Colleges in Kota. 20+ years of work, 1000+ students who cleared
-            where they wanted to. A few of them, in their own words.
+            AIIMS. IIT. BITS. NIT. Government Medical Colleges. 20+ years
+            of work, 1000+ students who cleared where they wanted to. A few
+            of them, in their own words.
           </p>
         </ScrollReveal>
 
@@ -117,7 +117,7 @@ export default function ResultsPage() {
             {[
               { value: "1000+", label: "NEET / AIIMS / IIT Selections" },
               { value: "20+", label: "Years Teaching (Founder)" },
-              { value: "Physics · Maths", label: "Subjects Taught" },
+              { value: "Physics · Chemistry", label: "Subjects Taught" },
               { value: "Global", label: "Students in India + Abroad" },
             ].map((stat) => (
               <div

@@ -7,7 +7,7 @@ import { KeyTakeaways } from "@/components/ui/key-takeaways";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "ProNEET, founded by Neeraj Gupta (ex-Bansal Classes, Narayana, Excel Physics). 20+ years teaching, 1000+ NEET / AIIMS / IIT selections, with Physics by Neeraj Gupta and Mathematics by Vivek Patidar for NEET and JEE aspirants.",
+    "ProNEET, founded by Neeraj Gupta (ex-Bansal Classes, Narayana, Excel Physics). 20+ years teaching, 1000+ NEET / AIIMS / IIT selections, with Physics by Neeraj Gupta and Chemistry by Vivek Patidar for NEET and JEE aspirants.",
 };
 
 // Chapters of the institute's journey — stated in arcs rather than
@@ -29,7 +29,7 @@ const TIMELINE = [
     year: "ProNEET begins",
     title: "Small-batch coaching in Jaipur",
     description:
-      "ProNEET starts in Jaipur with small classroom batches, Hindi & English medium, and a flat commitment: every student gets personal attention, every doubt gets same-day clearing. Neeraj Gupta is joined by Vivek Patidar (Mathematics) to anchor the Physics and Maths teaching for NEET and JEE aspirants.",
+      "ProNEET starts in Jaipur with small classroom batches, Hindi & English medium, and a flat commitment: every student gets personal attention, every doubt gets same-day clearing. Neeraj Gupta is joined by Vivek Patidar (Chemistry) to anchor the Physics and Chemistry teaching for NEET and JEE aspirants.",
   },
   {
     year: "Online era",
@@ -56,12 +56,12 @@ const WHY_SMALL_BATCH = [
   },
   {
     heading: "Why senior faculty, every class",
-    body: "Big coaching runs on panels: senior faculty record the videos, junior teachers handle the live classes. Here, Neeraj Gupta teaches Physics himself. Vivek Patidar handles Maths. No handoff, no substitution. The person who wrote your test is the person who explains where you went wrong.",
+    body: "Big coaching runs on panels: senior faculty record the videos, junior teachers handle the live classes. Here, Neeraj Gupta teaches Physics himself. Vivek Patidar handles Chemistry. No handoff, no substitution. The person who wrote your test is the person who explains where you went wrong.",
   },
 ];
 
 const WHAT_A_WEEK_LOOKS_LIKE = [
-  "Six days a week of classroom teaching, split between Physics and Maths.",
+  "Six days a week of classroom teaching, split between Physics and Chemistry.",
   "One topic test every week. Reviewed in class, not just graded.",
   "Daily practice problems (DPPs) for every chapter.",
   "Saturday: a dedicated doubt session. Stay as long as you want.",
@@ -100,7 +100,7 @@ export default function AboutPage() {
             bullets={[
               "ProNEET caps batches at 30 seats. Most large coachings run 200 to 400 per classroom.",
               "Founder Neeraj Gupta has 20+ years teaching Physics, including stints at Bansal Classes, Narayana, and Excel Physics.",
-              "Two senior teachers cover both subjects on offer: Neeraj Gupta for Physics, Vivek Patidar for Maths. No junior stand-ins, no rotating panels.",
+              "Two senior teachers cover both subjects on offer: Neeraj Gupta for Physics, Vivek Patidar for Chemistry. No junior stand-ins, no rotating panels.",
               "Same teacher across Class 11 and Class 12. No mid-programme handoff to a different faculty.",
               "Six classroom days a week, weekly topic test, Saturday doubt session, fortnightly parent update.",
               "1000+ NEET / AIIMS / IIT selections since the institute began (ProNEET admissions records, 2003–2026).",
@@ -149,8 +149,8 @@ export default function AboutPage() {
                     classroom batches. Hindi and English medium. Every doubt
                     cleared the same day. One teacher per subject. He
                     personally teaches Physics, alongside Vivek Patidar,
-                    a trusted Maths name in the Mansarovar coaching
-                    circuit, for Mathematics.
+                    a trusted Chemistry name in the Mansarovar coaching
+                    circuit, for Chemistry.
                   </p>
                   <p>
                     Students started telling their friends. Parents started

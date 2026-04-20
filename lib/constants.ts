@@ -1,7 +1,7 @@
 export const SITE = {
   name: "ProNEET",
   tagline: "Small-batch NEET & JEE coaching, Jaipur",
-  description: "Senior faculty. 30-seat batches. 20+ years of Physics by Neeraj Gupta (ex-Bansal Classes, Narayana, Excel Physics) and Maths by Vivek Patidar. Classroom in Vishveshwar Nagar, Jaipur. 1-on-1 online for students anywhere.",
+  description: "Senior faculty. 30-seat batches. 20+ years of Physics by Neeraj Gupta (ex-Bansal Classes, Narayana, Excel Physics) and Chemistry by Vivek Patidar. Classroom in Vishveshwar Nagar, Jaipur. 1-on-1 online for students anywhere.",
   url: "https://proneetphysics.com",
   // Primary admissions line — lifted from the old proneetphysics.com contact page.
   phone: "+919214314348",

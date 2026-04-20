@@ -30,8 +30,8 @@ const STUDENTS = [
   {
     name: "Gulshan Jangid",
     tag: "Engineering",
-    rank: "IIT Delhi",
-    college: "IIT Delhi · Student",
+    rank: "IIT",
+    college: "IIT · Student",
     quote:
       "There are only a few people who can explain Physics to students using everyday examples and make it stick. He is good. One of the best, in fact.",
   },

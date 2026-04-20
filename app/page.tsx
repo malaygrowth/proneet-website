@@ -37,7 +37,7 @@ const FAQ_DATA = [
   },
   {
     q: "Who actually teaches my child?",
-    a: "Neeraj Gupta takes Physics himself. Vivek Patidar takes Maths. Same two teachers through the two-year programme, no panel rotation.",
+    a: "Neeraj Gupta takes Physics himself. Vivek Patidar takes Chemistry. Same two teachers through the two-year programme, no panel rotation.",
   },
   {
     q: "What are the fees?",

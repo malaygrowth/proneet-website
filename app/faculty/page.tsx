@@ -12,14 +12,14 @@ const FACULTY_FAQS = [
       "Neeraj Gupta takes every Physics batch himself. There is no junior stand-in or pre-recorded panel video. He has been teaching Physics for 20+ years, including at Bansal Classes, Narayana, and Excel Physics.",
   },
   {
-    question: "Who teaches Maths?",
+    question: "Who teaches Chemistry?",
     answer:
-      "Vivek Patidar teaches Maths. He is a long-trusted name in the Mansarovar coaching circuit in Jaipur, with a year-on-year record of JEE Main qualifiers and high board scores. He covers Class 11, Class 12, droppers, and board exam students.",
+      "Vivek Patidar teaches Chemistry. He is a long-trusted name in the Mansarovar coaching circuit in Jaipur, with a year-on-year record of NEET and JEE qualifiers and high board scores. He covers Class 11, Class 12, droppers, and board exam students, across Organic, Inorganic, and Physical Chemistry.",
   },
   {
-    question: "Why doesn't ProNEET offer Chemistry or Biology?",
+    question: "Why doesn't ProNEET offer Maths or Biology?",
     answer:
-      "We only teach what we can teach at senior-faculty depth. Right now that is Physics and Maths. Students pair ProNEET with their own Chemistry coaching (and Biology, for NEET aspirants). We would rather do two subjects properly than four loosely.",
+      "We only teach what we can teach at senior-faculty depth. Right now that is Physics and Chemistry. NEET students pair ProNEET with their own Biology coaching. JEE students pair it with their own Maths coaching. We would rather do two subjects properly than four loosely.",
   },
   {
     question: "Will the same teacher teach me across Class 11 and Class 12?",
@@ -34,7 +34,7 @@ const FACULTY_FAQS = [
   {
     question: "Can I attend a free demo class with the actual teacher?",
     answer:
-      "Yes. Call admissions on +91 92143 14348 and we will schedule a demo class with Neeraj Gupta for Physics or Vivek Patidar for Maths. The teacher you meet at the demo is the teacher who will run your batch.",
+      "Yes. Call admissions on +91 92143 14348 and we will schedule a demo class with Neeraj Gupta for Physics or Vivek Patidar for Chemistry. The teacher you meet at the demo is the teacher who will run your batch.",
   },
 ];
 import { Award, BookOpen, Users, GraduationCap } from "lucide-react";
@@ -42,10 +42,10 @@ import { Award, BookOpen, Users, GraduationCap } from "lucide-react";
 export const metadata: Metadata = {
   title: "Faculty",
   description:
-    "Meet the ProNEET faculty: Neeraj Gupta (Physics, Founder) and Vivek Patidar (Mathematics). Experienced NEET and JEE teachers, small classroom batches.",
+    "Meet the ProNEET faculty: Neeraj Gupta (Physics, Founder) and Vivek Patidar (Chemistry). Experienced NEET and JEE teachers, small classroom batches.",
 };
 
-// ProNEET currently covers Physics (Neeraj Gupta) and Mathematics
+// ProNEET currently covers Physics (Neeraj Gupta) and Chemistry
 // (Vivek Patidar) for NEET and JEE aspirants.
 const FACULTY: {
   name: string;
@@ -73,16 +73,17 @@ const FACULTY: {
   },
   {
     name: "Vivek Patidar",
-    role: "Teaches Maths. A trusted name around Mansarovar.",
+    role: "Teaches Chemistry. A trusted name around Mansarovar.",
     experience: "Trusted in Mansarovar, Jaipur",
+    image: "/photos/vivek-patidar.jpeg",
     credentials: [
-      "A Maths name parents ask each other about in Mansarovar, Jaipur",
-      "Year-on-year record of JEE Main qualifiers and top board scores",
+      "A Chemistry name parents ask each other about in Mansarovar, Jaipur",
+      "Year-on-year record of NEET and JEE qualifiers and top board scores",
       "Covers Class 11, Class 12, droppers, and board exam students",
-      "Short-method drills, but only once the long method is clear",
+      "Teaches all three branches end-to-end: Organic, Inorganic, Physical",
     ],
     philosophy:
-      "Speed comes last. First we make the long method boring. Then we strip it to the short one. That order matters. Shortcuts taught first are the reason most JEE students fall apart in mocks.",
+      "Chemistry looks like three different subjects. It isn't. Organic is reasoning. Inorganic is pattern. Physical is Physics wearing a lab coat. Once a student sees that, the panic about mugging up chemistry stops.",
     featured: false,
   },
 ];
@@ -125,7 +126,7 @@ export default function FacultyPage() {
         <ScrollReveal className="max-w-3xl mx-auto mb-16">
           <KeyTakeaways
             bullets={[
-              "Two faculty cover both subjects on offer: Neeraj Gupta (Physics, Founder) and Vivek Patidar (Mathematics).",
+              "Two faculty cover both subjects on offer: Neeraj Gupta (Physics, Founder) and Vivek Patidar (Chemistry).",
               "Neeraj Gupta has 20+ years of Physics teaching, including Bansal Classes, Narayana, and Excel Physics.",
               "The founder personally leads every Physics batch. No junior stand-in, no pre-recorded panel.",
               "Both teachers handle Hindi or English medium and switch language per student as needed.",
@@ -142,7 +143,7 @@ export default function FacultyPage() {
               { icon: Award, label: "Years Teaching (Founder)", value: "20+" },
               { icon: Users, label: "Students Selected", value: "1000+" },
               { icon: GraduationCap, label: "NEET / AIIMS / IIT", value: "All three" },
-              { icon: BookOpen, label: "Subjects Taught", value: "Physics · Maths" },
+              { icon: BookOpen, label: "Subjects Taught", value: "Physics · Chemistry" },
             ].map((stat) => (
               <div
                 key={stat.label}
