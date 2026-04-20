@@ -43,6 +43,7 @@ export const metadata: Metadata = {
   title: "Faculty",
   description:
     "Meet the ProNEET faculty: Neeraj Gupta (Physics, Founder) and Vivek Patidar (Chemistry). Experienced NEET and JEE teachers, small classroom batches.",
+  alternates: { canonical: "/faculty" },
 };
 
 // ProNEET currently covers Physics (Neeraj Gupta) and Chemistry

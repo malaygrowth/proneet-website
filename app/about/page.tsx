@@ -7,7 +7,8 @@ import { KeyTakeaways } from "@/components/ui/key-takeaways";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "ProNEET, founded by Neeraj Gupta (ex-Bansal Classes, Narayana, Excel Physics). 20+ years teaching, 1000+ NEET / AIIMS / IIT selections, with Physics by Neeraj Gupta and Chemistry by Vivek Patidar for NEET and JEE aspirants.",
+    "Founded by Neeraj Gupta (ex-Bansal, Narayana, Excel Physics). 20+ years teaching, 1000+ NEET/AIIMS/IIT selections. Physics + Chemistry only.",
+  alternates: { canonical: "/about" },
 };
 
 // Chapters of the institute's journey — stated in arcs rather than

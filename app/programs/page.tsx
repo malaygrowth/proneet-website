@@ -45,7 +45,8 @@ const PROGRAM_FAQS = [
 export const metadata: Metadata = {
   title: "Programs",
   description:
-    "ProNEET programs: NEET, JEE, Dropper Batch and individual online classes for students outside India. Coaching for Physics and Chemistry by a small handpicked faculty.",
+    "ProNEET programs: NEET, JEE, Dropper Batch and 1-on-1 online. Physics and Chemistry by a handpicked small faculty in Jaipur.",
+  alternates: { canonical: "/programs" },
 };
 
 // ProNEET covers Physics (Neeraj Gupta) and Chemistry (Vivek Patidar).

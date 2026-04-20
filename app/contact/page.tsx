@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Contact",
   description:
     "Get in touch with ProNEET for admissions, demo classes, and inquiries. Call, email, or visit us in Jaipur.",
+  alternates: { canonical: "/contact" },
 };
 
 const CONTACT_INFO = [

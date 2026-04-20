@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Results",
   description:
     "ProNEET students have gone on to AIIMS, IIT, BITS, NIT, Govt Medical Colleges and more. Past students share their story.",
+  alternates: { canonical: "/results" },
 };
 
 // Past students of Neeraj Gupta / ProNEET Physics Classes.
