@@ -140,8 +140,25 @@ export default function JeeCoachingJaipurPost() {
             <p>
               JEE coaching in Jaipur is the set of classroom and online
               programmes in Jaipur city that prepare Class 11, Class 12,
-              and dropper students for the Joint Entrance Examination
-              (Main and Advanced) for admission to IITs, NITs, IIITs, and
+              and dropper students for the Joint Entrance Examination (
+              <a
+                href="https://jeemain.nta.nic.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand underline underline-offset-2"
+              >
+                JEE Main
+              </a>
+              {" "}and{" "}
+              <a
+                href="https://jeeadv.ac.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand underline underline-offset-2"
+              >
+                JEE Advanced
+              </a>
+              ) for admission to IITs, NITs, IIITs, and
               allied engineering institutes. Of the ~12.5 lakh JEE Main
               candidates in 2025 (NTA, 2025), Rajasthan sends one of the
               highest per-state shares, and Jaipur is one of the top three

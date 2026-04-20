@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { InfographicCompare } from "@/components/infographics/infographic-compare";
 import { InfographicSteps } from "@/components/infographics/infographic-steps";
 import { InfographicBars } from "@/components/infographics/infographic-bars";
+import { InfographicStats } from "@/components/infographics/infographic-stats";
+import { InfographicTable } from "@/components/infographics/infographic-table";
+import { InfographicQuote } from "@/components/infographics/infographic-quote";
 
 export const metadata: Metadata = {
   title: "Infographic samples (internal)",
@@ -160,18 +163,122 @@ export default function InfographicSamplesPage() {
           />
         </section>
 
+        {/* SAMPLE 4 — Stats */}
+        <section className="mb-20">
+          <p className="font-mono text-[11px] uppercase tracking-widest text-slate-400 mb-2">
+            Sample 4 — <span className="text-slate-700">InfographicStats</span>
+          </p>
+          <p className="text-sm text-slate-500 mb-6">
+            2-4 headline numbers. Good for opening Key Takeaways on a
+            pillar, or a results summary.
+          </p>
+          <InfographicStats
+            eyebrow="ProNEET, at a glance"
+            heading="What two decades of small-batch teaching looks like"
+            values={[
+              {
+                value: "30",
+                label: "Seats per batch",
+                sublabel: "Cap, not a target",
+              },
+              {
+                value: "20+",
+                label: "Years teaching",
+                sublabel: "Founder, Physics",
+              },
+              {
+                value: "1000+",
+                label: "Selections",
+                sublabel: "NEET / AIIMS / IIT / NIT",
+              },
+              {
+                value: "2",
+                label: "Subjects taught",
+                sublabel: "Physics, Chemistry",
+              },
+            ]}
+            footnote="Source: ProNEET admissions records, 2003-2026."
+          />
+        </section>
+
+        {/* SAMPLE 5 — Table */}
+        <section className="mb-20">
+          <p className="font-mono text-[11px] uppercase tracking-widest text-slate-400 mb-2">
+            Sample 5 — <span className="text-slate-700">InfographicTable</span>
+          </p>
+          <p className="text-sm text-slate-500 mb-6">
+            Glass-styled data table. Numeric columns right-aligned mono.
+            One row highlighted as "our tier" if applicable.
+          </p>
+          <InfographicTable
+            eyebrow="Jaipur NEET coaching"
+            heading="Fees and batch sizes, by tier"
+            columns={[
+              { key: "tier", label: "Tier" },
+              { key: "perYear", label: "Per year", align: "right", numeric: true },
+              { key: "twoYear", label: "2-year total", align: "right", numeric: true },
+              { key: "batch", label: "Batch size", align: "right", numeric: true },
+            ]}
+            rows={[
+              {
+                tier: "National brand branch",
+                perYear: "₹1.6 – 2.8 L",
+                twoYear: "₹3.2 – 5.6 L",
+                batch: "150 – 400",
+              },
+              {
+                tier: "Local mid-tier institute",
+                perYear: "₹80 K – 1.4 L",
+                twoYear: "₹1.6 – 2.8 L",
+                batch: "60 – 120",
+              },
+              {
+                tier: "Small-batch / specialist",
+                perYear: "₹60 K – 1 L",
+                twoYear: "₹1.2 – 2 L",
+                batch: "20 – 60",
+              },
+              {
+                tier: "Dropper batch (1 year)",
+                perYear: "₹1 – 2.2 L",
+                twoYear: "—",
+                batch: "Varies",
+              },
+            ]}
+            highlightRowIndex={2}
+            footnote="Source: ProNEET 2026 Q1 Jaipur market sweep. ProNEET sits in row 3."
+          />
+        </section>
+
+        {/* SAMPLE 6 — Quote */}
+        <section className="mb-20">
+          <p className="font-mono text-[11px] uppercase tracking-widest text-slate-400 mb-2">
+            Sample 6 — <span className="text-slate-700">InfographicQuote</span>
+          </p>
+          <p className="text-sm text-slate-500 mb-6">
+            Pull-quote in a glass frame. Serif body, mono attribution.
+            Used sparingly, one per post max.
+          </p>
+          <InfographicQuote
+            quote="A 300-seater teaches the top ten and forgets the rest. We kept the room to 30 so every student gets seen, every doubt gets heard, and Physics gets understood, not memorised."
+            attribution="Neeraj Gupta"
+            role="Founder, ProNEET · 20+ years teaching Physics"
+            image="/photos/neeraj-gupta.png"
+            imageAlt="Neeraj Gupta, founder of ProNEET, Jaipur"
+          />
+        </section>
+
         <div className="rounded-xl border border-slate-100 bg-surface-secondary p-6 sm:p-8 text-sm text-slate-600 leading-relaxed">
           <p className="font-semibold text-slate-900 mb-2">
-            What's not here (yet, on purpose)
+            Full inventory shipped
           </p>
           <p>
-            The inventory lists 6 shapes. We shipped 3 first so you can
-            react before we build the rest. Still to come:
-            <span className="font-mono text-[12px] text-slate-500">
-              {" "}InfographicStats, InfographicTable, InfographicQuote
-            </span>
-            . None of them add new surfaces or colours; they reuse the
-            same glass recipe.
+            All 6 shapes from the design system are live: Compare,
+            Steps, Bars, Stats, Table, Quote. Every one uses the same
+            glass recipe, the same two-colour palette, and the same
+            mono number treatment. Next phase: a planner that reads a
+            blog post and emits a JSON recommendation for which shapes
+            to insert where.
           </p>
         </div>
       </div>

@@ -9,6 +9,10 @@ import {
   ArticleJsonLd,
   BreadcrumbJsonLd,
 } from "@/components/seo/json-ld";
+import { InfographicStats } from "@/components/infographics/infographic-stats";
+import { InfographicCompare } from "@/components/infographics/infographic-compare";
+import { InfographicTable } from "@/components/infographics/infographic-table";
+import { InfographicQuote } from "@/components/infographics/infographic-quote";
 import { SITE } from "@/lib/constants";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 import { ArrowRight } from "lucide-react";
@@ -145,7 +149,16 @@ export default function NeetCoachingInJaipurPost() {
               Class 12 students (and droppers) for the National Eligibility
               cum Entrance Test, the single entrance exam for MBBS and
               BDS admissions across India. Of the ~20 lakh NEET candidates
-              who sat the exam in 2025 (NMC / NTA, 2025), Rajasthan
+              who sat the exam in 2025 (
+              <a
+                href="https://www.nmc.org.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-brand underline underline-offset-2"
+              >
+                National Medical Commission
+              </a>
+              {" "}/ NTA, 2025), Rajasthan
               contributes roughly 1.4 lakh, of which Jaipur is the largest
               single urban catchment (Rajasthan Board &amp; NTA district
               statistics, 2024-2025).
@@ -228,6 +241,35 @@ export default function NeetCoachingInJaipurPost() {
                 new and untested.
               </li>
             </ul>
+
+            <InfographicStats
+              eyebrow="Jaipur NEET coaching"
+              heading="The market in four numbers"
+              values={[
+                {
+                  value: "~40",
+                  label: "Active centres",
+                  sublabel: "2026 Q1 Jaipur sweep",
+                },
+                {
+                  value: "3",
+                  label: "National brand branches",
+                  sublabel: "Allen · Aakash · Resonance",
+                },
+                {
+                  value: "8–10",
+                  label: "Local mid-tier institutes",
+                  sublabel: "Parmar, Convex, Foundation, Tomer…",
+                },
+                {
+                  value: "25–30",
+                  label: "Small-batch setups",
+                  sublabel: "ProNEET sits here",
+                },
+              ]}
+              footnote="Source: ProNEET 2026 Q1 Jaipur market sweep."
+            />
+
             <p className="mt-5">
               The pattern most families fall into is to only seriously
               consider four or five centres during the decision. That is
@@ -254,44 +296,44 @@ export default function NeetCoachingInJaipurPost() {
               two-year NEET classroom programme, based on a 2026 Q1 sweep
               of published fees and parent inquiries:
             </p>
-            <div className="mt-6 overflow-x-auto">
-              <table className="w-full text-sm border border-slate-200">
-                <thead className="bg-surface-secondary">
-                  <tr>
-                    <th className="text-left p-3 font-semibold">Tier</th>
-                    <th className="text-left p-3 font-semibold">Per year (₹)</th>
-                    <th className="text-left p-3 font-semibold">2-year total (₹)</th>
-                    <th className="text-left p-3 font-semibold">Notes</th>
-                  </tr>
-                </thead>
-                <tbody className="[&_td]:border-t [&_td]:border-slate-100 [&_td]:p-3">
-                  <tr>
-                    <td className="font-medium">National brand branch</td>
-                    <td>1.6-2.8 lakh</td>
-                    <td>3.2-5.6 lakh</td>
-                    <td>Highest batch size, widest peer group, thinnest personal attention</td>
-                  </tr>
-                  <tr>
-                    <td className="font-medium">Local mid-tier institute</td>
-                    <td>80,000-1.4 lakh</td>
-                    <td>1.6-2.8 lakh</td>
-                    <td>Usually one identifiable senior name; mixed live-vs-recorded delivery</td>
-                  </tr>
-                  <tr>
-                    <td className="font-medium">Small-batch / specialist</td>
-                    <td>60,000-1 lakh</td>
-                    <td>1.2-2 lakh</td>
-                    <td>30-seat cap typical; same teacher every class; thinner peer group</td>
-                  </tr>
-                  <tr>
-                    <td className="font-medium">Dropper batch (1 year)</td>
-                    <td>1-2.2 lakh</td>
-                    <td>N/A</td>
-                    <td>20-40% premium over a Class 12 seat; diagnostic before enrolment</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <InfographicTable
+              eyebrow="Two-year NEET classroom fees"
+              heading="2026 Jaipur ranges, by tier"
+              columns={[
+                { key: "tier", label: "Tier" },
+                { key: "perYear", label: "Per year (₹)", align: "right", numeric: true },
+                { key: "total", label: "2-year total (₹)", align: "right", numeric: true },
+                { key: "notes", label: "Notes" },
+              ]}
+              rows={[
+                {
+                  tier: "National brand branch",
+                  perYear: "1.6 – 2.8 L",
+                  total: "3.2 – 5.6 L",
+                  notes: "Highest batch size, widest peer group, thinnest personal attention",
+                },
+                {
+                  tier: "Local mid-tier institute",
+                  perYear: "80 K – 1.4 L",
+                  total: "1.6 – 2.8 L",
+                  notes: "Usually one identifiable senior name; mixed live-vs-recorded",
+                },
+                {
+                  tier: "Small-batch / specialist",
+                  perYear: "60 K – 1 L",
+                  total: "1.2 – 2 L",
+                  notes: "30-seat cap typical; same teacher every class; thinner peer group",
+                },
+                {
+                  tier: "Dropper batch (1 year)",
+                  perYear: "1 – 2.2 L",
+                  total: "N/A",
+                  notes: "20-40% premium over a Class 12 seat; diagnostic before enrolment",
+                },
+              ]}
+              highlightRowIndex={2}
+              footnote="Source: ProNEET 2026 Q1 Jaipur market sweep. The highlighted row is ProNEET's tier."
+            />
             <p className="mt-5">
               EMI is near universal now. Scholarships exist at every tier
               but are mostly recovered on paper material or discounted from
@@ -338,6 +380,38 @@ export default function NeetCoachingInJaipurPost() {
               Narayana, and Excel Physics. The brands work. The batch size
               is what unmakes them.
             </p>
+
+            <InfographicCompare
+              eyebrow="The contrarian take"
+              heading="Small batch vs mega-batch, at the same fee-tier"
+              left={{
+                title: "30-seat classroom",
+                subtitle: "Small-batch",
+                stat: "30",
+                statLabel: "seats per batch",
+                bullets: [
+                  "Teacher knows every name by week 2",
+                  "Disengagement is caught within the week",
+                  "Saturday doubt queue: 3-5 students",
+                  "Same senior teacher across Class 11 + 12",
+                ],
+                verdict: "Engineered for attention",
+              }}
+              right={{
+                title: "300-seat classroom",
+                subtitle: "Mega-batch",
+                stat: "300",
+                statLabel: "seats per batch",
+                bullets: [
+                  "Teacher anchors to the top-10 students",
+                  "Bottom half disengages silently",
+                  "Doubt queue on Saturday: 40+ students waiting",
+                  "Junior faculty rotates between Class 11 and 12",
+                ],
+                verdict: "Engineered for throughput",
+              }}
+              footnote="Observation from 20+ years teaching inside Bansal Classes, Narayana, and Excel Physics — and from the last two decades at ProNEET."
+            />
           </section>
 
           <section>
@@ -529,6 +603,14 @@ export default function NeetCoachingInJaipurPost() {
               years if you get it right.
             </p>
           </section>
+
+          <InfographicQuote
+            quote="We don't believe in mass production of students. We believe in mastery. One concept, one student, one breakthrough at a time. Physics isn't hard. It's just been taught wrong."
+            attribution="Neeraj Gupta"
+            role="Founder, ProNEET · 20+ years teaching Physics"
+            image="/photos/neeraj-gupta.png"
+            imageAlt="Neeraj Gupta, founder of ProNEET, Mansarovar Jaipur"
+          />
 
           <section>
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">
