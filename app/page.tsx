@@ -45,7 +45,7 @@ const FAQ_DATA = [
   },
   {
     q: "Where is the classroom?",
-    a: "Vishveshwar Nagar, off Gopalpura Bypass near the Triveni flyover in Jaipur. Easy reach from Mansarovar, Malviya Nagar, C-Scheme and Tonk Road.",
+    a: "84/255, Madhyam Marg, Ward 27, Mansarovar Sector 8, Jaipur 302020. Easy reach from Mansarovar Metro, Malviya Nagar, Gopalpura Bypass and Ajmer Road.",
   },
 ];
 

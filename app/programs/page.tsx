@@ -143,7 +143,7 @@ export default function ProgramsPage() {
             lastUpdated="April 20, 2026"
           />
           <p className="mt-4 text-base text-slate-500 max-w-2xl mx-auto">
-            Classroom in Vishveshwar Nagar for students from across Jaipur.
+            Classroom on Madhyam Marg, Mansarovar Sector 8 for students from across Jaipur.
             A dropper batch for students rebuilding after a first attempt.
             Live online 1-on-1 for students anywhere else. Same senior
             faculty in all four.

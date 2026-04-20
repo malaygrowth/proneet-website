@@ -57,7 +57,7 @@ const PARENT_FAQS = [
   {
     question: "Where is the classroom, and is there parking?",
     answer:
-      "Vishveshwar Nagar, off Gopalpura Bypass near the Triveni flyover in Jaipur. Parking is available for two-wheelers and cars. Easy reach from Mansarovar, Malviya Nagar, C-Scheme, and Tonk Road.",
+      "84/255, Madhyam Marg, Ward 27, Mansarovar Sector 8, Jaipur 302020. Parking is available for two-wheelers and cars. Easy reach from Mansarovar Metro, Malviya Nagar, Gopalpura Bypass, and Ajmer Road.",
   },
   {
     question: "We live outside Jaipur / outside India. Can we still join?",

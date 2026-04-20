@@ -7,7 +7,7 @@ const SCENES = [
   {
     src: "/photos/classroom-batch.webp",
     alt: "ProNEET classroom in session, students with Neeraj sir at the back of the room",
-    caption: "A live batch in Vishveshwar Nagar",
+    caption: "A live batch in Mansarovar Sector 8",
     tall: true,
   },
   {
@@ -44,7 +44,7 @@ export function Scenes() {
           </h2>
           <p className="mt-3 text-base text-slate-500 max-w-lg mx-auto">
             Not stock photos. Not renders. The actual classroom in
-            Vishveshwar Nagar and the students who&apos;ve sat in it.
+            Mansarovar Sector 8 and the students who&apos;ve sat in it.
           </p>
         </ScrollReveal>
 

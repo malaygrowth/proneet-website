@@ -92,8 +92,8 @@ export function Hero() {
             <ScrollReveal delay={0.3}>
               <p className="mt-6 text-lg text-white/50 max-w-md leading-relaxed">
                 A small Jaipur coaching where Neeraj Gupta teaches Physics
-                himself, alongside Vivek Patidar for Chemistry. Classroom in
-                Vishveshwar Nagar. 1-on-1 online, wherever you are.
+                himself, alongside Vivek Patidar for Chemistry. Classroom on
+                Madhyam Marg, Mansarovar. 1-on-1 online, wherever you are.
               </p>
             </ScrollReveal>
 

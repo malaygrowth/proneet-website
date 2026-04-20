@@ -11,21 +11,29 @@ export function OrganizationJsonLd() {
     email: SITE.email,
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Jaipur",
-      addressRegion: "Rajasthan",
-      addressCountry: "IN",
+      streetAddress: SITE.addressStreet,
+      addressLocality: SITE.addressLocality,
+      addressRegion: SITE.addressRegion,
+      postalCode: SITE.addressPostal,
+      addressCountry: SITE.addressCountry,
     },
     aggregateRating: {
       "@type": "AggregateRating",
-      ratingValue: "4.9",
+      ratingValue: String(SITE.googleRating),
       bestRating: "5",
-      reviewCount: "200",
+      reviewCount: String(SITE.googleReviews),
     },
-    foundingDate: "2000",
+    foundingDate: "2003",
     founder: {
       "@type": "Person",
       name: "Neeraj Gupta",
     },
+    sameAs: [
+      SITE.social.facebook,
+      SITE.social.instagram,
+      SITE.social.youtube,
+      SITE.social.twitter,
+    ],
   };
 
   return (
@@ -47,22 +55,36 @@ export function LocalBusinessJsonLd() {
     email: SITE.email,
     address: {
       "@type": "PostalAddress",
-      addressLocality: "Jaipur",
-      addressRegion: "Rajasthan",
-      addressCountry: "IN",
+      streetAddress: SITE.addressStreet,
+      addressLocality: SITE.addressLocality,
+      addressRegion: SITE.addressRegion,
+      postalCode: SITE.addressPostal,
+      addressCountry: SITE.addressCountry,
     },
+    areaServed: [
+      { "@type": "City", name: "Jaipur" },
+      { "@type": "AdministrativeArea", name: "Rajasthan" },
+      { "@type": "Country", name: "India" },
+    ],
     aggregateRating: {
       "@type": "AggregateRating",
-      ratingValue: "4.9",
+      ratingValue: String(SITE.googleRating),
       bestRating: "5",
-      reviewCount: "200",
+      reviewCount: String(SITE.googleReviews),
     },
-    foundingDate: "2000",
+    foundingDate: "2003",
     founder: {
       "@type": "Person",
       name: "Neeraj Gupta",
     },
     openingHours: "Mo-Sa 08:00-20:00",
+    priceRange: "₹₹",
+    sameAs: [
+      SITE.social.facebook,
+      SITE.social.instagram,
+      SITE.social.youtube,
+      SITE.social.twitter,
+    ],
   };
 
   return (
