@@ -180,6 +180,60 @@ export function PersonJsonLd({
   );
 }
 
+interface ArticleJsonLdProps {
+  headline: string;
+  description: string;
+  url: string;
+  image: string;
+  datePublished: string;
+  dateModified: string;
+  author: string;
+  authorRole?: string;
+  keywords?: string[];
+}
+
+export function ArticleJsonLd({
+  headline,
+  description,
+  url,
+  image,
+  datePublished,
+  dateModified,
+  author,
+  authorRole,
+  keywords,
+}: ArticleJsonLdProps) {
+  const data: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline,
+    description,
+    url,
+    image: image.startsWith("http") ? image : `${SITE.url}${image}`,
+    datePublished,
+    dateModified,
+    author: {
+      "@type": "Person",
+      name: author,
+      ...(authorRole ? { jobTitle: authorRole } : {}),
+    },
+    publisher: {
+      "@type": "EducationalOrganization",
+      name: SITE.name,
+      url: SITE.url,
+    },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+  };
+  if (keywords?.length) data.keywords = keywords.join(", ");
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
 interface CourseEntry {
   name: string;
   description: string;

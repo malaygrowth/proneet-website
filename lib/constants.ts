@@ -39,7 +39,7 @@ export const STATS = {
 export const NAV_LINKS = [
   { label: "Programs", href: "/programs" },
   { label: "Results", href: "/results" },
-  { label: "Method", href: "/#method" },
   { label: "Faculty", href: "/faculty" },
   { label: "About", href: "/about" },
+  { label: "Blog", href: "/blog" },
 ] as const;
