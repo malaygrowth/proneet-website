@@ -9,6 +9,7 @@ import {
   BreadcrumbJsonLd,
   LocalBusinessJsonLd,
 } from "@/components/seo/json-ld";
+import { InfographicStats } from "@/components/infographics/infographic-stats";
 import { SITE } from "@/lib/constants";
 import { ArrowRight, MapPin, Phone, Clock } from "lucide-react";
 
@@ -109,6 +110,33 @@ export default function MansarovarLocationPage() {
             ]}
           />
         </ScrollReveal>
+
+        <InfographicStats
+          eyebrow="Mansarovar classroom"
+          heading="At a glance"
+          values={[
+            {
+              value: "5 min",
+              label: "From Mansarovar Metro",
+              sublabel: "Pink Line",
+            },
+            {
+              value: "30",
+              label: "Seats in the batch",
+              sublabel: "Hard cap, never exceeded",
+            },
+            {
+              value: "10+",
+              label: "Coaching options in the area",
+              sublabel: "Across NEET + JEE setups",
+            },
+            {
+              value: "Mon-Sat",
+              label: "Working days",
+              sublabel: "8 AM to 8 PM",
+            },
+          ]}
+        />
 
         <div className="space-y-10 text-[17px] text-slate-700 leading-relaxed">
           <section>

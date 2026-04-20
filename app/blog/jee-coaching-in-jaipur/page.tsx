@@ -9,6 +9,10 @@ import {
   ArticleJsonLd,
   BreadcrumbJsonLd,
 } from "@/components/seo/json-ld";
+import { InfographicTable } from "@/components/infographics/infographic-table";
+import { InfographicCompare } from "@/components/infographics/infographic-compare";
+import { InfographicSteps } from "@/components/infographics/infographic-steps";
+import { InfographicQuote } from "@/components/infographics/infographic-quote";
 import { SITE } from "@/lib/constants";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 import { ArrowRight } from "lucide-react";
@@ -247,44 +251,44 @@ export default function JeeCoachingJaipurPost() {
               With that understood, honest 2026 Jaipur ranges for a
               two-year JEE classroom programme:
             </p>
-            <div className="mt-6 overflow-x-auto">
-              <table className="w-full text-sm border border-slate-200">
-                <thead className="bg-surface-secondary">
-                  <tr>
-                    <th className="text-left p-3 font-semibold">Tier</th>
-                    <th className="text-left p-3 font-semibold">Per year (₹)</th>
-                    <th className="text-left p-3 font-semibold">2-year total (₹)</th>
-                    <th className="text-left p-3 font-semibold">Notes</th>
-                  </tr>
-                </thead>
-                <tbody className="[&_td]:border-t [&_td]:border-slate-100 [&_td]:p-3">
-                  <tr>
-                    <td className="font-medium">National brand branch</td>
-                    <td>1.8-3 lakh</td>
-                    <td>3.6-6 lakh</td>
-                    <td>Highest batch size, Sikar/Kota-level material, Jaipur-level execution</td>
-                  </tr>
-                  <tr>
-                    <td className="font-medium">Local mid-tier institute</td>
-                    <td>90,000-1.5 lakh</td>
-                    <td>1.8-3 lakh</td>
-                    <td>Usually integrated JEE Main + Advanced; test series often add-on</td>
-                  </tr>
-                  <tr>
-                    <td className="font-medium">Small-batch / specialist</td>
-                    <td>70,000-1.1 lakh</td>
-                    <td>1.4-2.2 lakh</td>
-                    <td>30-seat cap typical; JEE Main primary, Advanced stretch</td>
-                  </tr>
-                  <tr>
-                    <td className="font-medium">Dropper batch (1 year)</td>
-                    <td>1.2-2.4 lakh</td>
-                    <td>N/A</td>
-                    <td>20-40% premium over Class 12 seat; diagnostic on week one</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            <InfographicTable
+              eyebrow="Two-year JEE classroom fees"
+              heading="2026 Jaipur ranges, by tier"
+              columns={[
+                { key: "tier", label: "Tier" },
+                { key: "perYear", label: "Per year (₹)", align: "right", numeric: true },
+                { key: "total", label: "2-year total (₹)", align: "right", numeric: true },
+                { key: "notes", label: "Notes" },
+              ]}
+              rows={[
+                {
+                  tier: "National brand branch",
+                  perYear: "1.8 – 3 L",
+                  total: "3.6 – 6 L",
+                  notes: "Highest batch size, Sikar/Kota-level material, Jaipur-level execution",
+                },
+                {
+                  tier: "Local mid-tier institute",
+                  perYear: "90 K – 1.5 L",
+                  total: "1.8 – 3 L",
+                  notes: "Usually integrated Main + Advanced; test series often add-on",
+                },
+                {
+                  tier: "Small-batch / specialist",
+                  perYear: "70 K – 1.1 L",
+                  total: "1.4 – 2.2 L",
+                  notes: "30-seat cap typical; Main primary, Advanced stretch",
+                },
+                {
+                  tier: "Dropper batch (1 year)",
+                  perYear: "1.2 – 2.4 L",
+                  total: "N/A",
+                  notes: "20-40% premium over Class 12 seat; diagnostic on week one",
+                },
+              ]}
+              highlightRowIndex={2}
+              footnote="Source: ProNEET 2026 Q1 Jaipur market sweep. Highlighted row is ProNEET's tier."
+            />
           </section>
 
           <section>
@@ -319,6 +323,38 @@ export default function JeeCoachingJaipurPost() {
               Centres that always say &quot;yes, aim for Advanced&quot;
               are flattering you, not advising you.
             </p>
+
+            <InfographicCompare
+              eyebrow="The optimisation target"
+              heading="JEE Main vs JEE Advanced preparation load"
+              left={{
+                title: "JEE Main target",
+                subtitle: "Primary",
+                stat: "100%",
+                statLabel: "baseline training load",
+                bullets: [
+                  "NIT, IIIT, BITSAT-adjacent outcomes",
+                  "Standard chapter-wise practice volume",
+                  "Realistic for most Jaipur students",
+                  "Board exam prep fits naturally into the schedule",
+                ],
+                verdict: "Right target for most students",
+              }}
+              right={{
+                title: "JEE Advanced target",
+                subtitle: "Stretch",
+                stat: "+30%",
+                statLabel: "more load than Main",
+                bullets: [
+                  "IIT outcomes, top-100 AIR ambition",
+                  "20-30% more problems per week",
+                  "30-50% higher difficulty, multi-concept",
+                  "Realistic for top-quartile trajectory only",
+                ],
+                verdict: "Only if the diagnostic supports it",
+              }}
+              footnote="ProNEET runs a Month-3 diagnostic before committing a student to an Advanced track."
+            />
           </section>
 
           <section>
@@ -410,7 +446,47 @@ export default function JeeCoachingJaipurPost() {
                 for scholarship eligibility at many NITs.
               </li>
             </ul>
+
+            <InfographicSteps
+              eyebrow="Six working-batch markers"
+              heading="What to verify in a JEE coaching demo"
+              steps={[
+                {
+                  title: "One senior teacher per subject, across both years",
+                  body: "No mid-programme handoff to new faculty. The single most common failure mode in Jaipur JEE.",
+                },
+                {
+                  title: "Mocks graded against real JEE cut-offs",
+                  body: "Institute-internal scales flatter everyone. Mocks should return AIR-equivalent rankings.",
+                },
+                {
+                  title: "Chapter-wise question banks, difficulty-ranked",
+                  body: "Students should know which problems are Main, which are Advanced, which are Olympiad-stretch.",
+                },
+                {
+                  title: "Short-method drills only after long method is solid",
+                  body: "Centres that teach shortcuts first are the reason many JEE students collapse in mocks.",
+                },
+                {
+                  title: "A named Maths teacher you can meet",
+                  body: "Maths kills more JEE preparations than Physics or Chemistry. Under-discussed variable.",
+                },
+                {
+                  title: "Board exam prep in the schedule from day one",
+                  body: "Not added as a panic-month in April. Boards still matter for Main normalisation and NIT scholarship eligibility.",
+                },
+              ]}
+              footnote="Use this list inside any Jaipur JEE coaching demo class."
+            />
           </section>
+
+          <InfographicQuote
+            quote="A student trying to optimise for JEE Advanced is training on 20-30% more problems per week, at 30-50% higher difficulty. Most of the trap parents fall into is chasing Advanced when the student's trajectory suggests Main is the right target."
+            attribution="Neeraj Gupta"
+            role="Founder, ProNEET · 20+ years teaching Physics"
+            image="/photos/neeraj-gupta.png"
+            imageAlt="Neeraj Gupta, founder of ProNEET, Mansarovar Jaipur"
+          />
 
           <section>
             <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-4">

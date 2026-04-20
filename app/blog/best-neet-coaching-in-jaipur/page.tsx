@@ -9,6 +9,8 @@ import {
   ArticleJsonLd,
   BreadcrumbJsonLd,
 } from "@/components/seo/json-ld";
+import { InfographicStats } from "@/components/infographics/infographic-stats";
+import { InfographicQuote } from "@/components/infographics/infographic-quote";
 import { SITE } from "@/lib/constants";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
@@ -199,6 +201,33 @@ export default function BestNeetCoachingJaipurPost() {
           />
         </ScrollReveal>
 
+        <InfographicStats
+          eyebrow="The decision in four numbers"
+          heading="What a 'best-fit' shortlist looks like"
+          values={[
+            {
+              value: "3",
+              label: "Centres to visit",
+              sublabel: "Across at least two tiers",
+            },
+            {
+              value: "7",
+              label: "Questions to ask",
+              sublabel: "The checklist below",
+            },
+            {
+              value: "20",
+              label: "Minutes per demo",
+              sublabel: "Real class, not counsellor pitch",
+            },
+            {
+              value: "2",
+              label: "Weekends",
+              sublabel: "Full process, end to end",
+            },
+          ]}
+        />
+
         <div className="space-y-12">
           {CHECKS.map((check) => (
             <section key={check.n} className="relative">
@@ -306,6 +335,14 @@ export default function BestNeetCoachingJaipurPost() {
             {" "}and we will tell you directly whether we are.
           </p>
         </section>
+
+        <InfographicQuote
+          quote="The brand is what sold you the brochure. The teacher is what teaches your child for 24 months. Insist on knowing, by name, who teaches the live batch before you pay."
+          attribution="Neeraj Gupta"
+          role="Founder, ProNEET · 20+ years teaching Physics"
+          image="/photos/neeraj-gupta.png"
+          imageAlt="Neeraj Gupta, founder of ProNEET, Mansarovar Jaipur"
+        />
 
         <ScrollReveal className="mt-16">
           <div className="rounded-xl border border-slate-100 bg-surface-secondary p-6 sm:p-8">
