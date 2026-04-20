@@ -9,6 +9,7 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { cn } from "@/lib/utils";
+import { trackFaqExpand } from "@/lib/analytics";
 
 export interface FaqItem {
   question: string;
@@ -25,7 +26,11 @@ export function PageFaq({ eyebrow = "FAQ", heading, items }: PageFaqProps) {
   const [openIndex, setOpenIndex] = useState<number>(0);
 
   const handleToggle = (index: number) => {
-    setOpenIndex(openIndex === index ? -1 : index);
+    const isOpening = openIndex !== index;
+    setOpenIndex(isOpening ? index : -1);
+    if (isOpening && items[index]) {
+      trackFaqExpand(items[index].question);
+    }
   };
 
   return (

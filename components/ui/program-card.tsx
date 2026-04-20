@@ -1,6 +1,9 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Phone } from "lucide-react";
 import { SITE } from "@/lib/constants";
+import { trackPhoneClick } from "@/lib/analytics";
 
 interface ProgramCardProps {
   title: string;
@@ -58,6 +61,7 @@ export function ProgramCard({
       {/* CTA */}
       <a
         href={`tel:${SITE.phone}`}
+        onClick={() => trackPhoneClick("program_card", "programme")}
         className={cn(
           "mt-6 flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5",
           featured

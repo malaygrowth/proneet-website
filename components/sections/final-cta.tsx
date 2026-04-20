@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Phone, MessageCircle } from "lucide-react";
 import { SITE } from "@/lib/constants";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
+import { trackPhoneClick, trackWhatsappClick } from "@/lib/analytics";
 
 // Months to the next NEET that someone enrolling today can realistically target.
 // NEET-UG is held on the first Sunday of May. We approximate as May 4.
@@ -73,6 +74,7 @@ export function FinalCTA() {
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href={`tel:${SITE.phone}`}
+              onClick={() => trackPhoneClick("final_cta")}
               className="inline-flex items-center gap-2 rounded-lg bg-white px-7 py-3.5 text-sm font-semibold text-brand shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
             >
               <Phone className="w-4 h-4" />
@@ -82,6 +84,7 @@ export function FinalCTA() {
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsappClick("final_cta")}
               className="inline-flex items-center gap-2 rounded-lg border border-white/20 px-7 py-3.5 text-sm font-medium text-white transition-all duration-300 hover:border-white/40 hover:bg-white/10"
             >
               <MessageCircle className="w-4 h-4" />

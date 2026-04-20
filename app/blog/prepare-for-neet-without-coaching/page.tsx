@@ -9,6 +9,7 @@ import {
   ArticleJsonLd,
   BreadcrumbJsonLd,
 } from "@/components/seo/json-ld";
+import { ScrollTracker } from "@/components/analytics/scroll-tracker";
 import { InfographicCompare } from "@/components/infographics/infographic-compare";
 import { InfographicSteps } from "@/components/infographics/infographic-steps";
 import { InfographicQuote } from "@/components/infographics/infographic-quote";
@@ -82,6 +83,7 @@ const FAQS = [
 export default function PrepareWithoutCoachingPost() {
   return (
     <main className="pt-24 pb-20 bg-white">
+      <ScrollTracker slug={POST.slug} pageCategory="pillar" />
       <ArticleJsonLd
         headline={POST.title}
         description={POST.description}

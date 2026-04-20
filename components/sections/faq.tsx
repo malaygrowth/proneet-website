@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
+import { trackFaqExpand } from "@/lib/analytics";
 
 const STUDENT_FAQS = [
   {
@@ -80,7 +81,11 @@ export function FAQ() {
   };
 
   const handleToggle = (index: number) => {
-    setOpenIndex(openIndex === index ? -1 : index);
+    const isOpening = openIndex !== index;
+    setOpenIndex(isOpening ? index : -1);
+    if (isOpening && faqs[index]) {
+      trackFaqExpand(faqs[index].question, "homepage");
+    }
   };
 
   return (

@@ -5,6 +5,7 @@ import { KeyTakeaways } from "@/components/ui/key-takeaways";
 import { PageFaq } from "@/components/sections/page-faq";
 import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { InfographicStats } from "@/components/infographics/infographic-stats";
+import { PhoneLink } from "@/components/ui/cta-link";
 import { LOCATIONS } from "@/lib/locations";
 import { SITE } from "@/lib/constants";
 import { ArrowRight, Phone, MapPin, Clock } from "lucide-react";
@@ -205,12 +206,13 @@ export function CatchmentPage({ config }: { config: CatchmentConfig }) {
                   <p className="text-xs uppercase font-medium text-slate-400">
                     Admissions
                   </p>
-                  <a
-                    href={`tel:${SITE.phone}`}
+                  <PhoneLink
+                    ctaLocation="quick_contact"
+                    pageCategory="location_catchment"
                     className="text-sm text-slate-700 mt-0.5 hover:text-brand block"
                   >
                     {SITE.phoneDisplay}
-                  </a>
+                  </PhoneLink>
                 </div>
               </div>
               <div className="flex items-start gap-3">

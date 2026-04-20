@@ -9,6 +9,7 @@ import {
   StaggerItem,
 } from "@/components/animations/stagger-children";
 import { AtomAnimation } from "@/components/animations/atom-animation";
+import { trackBookDemoClick } from "@/lib/analytics";
 
 // Right-column proof strip. Kept specific and verified, in priority order
 // for the Indian NEET / JEE audience.
@@ -101,6 +102,7 @@ export function Hero() {
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <a
                   href={`tel:${SITE.phone}`}
+                  onClick={() => trackBookDemoClick("hero", "homepage")}
                   className="inline-flex items-center gap-2 rounded-lg bg-accent-orange px-6 py-3 text-sm font-semibold text-white shadow-glow-accent transition-all duration-300 hover:-translate-y-0.5 hover:brightness-110"
                 >
                   <Phone className="w-4 h-4" />

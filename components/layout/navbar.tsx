@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { SITE, NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { trackPhoneClick, trackWhatsappClick } from "@/lib/analytics";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -62,6 +63,7 @@ export function Navbar() {
               href={`https://wa.me/${SITE.whatsapp.replace(/\+/g, "")}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackWhatsappClick("nav")}
               className={cn(
                 "px-4 py-2 rounded-sm text-sm font-medium border transition-all duration-300",
                 scrolled
@@ -73,6 +75,7 @@ export function Navbar() {
             </a>
             <a
               href={`tel:${SITE.phone}`}
+              onClick={() => trackPhoneClick("nav")}
               className="px-4 py-2 rounded-sm text-sm font-semibold bg-slate-900 text-white flex items-center gap-2 transition-transform duration-300 hover:-translate-y-0.5"
             >
               <Phone className="w-3.5 h-3.5" />
@@ -117,6 +120,7 @@ export function Navbar() {
             ))}
             <a
               href={`tel:${SITE.phone}`}
+              onClick={() => trackPhoneClick("nav")}
               className="block w-full text-center py-3 rounded-sm bg-accent-orange text-white font-semibold text-base"
             >
               Call Now · Free Counseling

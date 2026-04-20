@@ -9,6 +9,7 @@ import {
   ArticleJsonLd,
   BreadcrumbJsonLd,
 } from "@/components/seo/json-ld";
+import { ScrollTracker } from "@/components/analytics/scroll-tracker";
 import { InfographicStats } from "@/components/infographics/infographic-stats";
 import { InfographicQuote } from "@/components/infographics/infographic-quote";
 import { SITE } from "@/lib/constants";
@@ -101,6 +102,7 @@ const FAQS = [
 export default function BestNeetCoachingJaipurPost() {
   return (
     <main className="pt-24 pb-20 bg-white">
+      <ScrollTracker slug={POST.slug} pageCategory="guide" />
       <ArticleJsonLd
         headline={POST.title}
         description={POST.description}

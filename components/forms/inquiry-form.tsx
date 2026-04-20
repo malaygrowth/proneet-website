@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Send, CheckCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { trackFormSubmit } from "@/lib/analytics";
 
 const inquirySchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -56,12 +57,15 @@ export function InquiryForm() {
       if (!res.ok) {
         const json = await res.json();
         setServerError(json.error || "Something went wrong");
+        trackFormSubmit("inquiry", false, "contact");
         return;
       }
 
       setSubmitted(true);
+      trackFormSubmit("inquiry", true, "contact");
     } catch {
       setServerError("Network error. Please try again.");
+      trackFormSubmit("inquiry", false, "contact");
     }
   };
 
