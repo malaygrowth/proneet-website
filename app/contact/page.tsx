@@ -59,11 +59,12 @@ export default function ContactPage() {
             CONTACT
           </span>
           <h1 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900">
-            Get in Touch
+            Three ways to reach us. Pick whichever is faster for you.
           </h1>
           <p className="mt-4 text-base text-slate-500 max-w-lg mx-auto">
-            Ready to start your preparation journey? Reach out and
-            we&apos;ll help you pick the right program.
+            Call admissions for batch fit and fees. Email Neeraj sir
+            directly with a teaching question. Or send the form below
+            and we&apos;ll call you back within the same day.
           </p>
         </ScrollReveal>
 
@@ -110,7 +111,7 @@ export default function ContactPage() {
                 </h3>
                 <p className="text-sm text-slate-500 leading-relaxed">
                   Not sure if ProNEET is right for you? Attend a free demo class
-                  before making any commitment. No fees, no pressure — just
+                  before making any commitment. No fees, no pressure. Just
                   experience the teaching firsthand.
                 </p>
               </div>
@@ -122,7 +123,7 @@ export default function ContactPage() {
                 </h3>
                 <p className="text-sm text-slate-500 leading-relaxed">
                   We run fully individual online classes for NEET and JEE
-                  students — in India and anywhere in the world. We currently
+                  students in India and anywhere in the world. We currently
                   teach students from Dubai, the UAE and the Middle East. Tell
                   us your city, timezone and class, and we&apos;ll set up a
                   one-on-one slot with the right faculty.

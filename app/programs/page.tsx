@@ -1,16 +1,55 @@
 import type { Metadata } from "next";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { ProgramCard } from "@/components/ui/program-card";
+import { PageByline } from "@/components/ui/page-byline";
+import { PageFaq } from "@/components/sections/page-faq";
+
+const PROGRAM_FAQS = [
+  {
+    question: "How big is each batch?",
+    answer:
+      "Capped at 30 seats. That cap is the central design choice of ProNEET, not a marketing line we soften later. If a batch fills, the next student goes on a waitlist for the following session.",
+  },
+  {
+    question: "Can I join mid-year if I'm switching from another coaching?",
+    answer:
+      "Usually yes, but only after a short diagnostic and a conversation with the teacher. We look at where your old batch is in the syllabus and where ours is. If the gap is too wide, we will tell you honestly and suggest the dropper batch or the next 11th cycle instead.",
+  },
+  {
+    question: "Do you teach JEE Advanced as well?",
+    answer:
+      "JEE Main is the primary scope of our JEE batch, with JEE Advanced as a stretch goal for top-quartile students. If your goal is IIT Bombay or Delhi, we will be straight about whether your current trajectory supports it and what extra work would be required.",
+  },
+  {
+    question: "What study material is included?",
+    answer:
+      "Printed chapter-wise notes, daily practice problems (DPPs), weekly topic tests, and previous-year question banks for the last 10 years of NEET / JEE. All of it included in the fee, no separate test-series add-on.",
+  },
+  {
+    question: "What are the fees for each batch?",
+    answer:
+      "Fees vary by batch (NEET, JEE, Dropper, 1-on-1) and the number of subjects taken. Call admissions on +91 92143 14348 and we will share the breakdown for the specific programme you're considering. EMI options are available for two-year batches.",
+  },
+  {
+    question: "Can I take only Physics, or only Maths?",
+    answer:
+      "Yes. Many students join just for Physics with Neeraj sir while continuing other subjects at their existing coaching. The 1-on-1 online track is the most common single-subject route. Classroom batches usually take both subjects together.",
+  },
+  {
+    question: "How does the 1-on-1 online track actually work?",
+    answer:
+      "Live one-teacher-one-student classes scheduled around your timezone, taught by the same senior faculty as the Jaipur classroom batches. Schedule, fees, and study plan are agreed in the first call. Most students on this track are in India; a few run from Dubai and the Gulf.",
+  },
+];
 
 export const metadata: Metadata = {
   title: "Programs",
   description:
-    "ProNEET programs — NEET, JEE, Dropper Batch and individual online classes for students outside India. Coaching for Physics, Chemistry and Mathematics by a small handpicked faculty.",
+    "ProNEET programs: NEET, JEE, Dropper Batch and individual online classes for students outside India. Coaching for Physics and Mathematics by a small handpicked faculty.",
 };
 
-// ProNEET covers Physics (Neeraj Gupta), Chemistry (R. K. Saini) and
-// Mathematics (Vivek Patidar). Biology coverage for NEET is TBD — confirm
-// before making public claims about it.
+// ProNEET covers Physics (Neeraj Gupta) and Mathematics (Vivek Patidar).
+// Chemistry and Biology are not offered at this time.
 const PROGRAMS = [
   {
     title: "NEET Classroom",
@@ -18,17 +57,17 @@ const PROGRAMS = [
     duration: "2-year classroom batch, Jaipur",
     featured: true,
     features: [
-      "Physics with Neeraj Gupta. Chemistry with R. K. Saini.",
-      "One batch, same two teachers across Class 11 and 12.",
+      "Physics with Neeraj Gupta, the founder, every class.",
+      "One batch, one senior teacher across Class 11 and 12.",
       "Weekly topic tests, reviewed in class the next day.",
       "Chapter-wise DPPs and printed study material.",
       "Recorded lectures if you miss a class.",
       "Hindi or English medium, decided after the demo.",
-      "Designed to sit alongside your own Biology coaching.",
+      "Designed to sit alongside your own Chemistry and Biology coaching.",
       "Parent update every fortnight, not only at term end.",
     ],
     description:
-      "The two-year classroom batch for Class 11 and 12 students preparing for NEET-UG. NEET has 180 questions across Physics, Chemistry and Biology. ProNEET covers Physics and Chemistry tightly inside the batch, while students pair it with their preferred Biology setup. The argument for joining is not that we're the biggest. It's that for two years, the same two senior teachers will know your work.",
+      "The two-year classroom batch for Class 11 and 12 students preparing for NEET-UG. NEET has 180 questions across Physics, Chemistry and Biology. ProNEET covers Physics tightly inside the batch, while students pair it with their preferred Chemistry and Biology setup. The argument for joining is not that we're the biggest. It's that for two years, the same senior teacher will know your work.",
   },
   {
     title: "JEE Classroom",
@@ -36,7 +75,7 @@ const PROGRAMS = [
     duration: "2-year classroom batch, Jaipur",
     featured: false,
     features: [
-      "Physics, Chemistry and Maths, all three, one roof.",
+      "Physics and Maths, taught end-to-end by senior faculty.",
       "Maths taught by Vivek Patidar, a Mansarovar name.",
       "JEE Main plus BITSAT and VITEEE in scope.",
       "Board exam prep built into the schedule, not after it.",
@@ -46,7 +85,7 @@ const PROGRAMS = [
       "Hindi or English medium.",
     ],
     description:
-      "The two-year classroom batch for JEE Main aspirants (with JEE Advanced as a stretch). Physics with Neeraj Gupta, Chemistry with R. K. Saini, Maths with Vivek Patidar. All three subjects taught by one dedicated senior teacher each, Class 11 through Class 12. No rotating panels, no pre-recorded stand-ins.",
+      "The two-year classroom batch for JEE Main aspirants (with JEE Advanced as a stretch). Physics with Neeraj Gupta. Maths with Vivek Patidar. Both subjects taught by one dedicated senior teacher each, Class 11 through Class 12. No rotating panels, no pre-recorded stand-ins. Students pair this with their own Chemistry prep.",
   },
   {
     title: "Dropper Batch",
@@ -58,7 +97,7 @@ const PROGRAMS = [
       "Week-one diagnostic, then a syllabus rebuilt around gaps.",
       "Morning or evening slot so self-study survives.",
       "Daily problem sets. Weekly full-length mocks.",
-      "Last 10 years of NEET and JEE Physics, walked through.",
+      "Last 10 years of NEET and JEE Physics and Maths, walked through.",
       "Mentor check-in every week on stress and pacing.",
       "Test strategy sessions, not just content.",
       "Progress review every month with a written note.",
@@ -75,7 +114,7 @@ const PROGRAMS = [
       "One student, one teacher, live online.",
       "Available to students anywhere in India first.",
       "Also run for Indian families in Dubai and the Gulf.",
-      "Pick one subject, two, or all three.",
+      "Pick Physics, Maths, or both.",
       "Taught by the same senior faculty, not junior stand-ins.",
       "Personalised study plan and DPPs.",
       "Same test series as the Jaipur batches.",
@@ -98,6 +137,11 @@ export default function ProgramsPage() {
           <h1 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900">
             Pick the batch that matches where you are.
           </h1>
+          <PageByline
+            author="ProNEET Admissions"
+            authorRole="Verified by Neeraj Gupta, Founder"
+            lastUpdated="April 20, 2026"
+          />
           <p className="mt-4 text-base text-slate-500 max-w-2xl mx-auto">
             Classroom in Vishveshwar Nagar for students from across Jaipur.
             A dropper batch for students rebuilding after a first attempt.
@@ -141,6 +185,13 @@ export default function ProgramsPage() {
             </ScrollReveal>
           ))}
         </div>
+
+        {/* FAQ */}
+        <PageFaq
+          eyebrow="PROGRAMS · FAQ"
+          heading="Common questions before joining a batch"
+          items={PROGRAM_FAQS}
+        />
       </div>
     </main>
   );

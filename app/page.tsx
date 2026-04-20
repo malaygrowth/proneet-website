@@ -6,6 +6,7 @@ import { Method } from "@/components/sections/method";
 import { TeacherShowcase } from "@/components/sections/teacher-showcase";
 import { Programs } from "@/components/sections/programs";
 import { StudentJourneys } from "@/components/sections/student-journeys";
+import { Scenes } from "@/components/sections/scenes";
 import { Differentiator } from "@/components/sections/differentiator";
 import { FAQ } from "@/components/sections/faq";
 import { FinalCTA } from "@/components/sections/final-cta";
@@ -36,7 +37,7 @@ const FAQ_DATA = [
   },
   {
     q: "Who actually teaches my child?",
-    a: "Neeraj Gupta takes Physics himself. R. K. Saini, formerly at Bansal Classes Jaipur, takes Chemistry. Vivek Patidar takes Maths. Same three teachers through the two-year programme, no panel rotation.",
+    a: "Neeraj Gupta takes Physics himself. Vivek Patidar takes Maths. Same two teachers through the two-year programme, no panel rotation.",
   },
   {
     q: "What are the fees?",
@@ -59,6 +60,7 @@ export default function HomePage() {
       <TeacherShowcase />
       <Programs />
       <StudentJourneys />
+      <Scenes />
       <Differentiator />
       <FAQ />
       <FinalCTA />

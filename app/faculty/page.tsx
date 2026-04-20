@@ -1,22 +1,68 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
+import { PageByline } from "@/components/ui/page-byline";
+import { KeyTakeaways } from "@/components/ui/key-takeaways";
+import { PageFaq } from "@/components/sections/page-faq";
+
+const FACULTY_FAQS = [
+  {
+    question: "Who actually teaches Physics in the classroom?",
+    answer:
+      "Neeraj Gupta takes every Physics batch himself. There is no junior stand-in or pre-recorded panel video. He has been teaching Physics for 20+ years, including at Bansal Classes, Narayana, and Excel Physics.",
+  },
+  {
+    question: "Who teaches Maths?",
+    answer:
+      "Vivek Patidar teaches Maths. He is a long-trusted name in the Mansarovar coaching circuit in Jaipur, with a year-on-year record of JEE Main qualifiers and high board scores. He covers Class 11, Class 12, droppers, and board exam students.",
+  },
+  {
+    question: "Why doesn't ProNEET offer Chemistry or Biology?",
+    answer:
+      "We only teach what we can teach at senior-faculty depth. Right now that is Physics and Maths. Students pair ProNEET with their own Chemistry coaching (and Biology, for NEET aspirants). We would rather do two subjects properly than four loosely.",
+  },
+  {
+    question: "Will the same teacher teach me across Class 11 and Class 12?",
+    answer:
+      "Yes. The same senior teacher takes you through the full 24 months of the programme. There is no mid-year handoff to a different faculty, which is the most common complaint we hear from students switching to us from larger coachings.",
+  },
+  {
+    question: "Can I learn in Hindi or English?",
+    answer:
+      "Either. Both teachers switch language during a class as the concept needs it. You do not have to lock in a medium at admission. Most students end up bilingual by Class 12 because tougher concepts often land better in one language than the other.",
+  },
+  {
+    question: "Can I attend a free demo class with the actual teacher?",
+    answer:
+      "Yes. Call admissions on +91 92143 14348 and we will schedule a demo class with Neeraj Gupta for Physics or Vivek Patidar for Maths. The teacher you meet at the demo is the teacher who will run your batch.",
+  },
+];
 import { Award, BookOpen, Users, GraduationCap } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Faculty",
   description:
-    "Meet the ProNEET faculty — Neeraj Gupta (Physics, Founder), R. K. Saini (Chemistry) and Vivek Patidar (Mathematics). Experienced NEET and JEE teachers, small classroom batches.",
+    "Meet the ProNEET faculty: Neeraj Gupta (Physics, Founder) and Vivek Patidar (Mathematics). Experienced NEET and JEE teachers, small classroom batches.",
 };
 
-// ProNEET covers Physics, Chemistry and Mathematics for NEET & JEE aspirants.
-// Biology coverage is currently TBD pending confirmation from the institute.
-const FACULTY = [
+// ProNEET currently covers Physics (Neeraj Gupta) and Mathematics
+// (Vivek Patidar) for NEET and JEE aspirants.
+const FACULTY: {
+  name: string;
+  role: string;
+  experience: string;
+  credentials: string[];
+  philosophy: string;
+  featured: boolean;
+  image?: string;
+}[] = [
   {
     name: "Neeraj Gupta",
     role: "Founder. Teaches Physics.",
-    experience: "25+ years",
+    experience: "20+ years · ex-Bansal Classes, Narayana, Excel Physics",
+    image: "/photos/neeraj-gupta.png",
     credentials: [
-      "25 years of classroom Physics, most of it inside the large coaching institutes of Rajasthan and Kota",
+      "20+ years of classroom Physics across Bansal Classes, Narayana, and Excel Physics. Three of the country's most respected NEET / JEE setups.",
       "Takes every Physics class himself. No junior stand-in.",
       "Teaches in Hindi or English, switches per student as needed",
       "Known for sitting with anxious students long after class ends",
@@ -24,20 +70,6 @@ const FACULTY = [
     philosophy:
       "Physics isn't memorised. It's understood once, then used forever. If a student can explain why a pulley problem works, they'll solve twenty of them without looking at a formula sheet.",
     featured: true,
-  },
-  {
-    name: "R. K. Saini",
-    role: "Teaches Chemistry. Formerly at Bansal Classes, Jaipur.",
-    experience: "Ex-Bansal Classes, Jaipur",
-    credentials: [
-      "Spent years at Bansal Classes, Jaipur, before ProNEET",
-      "Organic, Inorganic and Physical — all three, one teacher",
-      "Strong on NCERT-line questions and NEET-ready reaction chains",
-      "Same-day doubt clearing alongside his own classes",
-    ],
-    philosophy:
-      "Most students don't struggle with hard Chemistry. They struggle with the basics never getting locked in. Fix those, and the rest looks like pattern recognition.",
-    featured: false,
   },
   {
     name: "Vivek Patidar",
@@ -75,8 +107,13 @@ export default function FacultyPage() {
             FACULTY
           </span>
           <h1 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900">
-            Three teachers. Three subjects. No panel rotation.
+            Two teachers. Two subjects. No panel rotation.
           </h1>
+          <PageByline
+            author="ProNEET Editorial"
+            authorRole="Verified by Neeraj Gupta, Founder"
+            lastUpdated="April 20, 2026"
+          />
           <p className="mt-4 text-base text-slate-500 max-w-xl mx-auto">
             Most coaching runs on panels. Senior names record the videos,
             junior faces run your class. ProNEET is the opposite. The
@@ -84,14 +121,28 @@ export default function FacultyPage() {
           </p>
         </ScrollReveal>
 
+        {/* Key Takeaways */}
+        <ScrollReveal className="max-w-3xl mx-auto mb-16">
+          <KeyTakeaways
+            bullets={[
+              "Two faculty cover both subjects on offer: Neeraj Gupta (Physics, Founder) and Vivek Patidar (Mathematics).",
+              "Neeraj Gupta has 20+ years of Physics teaching, including Bansal Classes, Narayana, and Excel Physics.",
+              "The founder personally leads every Physics batch. No junior stand-in, no pre-recorded panel.",
+              "Both teachers handle Hindi or English medium and switch language per student as needed.",
+              "One teacher per subject across all 24 months of the Class 11 + 12 programme. No mid-year handoff.",
+              "1000+ NEET / AIIMS / IIT selections since the institute began (ProNEET admissions records, 2003–2026).",
+            ]}
+          />
+        </ScrollReveal>
+
         {/* Stats bar */}
         <ScrollReveal>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
             {[
-              { icon: Award, label: "Years Teaching (Founder)", value: "25+" },
+              { icon: Award, label: "Years Teaching (Founder)", value: "20+" },
               { icon: Users, label: "Students Selected", value: "1000+" },
               { icon: GraduationCap, label: "NEET / AIIMS / IIT", value: "All three" },
-              { icon: BookOpen, label: "Subjects Taught", value: "Phy · Chem · Maths" },
+              { icon: BookOpen, label: "Subjects Taught", value: "Physics · Maths" },
             ].map((stat) => (
               <div
                 key={stat.label}
@@ -105,6 +156,9 @@ export default function FacultyPage() {
               </div>
             ))}
           </div>
+          <p className="-mt-12 mb-16 text-center text-[11px] font-mono text-slate-400">
+            Source: ProNEET admissions and alumni records, 2003–2026.
+          </p>
         </ScrollReveal>
 
         {/* Faculty profiles */}
@@ -119,20 +173,32 @@ export default function FacultyPage() {
                 }`}
               >
                 <div className="flex flex-col sm:flex-row gap-6">
-                  {/* Avatar */}
+                  {/* Avatar / portrait */}
                   <div className="flex-shrink-0">
-                    <div
-                      className="flex items-center justify-center rounded-xl text-xl font-bold text-white"
-                      style={{
-                        width: 80,
-                        height: 80,
-                        background: member.featured
-                          ? "linear-gradient(135deg, #2563EB, #1D4ED8)"
-                          : "linear-gradient(135deg, #64748B, #475569)",
-                      }}
-                    >
-                      {getInitials(member.name)}
-                    </div>
+                    {member.image ? (
+                      <div className="relative w-[100px] h-[125px] rounded-xl overflow-hidden ring-1 ring-brand/20 shadow-tier-sm">
+                        <Image
+                          src={member.image}
+                          alt={member.name}
+                          fill
+                          sizes="100px"
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="flex items-center justify-center rounded-xl text-xl font-bold text-white"
+                        style={{
+                          width: 80,
+                          height: 80,
+                          background: member.featured
+                            ? "linear-gradient(135deg, #2563EB, #1D4ED8)"
+                            : "linear-gradient(135deg, #64748B, #475569)",
+                        }}
+                      >
+                        {getInitials(member.name)}
+                      </div>
+                    )}
                   </div>
 
                   {/* Info */}
@@ -182,6 +248,13 @@ export default function FacultyPage() {
             </ScrollReveal>
           ))}
         </div>
+
+        {/* FAQ */}
+        <PageFaq
+          eyebrow="FACULTY · FAQ"
+          heading="What parents and students ask about our teachers"
+          items={FACULTY_FAQS}
+        />
       </div>
     </main>
   );

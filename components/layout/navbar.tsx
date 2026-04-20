@@ -119,7 +119,7 @@ export function Navbar() {
               href={`tel:${SITE.phone}`}
               className="block w-full text-center py-3 rounded-sm bg-accent-orange text-white font-semibold text-base"
             >
-              Call Now — Free Counseling
+              Call Now · Free Counseling
             </a>
           </div>
         )}

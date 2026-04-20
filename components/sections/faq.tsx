@@ -42,7 +42,7 @@ const PARENT_FAQS = [
   {
     question: "Who actually teaches my child?",
     answer:
-      "Neeraj Gupta takes Physics himself. R. K. Saini, formerly at Bansal Classes Jaipur, takes Chemistry. Vivek Patidar, known across Mansarovar's coaching circuit, takes Maths. Same three teachers through the two-year programme. No panel rotation.",
+      "Neeraj Gupta takes Physics himself. Vivek Patidar, known across Mansarovar's coaching circuit, takes Maths. Same two teachers through the two-year programme. No panel rotation.",
   },
   {
     question: "How will I know if my child is actually preparing?",

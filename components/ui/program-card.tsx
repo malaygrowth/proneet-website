@@ -66,7 +66,7 @@ export function ProgramCard({
         )}
       >
         <Phone className="w-4 h-4" />
-        {featured ? "Enroll Now — Call" : "Enquire — Call"}
+        {featured ? "Enroll Now · Call" : "Enquire · Call"}
       </a>
     </div>
   );

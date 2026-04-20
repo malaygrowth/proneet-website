@@ -1,14 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import { Check } from "lucide-react";
 
 // Credentials sourced from the old proneetphysics.com (About page + homepage).
 const CREDENTIALS = [
-  "25+ years teaching Physics in top coaching institutes of India",
+  "20+ years teaching Physics. Ex-Bansal Classes, Narayana, Excel Physics.",
   "1000+ students cleared NEET, AIIMS, IIT / NIT",
   "Teaches in both Hindi and English medium",
-  "Personally leads every Physics batch — no rotating panels",
+  "Personally leads every Physics batch. No rotating panels.",
 ];
 
 export function TeacherShowcase() {
@@ -42,24 +43,14 @@ export function TeacherShowcase() {
 
               {/* Photo frame */}
               <div className="relative w-full aspect-[380/480] rounded-lg overflow-hidden shadow-tier-lg">
-                {/* Dark gradient placeholder background */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #1E293B 0%, #0F172A 50%, #1E293B 100%)",
-                  }}
+                <Image
+                  src="/photos/neeraj-gupta.png"
+                  alt="Neeraj Gupta, Founder of ProNEET"
+                  fill
+                  sizes="(min-width: 1024px) 380px, 100vw"
+                  className="object-cover"
+                  priority
                 />
-
-                {/* Placeholder content */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-20 h-20 mx-auto rounded-full bg-white/10 flex items-center justify-center text-3xl font-bold text-white/30">
-                      NG
-                    </div>
-                    <p className="mt-3 text-sm text-white/20">Photo coming soon</p>
-                  </div>
-                </div>
 
                 {/* Bottom gradient overlay with name */}
                 <div
@@ -84,7 +75,7 @@ export function TeacherShowcase() {
           <ScrollReveal direction="right" delay={0.15}>
             <div>
               <h3 className="text-2xl sm:text-3xl font-bold text-slate-900">
-                25+ years making Physics intuitive.
+                20+ years making Physics intuitive.
               </h3>
 
               <p className="mt-4 text-base text-slate-600 leading-relaxed">
@@ -113,7 +104,7 @@ export function TeacherShowcase() {
               <blockquote className="mt-8 border-l-2 border-brand/20 pl-4">
                 <p className="text-sm italic text-slate-500 leading-relaxed">
                   &ldquo;Every student can master Physics. They just need
-                  someone who teaches them the way they think — not the way
+                  someone who teaches them the way they think, not the way
                   textbooks are written.&rdquo;
                 </p>
               </blockquote>

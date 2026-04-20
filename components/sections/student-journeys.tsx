@@ -15,7 +15,7 @@ const STUDENTS = [
     name: "Dr. Kumkum Gupta",
     tag: "Medical",
     rank: "Govt. Medical College",
-    college: "Kota — Gynaecologist",
+    college: "Kota · Gynaecologist",
     quote:
       "I was in a major coaching institute. I got nothing but fear studying Physics there. Then I joined Neeraj Sir's classes. That day, and today, I'm a gynaecologist at Government Medical College, Kota.",
   },
@@ -23,7 +23,7 @@ const STUDENTS = [
     name: "Dr. Amit Gupta",
     tag: "Medical",
     rank: "Govt. Medical Hospital",
-    college: "Kota — Orthopaedics",
+    college: "Kota · Orthopaedics",
     quote:
       "I joined Neeraj Sir after Class X and I can't thank him enough for guiding me so well. I am a successful doctor now because of you. Thank you, Sir.",
   },
@@ -31,9 +31,9 @@ const STUDENTS = [
     name: "Gulshan Jangid",
     tag: "Engineering",
     rank: "IIT Delhi",
-    college: "IIT Delhi — Student",
+    college: "IIT Delhi · Student",
     quote:
-      "There are only a few people who can explain Physics to students using everyday examples and make it stick. He is good — one of the best, in fact.",
+      "There are only a few people who can explain Physics to students using everyday examples and make it stick. He is good. One of the best, in fact.",
   },
 ] as const;
 

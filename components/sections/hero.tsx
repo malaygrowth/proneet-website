@@ -20,8 +20,8 @@ const HERO_PROOF = [
   },
   {
     icon: Award,
-    stat: "25+ years of Physics",
-    label: "Neeraj Gupta, built across the large coaching institutes of Rajasthan and Kota.",
+    stat: "20+ years of Physics",
+    label: "Neeraj Gupta. Ex-Bansal Classes, Narayana, and Excel Physics.",
   },
   {
     icon: Languages,
@@ -81,7 +81,7 @@ export function Hero() {
 
             <ScrollReveal delay={0.2}>
               <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.1]">
-                25 years of Physics.
+                20+ years of Physics.
                 <br />
                 <span className="bg-gradient-to-r from-brand-light to-accent-orange bg-clip-text text-transparent">
                   Taught the way you think.
@@ -92,8 +92,7 @@ export function Hero() {
             <ScrollReveal delay={0.3}>
               <p className="mt-6 text-lg text-white/50 max-w-md leading-relaxed">
                 A small Jaipur coaching where Neeraj Gupta teaches Physics
-                himself, alongside R. K. Saini (ex-Bansal Classes) for
-                Chemistry and Vivek Patidar for Maths. Classroom in
+                himself, alongside Vivek Patidar for Maths. Classroom in
                 Vishveshwar Nagar. 1-on-1 online, wherever you are.
               </p>
             </ScrollReveal>

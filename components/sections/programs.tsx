@@ -16,11 +16,11 @@ const PROGRAMS = [
     duration: "2-Year classroom batch, Jaipur",
     featured: true,
     features: [
-      "Physics with Neeraj Gupta. Chemistry with R. K. Saini.",
+      "Physics with Neeraj Gupta, the founder, every class.",
       "One batch. Same teacher for two years. No rotating panels.",
       "Weekly tests, weekly parent update, doubts cleared the same day.",
       "Hindi or English medium. Decide after the demo class.",
-      "Sits alongside your Biology coaching or self-study.",
+      "Sits alongside your Chemistry and Biology coaching or self-study.",
     ],
   },
   {
@@ -28,7 +28,7 @@ const PROGRAMS = [
     target: "For Class 11 and 12, Engineering track",
     duration: "2-Year classroom batch, Jaipur",
     features: [
-      "All three subjects in one roof: Physics, Chemistry, Maths.",
+      "Physics and Maths under one roof. Senior faculty on both.",
       "Maths taught by Vivek Patidar, a trusted name in Mansarovar.",
       "Board prep runs inside the schedule, not after it.",
       "Mocks graded against actual JEE Main cut-offs, not ours.",
@@ -44,7 +44,7 @@ const PROGRAMS = [
       "Diagnostic in week one. Syllabus re-built around your gaps.",
       "Morning or evening slot so self-study doesn't get crushed.",
       "Weekly full-length mocks. Weekly one-on-one with a mentor.",
-      "Last ten years of NEET and JEE Physics, walked through.",
+      "Last ten years of NEET and JEE Physics and Maths, walked through.",
     ],
   },
   {
@@ -53,7 +53,7 @@ const PROGRAMS = [
     duration: "Live online, scheduled around you",
     features: [
       "Available for students in India, and for Indian families abroad.",
-      "Pick one subject, two, or all three.",
+      "Pick Physics, Maths, or both.",
       "Taught by the same senior faculty, not a junior stand-in.",
       "We currently run this track for students in Dubai and the Gulf.",
       "First call sets the schedule and the fees. No pressure.",

@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { ScrollReveal } from "@/components/animations/scroll-reveal";
+import { PageByline } from "@/components/ui/page-byline";
+import { KeyTakeaways } from "@/components/ui/key-takeaways";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "ProNEET — founded by Neeraj Gupta. 25+ years teaching, 1000+ NEET / AIIMS / IIT selections, and a small handpicked faculty covering Physics, Chemistry and Mathematics for NEET and JEE aspirants.",
+    "ProNEET, founded by Neeraj Gupta (ex-Bansal Classes, Narayana, Excel Physics). 20+ years teaching, 1000+ NEET / AIIMS / IIT selections, with Physics by Neeraj Gupta and Mathematics by Vivek Patidar for NEET and JEE aspirants.",
 };
 
 // Chapters of the institute's journey — stated in arcs rather than
@@ -14,19 +17,19 @@ const TIMELINE = [
     year: "The 1990s",
     title: "Teaching at India's top institutes",
     description:
-      "Neeraj Gupta begins teaching Physics at major coaching institutes in Rajasthan and Kota, building a reputation for explaining tough concepts in everyday language.",
+      "Neeraj Gupta begins teaching Physics at India's top coaching institutes: Bansal Classes, Narayana, and Excel Physics. He builds a reputation for explaining tough concepts in everyday language.",
   },
   {
     year: "Mid-2000s",
     title: "A small-faculty conviction",
     description:
-      "Watching students struggle in overstretched multi-thousand-student institutes, he decides to do the opposite — keep the batches small, keep the faculty small, and know every student by name.",
+      "Watching students struggle in overstretched multi-thousand-student institutes, he decides to do the opposite. Keep the batches small, keep the faculty small, and know every student by name.",
   },
   {
     year: "ProNEET begins",
     title: "Small-batch coaching in Jaipur",
     description:
-      "ProNEET starts in Jaipur with small classroom batches, Hindi & English medium, and a flat commitment: every student gets personal attention, every doubt gets same-day clearing. Neeraj Gupta is joined by R. K. Saini (Chemistry) and Vivek Patidar (Mathematics) to cover the full NEET and JEE syllabus.",
+      "ProNEET starts in Jaipur with small classroom batches, Hindi & English medium, and a flat commitment: every student gets personal attention, every doubt gets same-day clearing. Neeraj Gupta is joined by Vivek Patidar (Mathematics) to anchor the Physics and Maths teaching for NEET and JEE aspirants.",
   },
   {
     year: "Online era",
@@ -38,7 +41,7 @@ const TIMELINE = [
     year: "Today",
     title: "1000+ selections and counting",
     description:
-      "Over the years, 1000+ students taught here have cleared NEET, AIIMS, IITs and NITs — and many have gone on to become doctors, engineers and researchers. The method hasn't changed: small batches, concept-first teaching, personal mentorship.",
+      "Over the years, 1000+ students taught here have cleared NEET, AIIMS, IITs and NITs, and many have gone on to become doctors, engineers and researchers. The method hasn't changed: small batches, concept-first teaching, personal mentorship.",
   },
 ];
 
@@ -53,12 +56,12 @@ const WHY_SMALL_BATCH = [
   },
   {
     heading: "Why senior faculty, every class",
-    body: "Big coaching runs on panels: senior faculty record the videos, junior teachers handle the live classes. Here, Neeraj Gupta teaches Physics himself. R. K. Saini handles Chemistry. Vivek Patidar handles Maths. No handoff, no substitution. The person who wrote your test is the person who explains where you went wrong.",
+    body: "Big coaching runs on panels: senior faculty record the videos, junior teachers handle the live classes. Here, Neeraj Gupta teaches Physics himself. Vivek Patidar handles Maths. No handoff, no substitution. The person who wrote your test is the person who explains where you went wrong.",
   },
 ];
 
 const WHAT_A_WEEK_LOOKS_LIKE = [
-  "Six days a week of classroom teaching, split between Physics, Chemistry, and Maths.",
+  "Six days a week of classroom teaching, split between Physics and Maths.",
   "One topic test every week. Reviewed in class, not just graded.",
   "Daily practice problems (DPPs) for every chapter.",
   "Saturday: a dedicated doubt session. Stay as long as you want.",
@@ -77,29 +80,48 @@ export default function AboutPage() {
           <h1 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900">
             Small coaching. Senior faculty. No panel tricks.
           </h1>
+          <PageByline
+            author="Neeraj Gupta"
+            authorRole="Founder, ProNEET · 20+ years teaching Physics"
+            lastUpdated="April 20, 2026"
+          />
           <p className="mt-4 text-base text-slate-500 max-w-2xl mx-auto">
-            Twenty-five years inside the large coaching institutes taught
-            Neeraj Gupta what works and what goes missing. ProNEET is the
+            Two decades inside India&apos;s top coaching institutes (Bansal
+            Classes, Narayana, and Excel Physics) taught Neeraj Gupta what
+            works and what goes missing. ProNEET is the
             version of a Jaipur coaching that keeps what works and drops
             everything else.
           </p>
+        </ScrollReveal>
+
+        {/* Key Takeaways */}
+        <ScrollReveal className="max-w-3xl mx-auto mb-16">
+          <KeyTakeaways
+            bullets={[
+              "ProNEET caps batches at 30 seats. Most large coachings run 200 to 400 per classroom.",
+              "Founder Neeraj Gupta has 20+ years teaching Physics, including stints at Bansal Classes, Narayana, and Excel Physics.",
+              "Two senior teachers cover both subjects on offer: Neeraj Gupta for Physics, Vivek Patidar for Maths. No junior stand-ins, no rotating panels.",
+              "Same teacher across Class 11 and Class 12. No mid-programme handoff to a different faculty.",
+              "Six classroom days a week, weekly topic test, Saturday doubt session, fortnightly parent update.",
+              "1000+ NEET / AIIMS / IIT selections since the institute began (ProNEET admissions records, 2003–2026).",
+            ]}
+          />
         </ScrollReveal>
 
         {/* Founder story */}
         <ScrollReveal>
           <div className="rounded-xl border border-brand/20 bg-brand/5 p-6 sm:p-10 mb-16">
             <div className="flex flex-col md:flex-row gap-8">
-              {/* Avatar */}
+              {/* Portrait */}
               <div className="flex-shrink-0 flex flex-col items-center">
-                <div
-                  className="flex items-center justify-center rounded-xl text-2xl font-bold text-white"
-                  style={{
-                    width: 100,
-                    height: 100,
-                    background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
-                  }}
-                >
-                  NG
+                <div className="relative w-[120px] h-[150px] rounded-xl overflow-hidden shadow-tier-md ring-1 ring-brand/20">
+                  <Image
+                    src="/photos/neeraj-gupta.png"
+                    alt="Neeraj Gupta, Founder of ProNEET"
+                    fill
+                    sizes="120px"
+                    className="object-cover"
+                  />
                 </div>
                 <p className="mt-3 text-sm font-bold text-slate-900">
                   Neeraj Gupta
@@ -114,31 +136,31 @@ export default function AboutPage() {
                 </h2>
                 <div className="space-y-3 text-sm text-slate-600 leading-relaxed">
                   <p>
-                    Neeraj Gupta has been teaching Physics for over 25
-                    years — most of them at India&apos;s largest coaching
-                    institutes in Rajasthan and Kota. The idea behind ProNEET
-                    was simple: if you truly understand a concept, you can
-                    solve any problem built on it.
+                    Neeraj Gupta has been teaching Physics for over 20
+                    years, most of them at three of India&apos;s most
+                    respected coaching institutes: Bansal Classes, Narayana,
+                    and Excel Physics. The idea behind ProNEET was simple:
+                    if you truly understand a concept, you can solve any
+                    problem built on it.
                   </p>
                   <p>
                     So he stopped chasing the thousand-student, rotating-panel
                     format and started his own institute in Jaipur. Small
                     classroom batches. Hindi and English medium. Every doubt
-                    cleared the same day. One teacher per subject — he
-                    personally teaches Physics, alongside R. K. Saini
-                    (formerly of Bansal Classes, Jaipur) for Chemistry and
-                    Vivek Patidar, a trusted Maths name in the Mansarovar
-                    coaching circuit, for Mathematics.
+                    cleared the same day. One teacher per subject. He
+                    personally teaches Physics, alongside Vivek Patidar,
+                    a trusted Maths name in the Mansarovar coaching
+                    circuit, for Mathematics.
                   </p>
                   <p>
                     Students started telling their friends. Parents started
                     trusting. Over the years, 1000+ students taught here have
-                    cleared NEET, AIIMS and the IITs — and many have gone on
+                    cleared NEET, AIIMS and the IITs, and many have gone on
                     to be doctors, engineers and researchers.
                   </p>
                   <p>
                     The classroom has grown and we now also run live online
-                    and individual international 1-on-1 batches — but the
+                    and individual international 1-on-1 batches. The
                     principle hasn&apos;t changed. Keep batches small. Teach
                     concepts before formulas. Know every student by name.
                     Never compromise on depth for speed.
