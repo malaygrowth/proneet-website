@@ -57,4 +57,24 @@ export const LOCATIONS: LocationEntry[] = [
     travelTime: "5-12 min to Mansarovar",
     role: "catchment",
   },
+  {
+    slug: "jagatpura",
+    name: "Jagatpura",
+    description:
+      "NEET & JEE coaching for students in Jagatpura, Jaipur. 25-40 min to the ProNEET Mansarovar classroom. At the edge of viable commute.",
+    blurb:
+      "At the edge of viable commute. The 1-on-1 online track is often the better fit.",
+    travelTime: "25-40 min to Mansarovar",
+    role: "catchment",
+  },
+  {
+    slug: "tonk-road",
+    name: "Tonk Road",
+    description:
+      "NEET & JEE coaching for students along Tonk Road, Jaipur. 20-35 min to the ProNEET Mansarovar classroom depending on which stretch.",
+    blurb:
+      "20-35 min depending on stretch. Online 1-on-1 often saves 2+ hours a week.",
+    travelTime: "20-35 min to Mansarovar",
+    role: "catchment",
+  },
 ];

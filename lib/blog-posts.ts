@@ -19,6 +19,42 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: "proneet-vs-allen-jaipur",
+    title: "ProNEET vs Allen Jaipur: An Honest Comparison",
+    description:
+      "Allen Jaipur or ProNEET? Honest side-by-side: fees, batch size, faculty, scope. Who each is built for, and when the bigger brand is actually right.",
+    excerpt:
+      "A founder-written comparison that does not pretend to be neutral and does not trash the competitor. Allen is strong. ProNEET is a different product for different students. Here is how to tell which fits yours.",
+    publishDate: "2026-04-20",
+    lastUpdated: "2026-04-20",
+    author: "Neeraj Gupta",
+    authorRole: "Founder, ProNEET · ex-Bansal, Narayana, Excel Physics",
+    category: "Comparison",
+    readingTime: "11 min read",
+    targetKeyword: "allen coaching jaipur neet fees",
+    featuredImage: "/photos/students-batch.webp",
+    featuredImageAlt:
+      "A ProNEET NEET classroom batch in session at Mansarovar, Jaipur",
+  },
+  {
+    slug: "prepare-for-neet-without-coaching",
+    title: "How to Prepare for NEET from Class 11 Without Coaching",
+    description:
+      "Honest guide to self-study NEET prep from Class 11. What works, what breaks, the three things coaching actually adds, and when joining one is the right call.",
+    excerpt:
+      "Can you crack NEET without coaching? Yes. Should everyone? No. A 26-month self-study plan plus the two specific moments when coaching stops being optional and starts being worth the fee.",
+    publishDate: "2026-04-20",
+    lastUpdated: "2026-04-20",
+    author: "Neeraj Gupta",
+    authorRole: "Founder, ProNEET · 20+ years teaching Physics",
+    category: "Pillar",
+    readingTime: "14 min read",
+    targetKeyword: "how to prepare for neet from class 11 without coaching",
+    featuredImage: "/photos/students-grove.webp",
+    featuredImageAlt:
+      "A senior NEET aspirant working through Physics problems independently",
+  },
+  {
     slug: "jee-coaching-in-jaipur",
     title: "JEE Coaching in Jaipur: The Honest Guide for Class 11 and 12",
     description:
