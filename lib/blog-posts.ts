@@ -19,6 +19,42 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: "jee-coaching-in-jaipur",
+    title: "JEE Coaching in Jaipur: The Honest Guide for Class 11 and 12",
+    description:
+      "A working guide to JEE coaching in Jaipur. Who teaches, what fees look like, Kota vs Jaipur vs Sikar, JEE Main vs Advanced realism, and what parents regret choosing.",
+    excerpt:
+      "Jaipur has fewer dedicated JEE setups than NEET ones. Allen, Aakash, Resonance at the top, a handful of local mid-tier institutes, and a small-batch tail. Here is what to actually pick between, and the parts of the JEE conversation that brochures do not cover.",
+    publishDate: "2026-04-20",
+    lastUpdated: "2026-04-20",
+    author: "Neeraj Gupta",
+    authorRole: "Founder, ProNEET · 20+ years teaching Physics",
+    category: "Pillar",
+    readingTime: "13 min read",
+    targetKeyword: "iit jee coaching classes in jaipur",
+    featuredImage: "/photos/students-with-neeraj.webp",
+    featuredImageAlt:
+      "Senior JEE students working through a Physics problem with Neeraj Gupta at ProNEET, Mansarovar Jaipur",
+  },
+  {
+    slug: "best-neet-coaching-in-jaipur",
+    title: "Best NEET Coaching in Jaipur: 7 Things to Check Before You Enrol",
+    description:
+      "A 7-point checklist for choosing NEET coaching in Jaipur. Batch size, teacher names, fees in writing, demo class quality, Hindi medium, parent updates, exit terms.",
+    excerpt:
+      "Every Jaipur NEET coaching says they are the best. Here is the parent checklist that separates the ones who actually are from the ones with good billboards. Seven things to verify before you sign.",
+    publishDate: "2026-04-20",
+    lastUpdated: "2026-04-20",
+    author: "Neeraj Gupta",
+    authorRole: "Founder, ProNEET · 20+ years teaching Physics",
+    category: "Guide",
+    readingTime: "9 min read",
+    targetKeyword: "best neet coaching in jaipur",
+    featuredImage: "/photos/students-batch.webp",
+    featuredImageAlt:
+      "A NEET coaching batch of ProNEET students, Mansarovar Jaipur",
+  },
+  {
     slug: "neet-coaching-in-jaipur",
     title: "NEET Coaching in Jaipur: The Parent's Honest Guide",
     description:
