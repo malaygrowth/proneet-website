@@ -14,7 +14,7 @@ import {
 } from "@/components/seo/json-ld";
 import "./globals.css";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID ?? "G-D42ZXKH9RZ";
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-D42ZXKH9RZ";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
