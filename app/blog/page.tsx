@@ -105,11 +105,12 @@ export default function BlogIndexPage() {
               More guides on the way
             </h3>
             <p className="text-sm text-slate-600 leading-relaxed max-w-xl mx-auto">
-              One new pillar guide every three weeks: JEE coaching in Jaipur,
-              preparing for NEET from Class 11 without coaching, Jaipur vs
-              Kota vs Sikar, Hindi-medium NEET prep, and how to choose a
-              Physics teacher. If there&apos;s a specific question you want
-              answered, call the admissions line.
+              One new pillar guide every three weeks. In the queue:
+              Hindi-medium NEET prep, the dropper year playbook,
+              NEET Biology for non-Biology-background students, and a
+              working guide for parents of Class 10 students planning
+              the next two years. If there&apos;s a specific question
+              you want answered, call the admissions line.
             </p>
           </div>
         </ScrollReveal>

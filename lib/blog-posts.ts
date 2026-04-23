@@ -19,6 +19,60 @@ export interface BlogPost {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: "jaipur-vs-kota-vs-sikar-neet",
+    title: "NEET Coaching in Jaipur vs Kota vs Sikar: The Honest Parent's Guide",
+    description:
+      "Founder-written comparison of NEET coaching in Jaipur, Kota and Sikar. Fees, batch sizes, peer pool, mental-health picture, and who each city actually fits.",
+    excerpt:
+      "Three cities, three different bets. Kota gives you the deepest ecosystem in India, Sikar the Kota model at lower cost, Jaipur the option to keep your child at home. Here is how to tell which is right for your specific student.",
+    publishDate: "2026-04-23",
+    lastUpdated: "2026-04-23",
+    author: "Neeraj Gupta",
+    authorRole: "Founder, ProNEET · Ex-Narayana Kota, Bansal Classes, Excel Physics",
+    category: "Comparison",
+    readingTime: "14 min read",
+    targetKeyword: "neet coaching jaipur vs kota vs sikar",
+    featuredImage: "/photos/students-batch.webp",
+    featuredImageAlt:
+      "A NEET coaching batch at ProNEET Jaipur, contrasted with larger Kota and Sikar classrooms",
+  },
+  {
+    slug: "how-to-choose-a-physics-teacher",
+    title: "How to Choose a Physics Teacher for NEET and JEE",
+    description:
+      "A Physics teacher's guide to hiring a Physics teacher. Experience signals, demo-class tells, red flags, and why the IIT tag matters less than you think.",
+    excerpt:
+      "Physics decides the tail of the NEET score distribution. A weak teacher leaks marks through the whole paper; a strong one rebuilds the base. Written by a 20+ year Physics teacher on exactly what to check.",
+    publishDate: "2026-04-23",
+    lastUpdated: "2026-04-23",
+    author: "Neeraj Gupta",
+    authorRole: "Founder, ProNEET · 20+ years teaching Physics",
+    category: "Guide",
+    readingTime: "10 min read",
+    targetKeyword: "how to choose physics teacher neet",
+    featuredImage: "/photos/students-with-neeraj.webp",
+    featuredImageAlt:
+      "Neeraj Gupta teaching Physics to a small NEET batch at ProNEET, Mansarovar Jaipur",
+  },
+  {
+    slug: "neet-coaching-fees-in-jaipur-2026",
+    title: "NEET Coaching Fees in Jaipur 2026: What You Actually Pay",
+    description:
+      "Honest breakdown of NEET coaching fees in Jaipur for 2026. Allen, Aakash, Resonance, mid-tier and small-batch rates. Hidden costs and how to compare quotes.",
+    excerpt:
+      "Jaipur NEET coaching fees span ₹60,000 to ₹2,80,000 per year. The 4.5x spread is not random. A working guide to what each tier buys you, what is hidden in the invoice, and how to compare quotes like-with-like.",
+    publishDate: "2026-04-23",
+    lastUpdated: "2026-04-23",
+    author: "Neeraj Gupta",
+    authorRole: "Founder, ProNEET · 20+ years teaching Physics",
+    category: "Guide",
+    readingTime: "10 min read",
+    targetKeyword: "neet coaching fees in jaipur",
+    featuredImage: "/photos/classroom-batch.webp",
+    featuredImageAlt:
+      "A NEET coaching classroom batch at ProNEET, Mansarovar Jaipur, illustrating the small-batch tier in the Jaipur fee market",
+  },
+  {
     slug: "proneet-vs-allen-jaipur",
     title: "ProNEET vs Allen Jaipur: An Honest Comparison",
     description:
