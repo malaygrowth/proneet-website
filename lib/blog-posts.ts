@@ -34,7 +34,7 @@ export const BLOG_POSTS: BlogPost[] = [
     targetKeyword: "neet coaching jaipur vs kota vs sikar",
     featuredImage: "/blog/jaipur-vs-kota-vs-sikar-neet/cover.webp",
     featuredImageAlt:
-      "\"Jaipur vs Kota vs Sikar — Which city fits your NEET student\". 3D illustrated cover for \"NEET Coaching in Jaipur vs Kota vs Sikar: The Honest Parent's Guide\" on neet coaching jaipur vs kota vs sikar.",
+      "\"Jaipur vs Kota vs Sikar — Choosing the right NEET city for your child\". 3D illustrated cover for \"NEET Coaching in Jaipur vs Kota vs Sikar: The Honest Parent's Guide\" on neet coaching jaipur vs kota vs sikar.",
   },
   {
     slug: "how-to-choose-a-physics-teacher",
@@ -52,7 +52,7 @@ export const BLOG_POSTS: BlogPost[] = [
     targetKeyword: "how to choose physics teacher neet",
     featuredImage: "/blog/how-to-choose-a-physics-teacher/cover.webp",
     featuredImageAlt:
-      "\"Choosing Your Physics Teacher — What to check before committing\". 3D illustrated cover for \"How to Choose a Physics Teacher for NEET and JEE\" on how to choose physics teacher neet.",
+      "\"Choose Your Physics Teacher — The biggest decision for NEET success\". 3D illustrated cover for \"How to Choose a Physics Teacher for NEET and JEE\" on how to choose physics teacher neet.",
   },
   {
     slug: "neet-coaching-fees-in-jaipur-2026",
@@ -70,7 +70,7 @@ export const BLOG_POSTS: BlogPost[] = [
     targetKeyword: "neet coaching fees in jaipur",
     featuredImage: "/blog/neet-coaching-fees-in-jaipur-2026/cover.webp",
     featuredImageAlt:
-      "\"Jaipur NEET Fees 2026 — Hidden costs and comparisons revealed\". 3D illustrated cover for \"NEET Coaching Fees in Jaipur 2026: What You Actually Pay\" on neet coaching fees in jaipur.",
+      "\"Jaipur NEET Fees 2026 — Understand the cost breakdown and comparisons\". 3D illustrated cover for \"NEET Coaching Fees in Jaipur 2026: What You Actually Pay\" on neet coaching fees in jaipur.",
   },
   {
     slug: "proneet-vs-allen-jaipur",
@@ -88,7 +88,7 @@ export const BLOG_POSTS: BlogPost[] = [
     targetKeyword: "allen coaching jaipur neet fees",
     featuredImage: "/blog/proneet-vs-allen-jaipur/cover.webp",
     featuredImageAlt:
-      "\"ProNEET vs Allen Jaipur — Side-by-side honest comparison for parents\". 3D illustrated cover for \"ProNEET vs Allen Jaipur: An Honest Comparison\" on allen coaching jaipur neet fees.",
+      "\"ProNEET vs Allen Jaipur — Honest fees and fit comparison\". 3D illustrated cover for \"ProNEET vs Allen Jaipur: An Honest Comparison\" on allen coaching jaipur neet fees.",
   },
   {
     slug: "prepare-for-neet-without-coaching",
@@ -106,7 +106,7 @@ export const BLOG_POSTS: BlogPost[] = [
     targetKeyword: "how to prepare for neet from class 11 without coaching",
     featuredImage: "/blog/prepare-for-neet-without-coaching/cover.webp",
     featuredImageAlt:
-      "\"Self-Study NEET Prep — A practical guide for Class 11 students\". 3D illustrated cover for \"How to Prepare for NEET from Class 11 Without Coaching\" on how to prepare for neet from class 11 without coaching.",
+      "\"Prepare for NEET Alone — Self-study guide from Class 11\". 3D illustrated cover for \"How to Prepare for NEET from Class 11 Without Coaching\" on how to prepare for neet from class 11 without coaching.",
   },
   {
     slug: "jee-coaching-in-jaipur",
@@ -124,7 +124,7 @@ export const BLOG_POSTS: BlogPost[] = [
     targetKeyword: "iit jee coaching classes in jaipur",
     featuredImage: "/blog/jee-coaching-in-jaipur/cover.webp",
     featuredImageAlt:
-      "\"Jaipur JEE Shortlist — A guide to coaching choices\". 3D illustrated cover for \"JEE Coaching in Jaipur: The Honest Guide for Class 11 and 12\" on iit jee coaching classes in jaipur.",
+      "\"JEE Coaching in Jaipur — Fees, faculty, and the honest shortlist\". 3D illustrated cover for \"JEE Coaching in Jaipur: The Honest Guide for Class 11 and 12\" on iit jee coaching classes in jaipur.",
   },
   {
     slug: "best-neet-coaching-in-jaipur",
@@ -142,7 +142,7 @@ export const BLOG_POSTS: BlogPost[] = [
     targetKeyword: "best neet coaching in jaipur",
     featuredImage: "/blog/best-neet-coaching-in-jaipur/cover.webp",
     featuredImageAlt:
-      "\"7 Things to Check — Before you enrol in Jaipur coaching\". 3D illustrated cover for \"Best NEET Coaching in Jaipur: 7 Things to Check Before You Enrol\" on best neet coaching in jaipur.",
+      "\"7 Things to Verify — Choosing the best Jaipur NEET coaching\". 3D illustrated cover for \"Best NEET Coaching in Jaipur: 7 Things to Check Before You Enrol\" on best neet coaching in jaipur.",
   },
   {
     slug: "neet-coaching-in-jaipur",
@@ -160,6 +160,6 @@ export const BLOG_POSTS: BlogPost[] = [
     targetKeyword: "neet coaching in jaipur",
     featuredImage: "/blog/neet-coaching-in-jaipur/cover.webp",
     featuredImageAlt:
-      "\"Batch Size vs Brand — Decoding NEET coaching in Jaipur\". 3D illustrated cover for \"NEET Coaching in Jaipur: The Parent's Honest Guide\" on neet coaching in jaipur.",
+      "\"NEET Coaching in Jaipur — A parent's market guide, tier by tier\". 3D illustrated cover for \"NEET Coaching in Jaipur: The Parent's Honest Guide\" on neet coaching in jaipur.",
   },
 ];

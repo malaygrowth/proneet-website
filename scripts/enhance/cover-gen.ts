@@ -33,6 +33,8 @@ import {
 import { findPostFile, parsePost } from "./parse-post.js";
 import { analyzePost, type VisualBrief } from "./analyze-post.js";
 import { renderTextOverlayPng } from "./text-overlay.js";
+import { Resvg } from "@resvg/resvg-js";
+import { COVER_OVERRIDES } from "./cover-overrides.js";
 
 export interface BlogRegistryEntry {
   slug: string;
@@ -134,6 +136,28 @@ async function generateBackground(
   throw lastErr ?? new Error("All image models failed");
 }
 
+// Navy-to-transparent gradient over the left ~52% of the canvas. Sits
+// between the illustration and the typography. Any illustration drift
+// into the text zone fades under this mask, so headline readability is
+// guaranteed regardless of what the image model emits.
+function renderLeftMaskPng(width: number, height: number): Buffer {
+  const fadeEnd = 0.58; // stop the fade just past the midline
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+  <defs>
+    <linearGradient id="leftMask" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0F172A" stop-opacity="1"/>
+      <stop offset="0.32" stop-color="#0F172A" stop-opacity="0.95"/>
+      <stop offset="${fadeEnd}" stop-color="#0F172A" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="${width}" height="${height}" fill="url(#leftMask)"/>
+</svg>`;
+  return new Resvg(svg, { fitTo: { mode: "width", value: width } })
+    .render()
+    .asPng();
+}
+
 async function composeCover(
   bgBytes: Buffer,
   brief: VisualBrief,
@@ -145,6 +169,8 @@ async function composeCover(
       position: "center",
     })
     .toBuffer();
+
+  const leftMaskPng = renderLeftMaskPng(IMAGE_SIZE.width, IMAGE_SIZE.height);
 
   const overlayPng = await renderTextOverlayPng(
     {
@@ -159,14 +185,18 @@ async function composeCover(
 
   const targetBytes = AUDIT_THRESHOLDS.maxImageSizeKb * 1024;
   let quality = 86;
+  const compositeLayers = [
+    { input: leftMaskPng, top: 0, left: 0 },
+    { input: overlayPng, top: 0, left: 0 },
+  ];
   let composed = await sharp(bgResized)
-    .composite([{ input: overlayPng, top: 0, left: 0 }])
+    .composite(compositeLayers)
     .webp({ quality, effort: 6 })
     .toBuffer();
   while (composed.byteLength > targetBytes && quality > 40) {
     quality -= 8;
     composed = await sharp(bgResized)
-      .composite([{ input: overlayPng, top: 0, left: 0 }])
+      .composite(compositeLayers)
       .webp({ quality, effort: 6 })
       .toBuffer();
   }
@@ -249,7 +279,7 @@ export async function generateCoverFor(opts: {
   const post = parsePost(postFile, opts.entry.slug);
 
   process.stdout.write(`  → briefing ${opts.entry.slug} ... `);
-  const brief = await analyzePost(client, {
+  const briefFromLlm = await analyzePost(client, {
     title: post.title,
     metaDescription: post.metaDescription,
     category: post.category,
@@ -257,7 +287,11 @@ export async function generateCoverFor(opts: {
     body: post.body,
     excerpt: opts.entry.excerpt,
   });
-  process.stdout.write(`ok\n`);
+  const override = COVER_OVERRIDES[opts.entry.slug];
+  const brief: VisualBrief = override
+    ? { ...briefFromLlm, ...override }
+    : briefFromLlm;
+  process.stdout.write(override ? `ok (with override)\n` : `ok\n`);
   process.stdout.write(`     headline: ${brief.headline}\n`);
   process.stdout.write(`     subhead:  ${brief.subhead}\n`);
   process.stdout.write(`     iconography: ${brief.iconography.slice(0, 120)}...\n`);
