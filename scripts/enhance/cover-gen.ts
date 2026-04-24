@@ -1,20 +1,43 @@
 // Cover-image generator. One hero image per blog post, saved as
-// public/blog/<slug>/cover.webp. Designed for visual series consistency:
-// every cover shares the same editorial style and palette, with the
-// subject varied by post category.
+// public/blog/<slug>/cover.webp. The generator runs a two-stage pipeline:
+//
+//   1. analyze-post.ts extracts a structured visual brief (thesis, scene,
+//      subject, gesture, light, per-post exclusions) from the actual post
+//      body via GPT-4o-mini. This replaces the old category-template
+//      approach that produced formulaic chalkboard scenes.
+//
+//   2. buildPrompt() assembles a two-layer prompt:
+//        - Series bible (fixed across every cover: lens, grain, palette,
+//          lighting philosophy, color grade). Keeps the series cohesive.
+//        - Per-post scene (from the brief). Keeps each cover specific.
+//      Rendered as narrative prose with a hard constraint tail, per
+//      OpenAI's current prompting guidance.
+//
+// Key rule learned the hard way: do NOT name writing surfaces in the
+// scene (chalkboards, whiteboards, notebooks with visible writing, book
+// spines with titles, signboards, phone screens, posters). Negative
+// prompts cannot override a named-object prior in gpt-image-1. The fix
+// is scene-level — pick a scene that doesn't invite text in the first
+// place.
 
 import OpenAI from "openai";
 import sharp from "sharp";
-import { mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
+import {
+  mkdirSync,
+  writeFileSync,
+  existsSync,
+  readFileSync,
+} from "node:fs";
 import { join } from "node:path";
 import {
-  BRAND,
   IMAGE_SIZE,
   OPENAI_IMAGE_MODEL,
   OPENAI_IMAGE_FALLBACK,
   AUDIT_THRESHOLDS,
   PATHS,
 } from "./config.js";
+import { findPostFile, parsePost } from "./parse-post.js";
+import { analyzePost, type VisualBrief } from "./analyze-post.js";
 
 export interface BlogRegistryEntry {
   slug: string;
@@ -32,50 +55,88 @@ export interface GeneratedCover {
   filePath: string;
   publicPath: string;
   alt: string;
+  brief: VisualBrief | null;
   promptUsed: string;
   bytes: number;
   model: string;
   cached: boolean;
 }
 
-// Category → subject framing. Keeps the series cohesive while varying the
-// scene so every cover has its own identity.
-const CATEGORY_SUBJECT: Record<string, string> = {
-  Pillar:
-    "a wide establishing shot of a small Indian coaching-institute classroom interior, eight to twelve senior students in mid-lesson, one teacher at the board, natural window light from camera left, rows of wooden desks, chalk dust hanging in the air. Frame the room so the back wall is visible — cinematic wide.",
-  Guide:
-    "a tight mid-shot of an Indian Physics teacher at a green chalkboard, writing a single equation by hand, students visible out of focus in the foreground, warm tungsten light mixed with cool window light, textbook and chalk on the desk. Documentary portrait energy.",
-  Comparison:
-    "a split-composition scene contrasting two Indian coaching environments — on the left, a dense overcrowded hall with many heads in silhouette; on the right, a calmer small-batch classroom with fewer, clearer student figures. The tonal contrast between the two sides carries the visual argument.",
-  Location:
-    "an architectural exterior of a low-rise Indian coaching-institute building in a busy Jaipur neighbourhood at golden hour, signboards softly out of focus (unreadable), auto-rickshaws and students on foot in the foreground, warm evening light raking across the facade.",
+// ---------------------------------------------------------------------------
+// Series bible — fixed across every cover in the series.
+// Edit these values to shift the entire visual language of the blog.
+// ---------------------------------------------------------------------------
+
+const SERIES_BIBLE = {
+  medium: "35mm documentary editorial photograph, single exposure",
+  lens: "50mm prime, f/2.8, shallow depth of field",
+  lighting_philosophy:
+    "one directional light source, soft and warm, raking across the subject; the shadow side is allowed to fall into quiet muted tones",
+  color_temperature: "warm highlights around 4200K, cool muted shadows",
+  grain: "fine Kodak Portra 400 grain — organic, not stylised",
+  palette:
+    "warm paper whites, walnut browns, muted navy shadows, a single ember-orange accent in the lighting — never as painted objects",
+  color_grade:
+    "soft warm highlights, gently lifted shadows, natural skin tones, no HDR, no teal-and-orange, no painterly look",
+  composition:
+    "16:9 landscape, rule-of-thirds, subject off-centre, generous breathing room on one side",
+  craft_rules: [
+    "one subject, one gesture, one light source",
+    "real documentary restraint — never stylised, never staged-looking",
+    "materials and surfaces look worn and lived-in",
+    "human presence is implied more often than fully shown; hands, silhouettes, backs of heads preferred over faces",
+  ],
 };
 
-// Shared cover-specific constraints layered on top of BRAND.visualStyle.
-const COVER_RULES = [
-  "Single hero moment. No collage, no multiple panels unless explicitly requested.",
-  "Strong central-to-right subject placement; leave the left third breathable for visual balance.",
-  "No visible text, signage letters, numbers, logos, watermarks, or book titles — all text-like surfaces must be illegible.",
-  "No AI artefacts: no extra fingers, no warped faces, no melting objects, no surreal scale.",
-  "Indian faces and Indian classroom context only; uniforms may be plain shirts, not branded.",
-  "Cinematic 16:9 framing, 35mm focal length feel, f/2.0 shallow depth of field.",
-  "Colour grade: warm highlights with muted shadows; palette accents should appear naturally as environmental light, not as painted props.",
-].join(" ");
+// Text surfaces we ALWAYS exclude, on top of per-post exclusions from the
+// visual brief. Named nouns here are the ones gpt-image-1 reliably tries
+// to fill with fake text unless we forbid them at scene level.
+const GLOBAL_TEXT_SURFACE_EXCLUSIONS = [
+  "no chalkboards",
+  "no whiteboards",
+  "no blackboards",
+  "no visible book titles or spine lettering",
+  "no open notebooks with writing",
+  "no signboards or storefront lettering",
+  "no posters on walls",
+  "no phone screens, computer screens, or tablets",
+  "no printed receipts, bills, price tags, or currency notes",
+  "no calendars, clocks with readable numerals, or wall hangings with words",
+  "no logos, watermarks, trademarks, captions, or typography of any kind anywhere in the frame",
+];
 
-function buildPrompt(entry: BlogRegistryEntry): { prompt: string; alt: string } {
-  const subject =
-    CATEGORY_SUBJECT[entry.category] || CATEGORY_SUBJECT.Guide;
+function buildPrompt(
+  entry: BlogRegistryEntry,
+  brief: VisualBrief,
+): { prompt: string; alt: string } {
+  const exclusions = [
+    ...GLOBAL_TEXT_SURFACE_EXCLUSIONS,
+    ...(brief.scene_exclusions || []).map((e) => `no ${e}`),
+  ];
 
   const prompt = [
-    `Scene: ${subject}`,
-    `Narrative context: This is the cover image for a long-form editorial guide titled "${entry.title}". ` +
-      `The piece is about: ${entry.excerpt}`,
-    `Style: ${BRAND.visualStyle}.`,
-    `Palette accents (as ambient light, not painted objects): ${Object.values(BRAND.palette).join(", ")}.`,
-    `Cover rules: ${COVER_RULES}`,
+    // Narrative opening — describe the photograph as a photograph.
+    `A ${SERIES_BIBLE.medium}. ${brief.scene}`,
+    "",
+    // The subject/gesture/light triple — one sentence each.
+    `Subject of the frame: ${brief.subject}, ${brief.gesture}.`,
+    `Lighting: ${brief.light}. Broader lighting philosophy for this series — ${SERIES_BIBLE.lighting_philosophy}. ${SERIES_BIBLE.color_temperature}.`,
+    "",
+    // Technical / craft layer (shared across the series).
+    `Shot on ${SERIES_BIBLE.lens}. ${SERIES_BIBLE.grain}. ${SERIES_BIBLE.composition}.`,
+    `Palette: ${SERIES_BIBLE.palette}.`,
+    `Colour grade: ${SERIES_BIBLE.color_grade}.`,
+    `Craft rules: ${SERIES_BIBLE.craft_rules.join("; ")}.`,
+    "",
+    // Mood anchor.
+    `Mood: ${brief.mood}. The image should feel honest, unposed, and quietly specific.`,
+    "",
+    // Hard constraint tail — scene-level exclusions AFTER the positive
+    // description. This ordering works better than a prefix.
+    `Hard constraints (strictly enforced): ${exclusions.join("; ")}. No extra fingers, no warped faces, no melting or surreal objects, no painterly brush texture, no illustration look — photographic realism only.`,
   ].join(" ");
 
-  const alt = `Editorial cover photograph for "${entry.title}" — ${entry.category.toLowerCase()} guide on ${entry.targetKeyword}.`;
+  const alt = `Editorial cover photograph for "${entry.title}". ${brief.scene}`;
   return { prompt, alt };
 }
 
@@ -113,11 +174,14 @@ async function generateOne(
   let lastErr: unknown = null;
   for (const model of tryModels) {
     try {
+      // gpt-image-1 supports 1536x1024 (3:2); dall-e-3 only supports
+      // 1024x1024, 1024x1792, and 1792x1024. Close-to-16:9 from both.
+      const size = model === "dall-e-3" ? "1792x1024" : "1536x1024";
       const res = await client.images.generate({
         model,
         prompt,
         n: 1,
-        size: "1536x1024",
+        size: size as "1536x1024" | "1792x1024",
       });
       const first = res.data?.[0];
       if (!first) throw new Error("Empty image response");
@@ -138,8 +202,7 @@ async function generateOne(
   throw lastErr ?? new Error("All image models failed");
 }
 
-// Parse lib/blog-posts.ts into structured entries. We only need the
-// fields relevant to cover generation.
+// Parse lib/blog-posts.ts into structured entries.
 export function readBlogRegistry(repoRoot: string): BlogRegistryEntry[] {
   const registryPath = join(repoRoot, "lib", "blog-posts.ts");
   const raw = readFileSync(registryPath, "utf8");
@@ -192,14 +255,14 @@ export async function generateCoverFor(opts: {
 
   const filePath = join(outDir, "cover.webp");
   const publicPath = `/blog/${opts.entry.slug}/cover.webp`;
-  const { prompt, alt } = buildPrompt(opts.entry);
 
   if (!opts.force && existsSync(filePath)) {
     return {
       slug: opts.entry.slug,
       filePath,
       publicPath,
-      alt,
+      alt: opts.entry.featuredImageAlt || `Cover for "${opts.entry.title}"`,
+      brief: null,
       promptUsed: "(cached — pass --force to regenerate)",
       bytes: 0,
       model: "cached",
@@ -207,7 +270,33 @@ export async function generateCoverFor(opts: {
     };
   }
 
-  process.stdout.write(`  → generating cover for ${opts.entry.slug} ... `);
+  // Step 1: read the actual post body.
+  const postFile = findPostFile(opts.repoRoot, opts.entry.slug);
+  if (!postFile) {
+    throw new Error(
+      `No page.tsx found for slug "${opts.entry.slug}" — cannot build visual brief.`,
+    );
+  }
+  const post = parsePost(postFile, opts.entry.slug);
+
+  // Step 2: extract visual brief via GPT-4o-mini.
+  process.stdout.write(`  → briefing ${opts.entry.slug} ... `);
+  const brief = await analyzePost(client, {
+    title: post.title,
+    metaDescription: post.metaDescription,
+    category: post.category,
+    primaryKeyword: post.primaryKeyword,
+    body: post.body,
+    excerpt: opts.entry.excerpt,
+  });
+  process.stdout.write(`ok\n`);
+  process.stdout.write(`     thesis: ${brief.thesis}\n`);
+  process.stdout.write(`     scene:  ${brief.scene}\n`);
+
+  // Step 3: build prompt and generate.
+  const { prompt, alt } = buildPrompt(opts.entry, brief);
+
+  process.stdout.write(`  → rendering cover ... `);
   const { bytes, model } = await generateOne(client, prompt);
   const compressed = await compressWebp(bytes);
   writeFileSync(filePath, compressed);
@@ -220,6 +309,7 @@ export async function generateCoverFor(opts: {
     filePath,
     publicPath,
     alt,
+    brief,
     promptUsed: prompt,
     bytes: compressed.byteLength,
     model,
@@ -228,8 +318,7 @@ export async function generateCoverFor(opts: {
 }
 
 // Rewrite lib/blog-posts.ts to point featuredImage at the new cover for
-// each entry that has one on disk. Also refreshes featuredImageAlt to the
-// cover-appropriate alt when the existing one points at the old stock photo.
+// each entry that has one on disk. Also refreshes featuredImageAlt.
 export function updateRegistryFeaturedImages(opts: {
   repoRoot: string;
   covers: GeneratedCover[];
@@ -239,27 +328,29 @@ export function updateRegistryFeaturedImages(opts: {
   const updated: string[] = [];
   const skipped: string[] = [];
 
+  // Match a double-quoted TS string literal that correctly honours `\"`
+  // and `\\` escapes. The capture group is the quoted literal including
+  // its outer quotes, so the replacement can safely drop a new literal in.
+  const quotedString = `"(?:[^"\\\\]|\\\\.)*"`;
+
   for (const cover of opts.covers) {
     const slugRe = new RegExp(
-      `(slug:\\s*"${cover.slug}"[\\s\\S]*?featuredImage:\\s*)"([^"]+)"`,
+      `(slug:\\s*"${cover.slug}"[\\s\\S]*?featuredImage:\\s*)${quotedString}`,
     );
-    const m = raw.match(slugRe);
-    if (!m) {
-      skipped.push(cover.slug);
-      continue;
-    }
-    if (m[2] === cover.publicPath) {
+    if (!slugRe.test(raw)) {
       skipped.push(cover.slug);
       continue;
     }
     raw = raw.replace(slugRe, `$1"${cover.publicPath}"`);
 
-    // Update featuredImageAlt for this entry too (scoped by slug block).
+    // Alt may span multiple lines with a leading newline + indentation.
+    // Use a non-greedy, escape-aware match for its literal value.
     const altRe = new RegExp(
-      `(slug:\\s*"${cover.slug}"[\\s\\S]*?featuredImageAlt:\\s*\\n?\\s*)"([^"]+)"`,
+      `(slug:\\s*"${cover.slug}"[\\s\\S]*?featuredImageAlt:\\s*\\n?\\s*)${quotedString}`,
     );
     if (altRe.test(raw)) {
-      raw = raw.replace(altRe, `$1"${cover.alt.replace(/"/g, '\\"')}"`);
+      const escaped = cover.alt.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+      raw = raw.replace(altRe, `$1"${escaped}"`);
     }
     updated.push(cover.slug);
   }

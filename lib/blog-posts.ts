@@ -34,7 +34,7 @@ export const BLOG_POSTS: BlogPost[] = [
     targetKeyword: "neet coaching jaipur vs kota vs sikar",
     featuredImage: "/blog/jaipur-vs-kota-vs-sikar-neet/cover.webp",
     featuredImageAlt:
-      "Editorial cover photograph for \"NEET Coaching in Jaipur vs Kota vs Sikar: The Honest Parent's Guide\" — comparison guide on neet coaching jaipur vs kota vs sikar.",
+      "Editorial cover photograph for \"NEET Coaching in Jaipur vs Kota vs Sikar: The Honest Parent's Guide\". a parent's hand gently placed on a sturdy, weathered wooden table in a modest Jaipur home, with a single well-used keychain resting beside it, sunlight filtering through a nearby window casting soft shadows",
   },
   {
     slug: "how-to-choose-a-physics-teacher",
@@ -52,7 +52,7 @@ export const BLOG_POSTS: BlogPost[] = [
     targetKeyword: "how to choose physics teacher neet",
     featuredImage: "/blog/how-to-choose-a-physics-teacher/cover.webp",
     featuredImageAlt:
-      "Editorial cover photograph for \"How to Choose a Physics Teacher for NEET and JEE\" — guide guide on how to choose physics teacher neet.",
+      "Editorial cover photograph for \"How to Choose a Physics Teacher for NEET and JEE\". A student's hand gripping the bottom rung of a sturdy metal staircase, sunlight filtering through the gaps, the rest of the staircase disappearing upwards into shadow, symbolizing the foundation needed for a successful academic journey.",
   },
   {
     slug: "neet-coaching-fees-in-jaipur-2026",
@@ -70,7 +70,7 @@ export const BLOG_POSTS: BlogPost[] = [
     targetKeyword: "neet coaching fees in jaipur",
     featuredImage: "/blog/neet-coaching-fees-in-jaipur-2026/cover.webp",
     featuredImageAlt:
-      "Editorial cover photograph for \"NEET Coaching Fees in Jaipur 2026: What You Actually Pay\" — guide guide on neet coaching fees in jaipur.",
+      "Editorial cover photograph for \"NEET Coaching Fees in Jaipur 2026: What You Actually Pay\". A parent's hand adjusting a ceiling fan in a modestly furnished study room, light from a bare bulb casting sharp shadows, the room's simple decor suggesting careful budget management.",
   },
   {
     slug: "proneet-vs-allen-jaipur",
