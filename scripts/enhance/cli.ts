@@ -25,6 +25,12 @@ for (const f of [".env.local", ".env.development.local", ".env"]) {
 import { findPostFile, parsePost } from "./parse-post.js";
 import { auditPost, formatReport } from "./audit.js";
 import { generateForPost } from "./image-gen.js";
+import {
+  readBlogRegistry,
+  generateCoverFor,
+  updateRegistryFeaturedImages,
+  type GeneratedCover,
+} from "./cover-gen.js";
 import { suggestLinks, formatSuggestions } from "./link-suggest.js";
 import { planInfographics, formatPlan } from "./plan-infographics.js";
 import { PATHS } from "./config.js";
@@ -40,7 +46,7 @@ const KNOWN_SLUGS = [
   "mansarovar",
 ];
 
-type Command = "audit" | "images" | "links" | "plan" | "all";
+type Command = "audit" | "images" | "links" | "plan" | "covers" | "all";
 
 function parseArgs(argv: string[]): {
   command: Command;
@@ -160,14 +166,86 @@ async function runOne(
   }
 }
 
+async function runCovers(flags: {
+  force: boolean;
+  only: string | null;
+}): Promise<void> {
+  const entries = readBlogRegistry(REPO_ROOT).filter(
+    (e) => !flags.only || e.slug === flags.only,
+  );
+  if (entries.length === 0) {
+    console.error(
+      flags.only
+        ? `No blog-posts.ts entry with slug "${flags.only}"`
+        : "No blog-posts.ts entries found",
+    );
+    process.exit(1);
+  }
+
+  const reportDir = join(REPO_ROOT, PATHS.enhanceReports);
+  mkdirSync(reportDir, { recursive: true });
+
+  const results: GeneratedCover[] = [];
+  for (const entry of entries) {
+    console.log(`\n=== cover: ${entry.slug} (${entry.category}) ===`);
+    try {
+      const cover = await generateCoverFor({
+        repoRoot: REPO_ROOT,
+        entry,
+        force: flags.force,
+      });
+      results.push(cover);
+      if (cover.cached) {
+        console.log("  (cached — no API call made)");
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`  ! cover failed for ${entry.slug}: ${msg}`);
+    }
+  }
+
+  const { updated, skipped } = updateRegistryFeaturedImages({
+    repoRoot: REPO_ROOT,
+    covers: results,
+  });
+  console.log(
+    `\n[registry] updated featuredImage for ${updated.length} post(s): ${updated.join(", ") || "none"}`,
+  );
+  if (skipped.length) {
+    console.log(`[registry] unchanged: ${skipped.join(", ")}`);
+  }
+
+  writeFileSync(
+    join(reportDir, "covers.json"),
+    JSON.stringify(results, null, 2),
+  );
+  const md = results
+    .map(
+      (r) =>
+        `### ${r.slug}\n- Path: \`${r.publicPath}\`\n- Alt: ${r.alt}\n- Size: ${r.cached ? "cached" : `${Math.round(r.bytes / 1024)}KB`}\n- Model: ${r.model}\n`,
+    )
+    .join("\n");
+  writeFileSync(
+    join(reportDir, "covers.md"),
+    `# Generated blog covers\n\n${md}`,
+  );
+}
+
 async function main() {
   const { command, slug, allPosts, force, maxImages } = parseArgs(
     process.argv,
   );
+
+  if (command === "covers") {
+    await runCovers({ force, only: slug });
+    return;
+  }
+
   const slugs = allPosts ? KNOWN_SLUGS : slug ? [slug] : [];
   if (slugs.length === 0) {
     console.error(
-      "Usage: npm run enhance -- <audit|images|links|all> <slug> [--force] [--max-images N]\n" +
+      "Usage: npm run enhance -- <audit|images|links|covers|all> [slug] [--force] [--max-images N]\n" +
+        "   covers with no slug regenerates all blog cover images.\n" +
         "   or: npm run enhance -- <cmd> --all",
     );
     process.exit(1);

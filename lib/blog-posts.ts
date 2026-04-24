@@ -32,9 +32,9 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Comparison",
     readingTime: "14 min read",
     targetKeyword: "neet coaching jaipur vs kota vs sikar",
-    featuredImage: "/photos/students-batch.webp",
+    featuredImage: "/blog/jaipur-vs-kota-vs-sikar-neet/cover.webp",
     featuredImageAlt:
-      "A NEET coaching batch at ProNEET Jaipur, contrasted with larger Kota and Sikar classrooms",
+      "Editorial cover photograph for \"NEET Coaching in Jaipur vs Kota vs Sikar: The Honest Parent's Guide\" — comparison guide on neet coaching jaipur vs kota vs sikar.",
   },
   {
     slug: "how-to-choose-a-physics-teacher",
@@ -50,9 +50,9 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Guide",
     readingTime: "10 min read",
     targetKeyword: "how to choose physics teacher neet",
-    featuredImage: "/photos/students-with-neeraj.webp",
+    featuredImage: "/blog/how-to-choose-a-physics-teacher/cover.webp",
     featuredImageAlt:
-      "Neeraj Gupta teaching Physics to a small NEET batch at ProNEET, Mansarovar Jaipur",
+      "Editorial cover photograph for \"How to Choose a Physics Teacher for NEET and JEE\" — guide guide on how to choose physics teacher neet.",
   },
   {
     slug: "neet-coaching-fees-in-jaipur-2026",
@@ -68,9 +68,9 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Guide",
     readingTime: "10 min read",
     targetKeyword: "neet coaching fees in jaipur",
-    featuredImage: "/photos/classroom-batch.webp",
+    featuredImage: "/blog/neet-coaching-fees-in-jaipur-2026/cover.webp",
     featuredImageAlt:
-      "A NEET coaching classroom batch at ProNEET, Mansarovar Jaipur, illustrating the small-batch tier in the Jaipur fee market",
+      "Editorial cover photograph for \"NEET Coaching Fees in Jaipur 2026: What You Actually Pay\" — guide guide on neet coaching fees in jaipur.",
   },
   {
     slug: "proneet-vs-allen-jaipur",
@@ -86,9 +86,9 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Comparison",
     readingTime: "11 min read",
     targetKeyword: "allen coaching jaipur neet fees",
-    featuredImage: "/photos/students-batch.webp",
+    featuredImage: "/blog/proneet-vs-allen-jaipur/cover.webp",
     featuredImageAlt:
-      "A ProNEET NEET classroom batch in session at Mansarovar, Jaipur",
+      "Editorial cover photograph for \"ProNEET vs Allen Jaipur: An Honest Comparison\" — comparison guide on allen coaching jaipur neet fees.",
   },
   {
     slug: "prepare-for-neet-without-coaching",
@@ -104,9 +104,9 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Pillar",
     readingTime: "14 min read",
     targetKeyword: "how to prepare for neet from class 11 without coaching",
-    featuredImage: "/photos/students-grove.webp",
+    featuredImage: "/blog/prepare-for-neet-without-coaching/cover.webp",
     featuredImageAlt:
-      "A senior NEET aspirant working through Physics problems independently",
+      "Editorial cover photograph for \"How to Prepare for NEET from Class 11 Without Coaching\" — pillar guide on how to prepare for neet from class 11 without coaching.",
   },
   {
     slug: "jee-coaching-in-jaipur",
@@ -122,9 +122,9 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Pillar",
     readingTime: "13 min read",
     targetKeyword: "iit jee coaching classes in jaipur",
-    featuredImage: "/photos/students-with-neeraj.webp",
+    featuredImage: "/blog/jee-coaching-in-jaipur/cover.webp",
     featuredImageAlt:
-      "Senior JEE students working through a Physics problem with Neeraj Gupta at ProNEET, Mansarovar Jaipur",
+      "Editorial cover photograph for \"JEE Coaching in Jaipur: The Honest Guide for Class 11 and 12\" — pillar guide on iit jee coaching classes in jaipur.",
   },
   {
     slug: "best-neet-coaching-in-jaipur",
@@ -140,9 +140,9 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Guide",
     readingTime: "9 min read",
     targetKeyword: "best neet coaching in jaipur",
-    featuredImage: "/photos/students-batch.webp",
+    featuredImage: "/blog/best-neet-coaching-in-jaipur/cover.webp",
     featuredImageAlt:
-      "A NEET coaching batch of ProNEET students, Mansarovar Jaipur",
+      "Editorial cover photograph for \"Best NEET Coaching in Jaipur: 7 Things to Check Before You Enrol\" — guide guide on best neet coaching in jaipur.",
   },
   {
     slug: "neet-coaching-in-jaipur",
@@ -158,8 +158,8 @@ export const BLOG_POSTS: BlogPost[] = [
     category: "Pillar",
     readingTime: "14 min read",
     targetKeyword: "neet coaching in jaipur",
-    featuredImage: "/photos/classroom-batch.webp",
+    featuredImage: "/blog/neet-coaching-in-jaipur/cover.webp",
     featuredImageAlt:
-      "A live NEET coaching batch in session at the ProNEET classroom in Mansarovar, Jaipur",
+      "Editorial cover photograph for \"NEET Coaching in Jaipur: The Parent's Honest Guide\" — pillar guide on neet coaching in jaipur.",
   },
 ];
