@@ -46,7 +46,14 @@ const KNOWN_SLUGS = [
   "mansarovar",
 ];
 
-type Command = "audit" | "images" | "links" | "plan" | "covers" | "all";
+type Command =
+  | "audit"
+  | "images"
+  | "links"
+  | "plan"
+  | "covers"
+  | "all"
+  | "ship";
 
 function parseArgs(argv: string[]): {
   command: Command;
@@ -86,7 +93,40 @@ async function runOne(
   const reportDir = join(REPO_ROOT, PATHS.enhanceReports);
   mkdirSync(reportDir, { recursive: true });
 
-  if (command === "audit" || command === "all") {
+  // Cover goes first — it's what surfaces the post on /blog and in OG
+  // previews, so we want it generated before anything else on a new
+  // post. Uses the BLOG_POSTS registry as the source of truth.
+  if (command === "all" || command === "ship") {
+    const entries = readBlogRegistry(REPO_ROOT);
+    const entry = entries.find((e) => e.slug === slug);
+    if (!entry) {
+      console.warn(
+        `  ! no lib/blog-posts.ts entry for "${slug}" — skipping cover generation.`,
+      );
+    } else {
+      console.log(`\n[cover] generating for "${slug}" ...`);
+      try {
+        const cover = await generateCoverFor({
+          repoRoot: REPO_ROOT,
+          entry,
+          force: flags.force,
+        });
+        updateRegistryFeaturedImages({
+          repoRoot: REPO_ROOT,
+          covers: [cover],
+        });
+        writeFileSync(
+          join(reportDir, `${slug}-cover.json`),
+          JSON.stringify(cover, null, 2),
+        );
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error(`  ! cover generation failed: ${msg}`);
+      }
+    }
+  }
+
+  if (command === "audit" || command === "all" || command === "ship") {
     const report = auditPost(post);
     const text = formatReport(report);
     console.log(text);
@@ -97,7 +137,7 @@ async function runOne(
     );
   }
 
-  if (command === "images" || command === "all") {
+  if (command === "images" || command === "all" || command === "ship") {
     console.log(`\n[images] generating for "${slug}" ...`);
     try {
       const results = await generateForPost({
@@ -129,7 +169,7 @@ async function runOne(
     }
   }
 
-  if (command === "links" || command === "all") {
+  if (command === "links" || command === "all" || command === "ship") {
     const suggestions = suggestLinks(post);
     const text = formatSuggestions(slug, suggestions);
     console.log(text);
@@ -157,11 +197,17 @@ async function runOne(
     }
   }
 
-  if (command === "all") {
+  if (command === "all" || command === "ship") {
     // Re-audit so the diff against the starting report is visible.
     const after = auditPost(parsePost(filePath, slug));
     console.log(
       `\n[re-audit] ${slug} score: ${after.score.toFixed(1)}/${after.maxScore} (${after.pct}%)`,
+    );
+  }
+
+  if (command === "ship") {
+    console.log(
+      `\n[ship] ${slug} is ready. Commit lib/blog-posts.ts, public/blog/${slug}/, app/blog/${slug}/page.tsx, and push to master to deploy.`,
     );
   }
 }
@@ -244,9 +290,18 @@ async function main() {
   const slugs = allPosts ? KNOWN_SLUGS : slug ? [slug] : [];
   if (slugs.length === 0) {
     console.error(
-      "Usage: npm run enhance -- <audit|images|links|covers|all> [slug] [--force] [--max-images N]\n" +
-        "   covers with no slug regenerates all blog cover images.\n" +
-        "   or: npm run enhance -- <cmd> --all",
+      "Usage:\n" +
+        "  npm run enhance -- ship <slug>                  # full flow for a new blog post\n" +
+        "                                                  # (cover → audit → section images → links)\n" +
+        "  npm run enhance -- covers [slug]                # (re)generate cover; no slug = all posts\n" +
+        "  npm run enhance -- audit <slug>                 # SEO audit only\n" +
+        "  npm run enhance -- images <slug>                # generate section body images\n" +
+        "  npm run enhance -- links <slug>                 # suggest internal + outbound links\n" +
+        "  npm run enhance -- all <slug>                   # alias for ship\n" +
+        "  npm run enhance -- <cmd> --all                  # run on every registered post\n" +
+        "\n" +
+        "Flags: --force  regenerate even if cached\n" +
+        "       --max-images N  cap section images per post (default 6)\n",
     );
     process.exit(1);
   }
