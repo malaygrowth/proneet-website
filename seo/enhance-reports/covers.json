@@ -1,82 +1,19 @@
 [
   {
-    "slug": "jaipur-vs-kota-vs-sikar-neet",
-    "filePath": "C:\\Users\\malay\\Dropbox\\My PC (LAPTOP-PFP667Q2)\\Desktop\\ProNEET Physics\\proneet\\public\\blog\\jaipur-vs-kota-vs-sikar-neet\\cover.webp",
-    "publicPath": "/blog/jaipur-vs-kota-vs-sikar-neet/cover.webp",
-    "alt": "Editorial cover photograph for \"NEET Coaching in Jaipur vs Kota vs Sikar: The Honest Parent's Guide\". a parent's hand gently placed on a sturdy, weathered wooden table in a modest Jaipur home, with a single well-used keychain resting beside it, sunlight filtering through a nearby window casting soft shadows",
+    "slug": "jee-coaching-in-jaipur",
+    "filePath": "C:\\Users\\malay\\Dropbox\\My PC (LAPTOP-PFP667Q2)\\Desktop\\ProNEET Physics\\proneet\\public\\blog\\jee-coaching-in-jaipur\\cover.webp",
+    "publicPath": "/blog/jee-coaching-in-jaipur/cover.webp",
+    "alt": "\"Jaipur JEE Shortlist — A guide to coaching choices\". 3D illustrated cover for \"JEE Coaching in Jaipur: The Honest Guide for Class 11 and 12\" on iit jee coaching classes in jaipur.",
     "brief": {
-      "thesis": "Kota, Jaipur, and Sikar each fit different student profiles; choosing based on brand is less effective than choosing on fit.",
-      "scene": "a parent's hand gently placed on a sturdy, weathered wooden table in a modest Jaipur home, with a single well-used keychain resting beside it, sunlight filtering through a nearby window casting soft shadows",
-      "subject": "parent's hand",
-      "gesture": "gently placed on a wooden table",
-      "light": "sunlight filtering through a nearby window",
-      "avoided_cliche": "students in a classroom setting or coaching institute",
-      "scene_exclusions": [
-        "students",
-        "classroom",
-        "books",
-        "money",
-        "writing surfaces",
-        "coaching institutes",
-        "signboards"
-      ],
-      "mood": "contemplative"
+      "thesis": "A comprehensive guide on choosing the right JEE coaching path in Jaipur, with comparisons to Kota and Sikar, focusing on student outcomes and realistic expectations.",
+      "headline": "Jaipur JEE Shortlist",
+      "subhead": "A guide to coaching choices",
+      "iconography": "A 3D clay scene on a soft navy plinth featuring three abstract cityscape models, each representing Jaipur, Kota, and Sikar. Each cityscape includes a mix of matte-blue geometric shapes such as towers and cones, with a warm orange #F97316 upward arrow arching toward the Jaipur model. The scene visually encodes the comparison between the three cities with emphasis on Jaipur.",
+      "avoided_cliche": "a generic map with location pins",
+      "mood": "insightful"
     },
-    "promptUsed": "A 35mm documentary editorial photograph, single exposure. a parent's hand gently placed on a sturdy, weathered wooden table in a modest Jaipur home, with a single well-used keychain resting beside it, sunlight filtering through a nearby window casting soft shadows  Subject of the frame: parent's hand, gently placed on a wooden table. Lighting: sunlight filtering through a nearby window. Broader lighting philosophy for this series — one directional light source, soft and warm, raking across the subject; the shadow side is allowed to fall into quiet muted tones. warm highlights around 4200K, cool muted shadows.  Shot on 50mm prime, f/2.8, shallow depth of field. fine Kodak Portra 400 grain — organic, not stylised. 16:9 landscape, rule-of-thirds, subject off-centre, generous breathing room on one side. Palette: warm paper whites, walnut browns, muted navy shadows, a single ember-orange accent in the lighting — never as painted objects. Colour grade: soft warm highlights, gently lifted shadows, natural skin tones, no HDR, no teal-and-orange, no painterly look. Craft rules: one subject, one gesture, one light source; real documentary restraint — never stylised, never staged-looking; materials and surfaces look worn and lived-in; human presence is implied more often than fully shown; hands, silhouettes, backs of heads preferred over faces.  Mood: contemplative. The image should feel honest, unposed, and quietly specific.  Hard constraints (strictly enforced): no chalkboards; no whiteboards; no blackboards; no visible book titles or spine lettering; no open notebooks with writing; no signboards or storefront lettering; no posters on walls; no phone screens, computer screens, or tablets; no printed receipts, bills, price tags, or currency notes; no calendars, clocks with readable numerals, or wall hangings with words; no logos, watermarks, trademarks, captions, or typography of any kind anywhere in the frame; no students; no classroom; no books; no money; no writing surfaces; no coaching institutes; no signboards. No extra fingers, no warped faces, no melting or surreal objects, no painterly brush texture, no illustration look — photographic realism only.",
-    "bytes": 42116,
-    "model": "gpt-image-1",
-    "cached": false
-  },
-  {
-    "slug": "how-to-choose-a-physics-teacher",
-    "filePath": "C:\\Users\\malay\\Dropbox\\My PC (LAPTOP-PFP667Q2)\\Desktop\\ProNEET Physics\\proneet\\public\\blog\\how-to-choose-a-physics-teacher\\cover.webp",
-    "publicPath": "/blog/how-to-choose-a-physics-teacher/cover.webp",
-    "alt": "Editorial cover photograph for \"How to Choose a Physics Teacher for NEET and JEE\". A student's hand gripping the bottom rung of a sturdy metal staircase, sunlight filtering through the gaps, the rest of the staircase disappearing upwards into shadow, symbolizing the foundation needed for a successful academic journey.",
-    "brief": {
-      "thesis": "A weak Physics teacher leaks marks through the entire NEET paper; a strong one builds a foundational base, making them the most leveraged decision in hiring.",
-      "scene": "A student's hand gripping the bottom rung of a sturdy metal staircase, sunlight filtering through the gaps, the rest of the staircase disappearing upwards into shadow, symbolizing the foundation needed for a successful academic journey.",
-      "subject": "student's hand",
-      "gesture": "gripping the bottom rung of a staircase",
-      "light": "sunlight filtering through the gaps",
-      "avoided_cliche": "a physics teacher lecturing at a blackboard",
-      "scene_exclusions": [
-        "blackboard",
-        "notebooks",
-        "books",
-        "desks",
-        "classroom",
-        "money"
-      ],
-      "mood": "weighted"
-    },
-    "promptUsed": "A 35mm documentary editorial photograph, single exposure. A student's hand gripping the bottom rung of a sturdy metal staircase, sunlight filtering through the gaps, the rest of the staircase disappearing upwards into shadow, symbolizing the foundation needed for a successful academic journey.  Subject of the frame: student's hand, gripping the bottom rung of a staircase. Lighting: sunlight filtering through the gaps. Broader lighting philosophy for this series — one directional light source, soft and warm, raking across the subject; the shadow side is allowed to fall into quiet muted tones. warm highlights around 4200K, cool muted shadows.  Shot on 50mm prime, f/2.8, shallow depth of field. fine Kodak Portra 400 grain — organic, not stylised. 16:9 landscape, rule-of-thirds, subject off-centre, generous breathing room on one side. Palette: warm paper whites, walnut browns, muted navy shadows, a single ember-orange accent in the lighting — never as painted objects. Colour grade: soft warm highlights, gently lifted shadows, natural skin tones, no HDR, no teal-and-orange, no painterly look. Craft rules: one subject, one gesture, one light source; real documentary restraint — never stylised, never staged-looking; materials and surfaces look worn and lived-in; human presence is implied more often than fully shown; hands, silhouettes, backs of heads preferred over faces.  Mood: weighted. The image should feel honest, unposed, and quietly specific.  Hard constraints (strictly enforced): no chalkboards; no whiteboards; no blackboards; no visible book titles or spine lettering; no open notebooks with writing; no signboards or storefront lettering; no posters on walls; no phone screens, computer screens, or tablets; no printed receipts, bills, price tags, or currency notes; no calendars, clocks with readable numerals, or wall hangings with words; no logos, watermarks, trademarks, captions, or typography of any kind anywhere in the frame; no blackboard; no notebooks; no books; no desks; no classroom; no money. No extra fingers, no warped faces, no melting or surreal objects, no painterly brush texture, no illustration look — photographic realism only.",
-    "bytes": 36970,
-    "model": "gpt-image-1",
-    "cached": false
-  },
-  {
-    "slug": "neet-coaching-fees-in-jaipur-2026",
-    "filePath": "C:\\Users\\malay\\Dropbox\\My PC (LAPTOP-PFP667Q2)\\Desktop\\ProNEET Physics\\proneet\\public\\blog\\neet-coaching-fees-in-jaipur-2026\\cover.webp",
-    "publicPath": "/blog/neet-coaching-fees-in-jaipur-2026/cover.webp",
-    "alt": "Editorial cover photograph for \"NEET Coaching Fees in Jaipur 2026: What You Actually Pay\". A parent's hand adjusting a ceiling fan in a modestly furnished study room, light from a bare bulb casting sharp shadows, the room's simple decor suggesting careful budget management.",
-    "brief": {
-      "thesis": "The 4.5x fee spread in Jaipur's NEET coaching is not about teaching quality but what's embedded in the invoice.",
-      "scene": "A parent's hand adjusting a ceiling fan in a modestly furnished study room, light from a bare bulb casting sharp shadows, the room's simple decor suggesting careful budget management.",
-      "subject": "parent's hand",
-      "gesture": "adjusting a ceiling fan",
-      "light": "light from a bare bulb casting sharp shadows",
-      "avoided_cliche": "money piles with a calculator",
-      "scene_exclusions": [
-        "money",
-        "calculator",
-        "textbooks",
-        "screens",
-        "chalkboards"
-      ],
-      "mood": "weighted"
-    },
-    "promptUsed": "A 35mm documentary editorial photograph, single exposure. A parent's hand adjusting a ceiling fan in a modestly furnished study room, light from a bare bulb casting sharp shadows, the room's simple decor suggesting careful budget management.  Subject of the frame: parent's hand, adjusting a ceiling fan. Lighting: light from a bare bulb casting sharp shadows. Broader lighting philosophy for this series — one directional light source, soft and warm, raking across the subject; the shadow side is allowed to fall into quiet muted tones. warm highlights around 4200K, cool muted shadows.  Shot on 50mm prime, f/2.8, shallow depth of field. fine Kodak Portra 400 grain — organic, not stylised. 16:9 landscape, rule-of-thirds, subject off-centre, generous breathing room on one side. Palette: warm paper whites, walnut browns, muted navy shadows, a single ember-orange accent in the lighting — never as painted objects. Colour grade: soft warm highlights, gently lifted shadows, natural skin tones, no HDR, no teal-and-orange, no painterly look. Craft rules: one subject, one gesture, one light source; real documentary restraint — never stylised, never staged-looking; materials and surfaces look worn and lived-in; human presence is implied more often than fully shown; hands, silhouettes, backs of heads preferred over faces.  Mood: weighted. The image should feel honest, unposed, and quietly specific.  Hard constraints (strictly enforced): no chalkboards; no whiteboards; no blackboards; no visible book titles or spine lettering; no open notebooks with writing; no signboards or storefront lettering; no posters on walls; no phone screens, computer screens, or tablets; no printed receipts, bills, price tags, or currency notes; no calendars, clocks with readable numerals, or wall hangings with words; no logos, watermarks, trademarks, captions, or typography of any kind anywhere in the frame; no money; no calculator; no textbooks; no screens; no chalkboards. No extra fingers, no warped faces, no melting or surreal objects, no painterly brush texture, no illustration look — photographic realism only.",
-    "bytes": 28716,
+    "promptUsed": "A 16:9 landscape graphic for a blog cover. NOT a photograph — a modern B2B-SaaS editorial cover composed entirely of 3D clay illustration on a navy gradient background.\n\nBACKGROUND: a rich solid navy-blue gradient filling the ENTIRE canvas; top-left corner is #0F172A deep navy, bottom-right is #1E3A8A brand blue, with a subtle diagonal sheen across the mid-frame; no white anywhere; no stars, no grid, no particles.\n\nLAYOUT RULE — ABSOLUTELY CRITICAL:\nThe LEFT 50% of the frame MUST be empty navy gradient. No illustration, no objects, no figurines, no shapes, no decorative elements, nothing. This space is reserved for text which will be added separately. The RIGHT 50% of the frame is where all the 3D illustration lives. The illustration must be fully contained within the right half and must not cross the vertical midline.\n\nILLUSTRATION (right 50% only):\nA 3D clay scene on a soft navy plinth featuring three abstract cityscape models, each representing Jaipur, Kota, and Sikar. Each cityscape includes a mix of matte-blue geometric shapes such as towers and cones, with a warm orange #F97316 upward arrow arching toward the Jaipur model. The scene visually encodes the comparison between the three cities with emphasis on Jaipur.\n\nRENDERING:\nmatte clay plastic 3D rendering in the Spline / Icons8 Isometric style; gentle bevels on every edge; soft contact shadows on the navy floor; cool blue studio key light from upper-left with one warm orange #F97316 rim light touching the hero element only; no harsh glossy reflections, no chrome, no glass.\n\nPALETTE (strict):\nobjects in matte navy, mid-blue, and pale blue/white tones; exactly one hero element rendered in warm orange #F97316 as the brand accent.\n\nCOMPOSITION: 16:9 landscape. The illustration group is vertically centred on the right 50% of the canvas, with generous breathing room on all sides. The left 50% of the canvas remains completely empty navy gradient. Subject off-centre, documentary negative space.\n\nHARD CONSTRAINTS:\n- ABSOLUTELY NO TEXT anywhere in the frame. No letters, no numbers, no words, no captions, no subtitles, no watermarks, no logos, no brand names. Zero typography.\n- The left 50% of the canvas is strictly empty navy gradient.\n- No real brand logos, no UI mockups, no browser chrome, no stat callouts.\n- No photorealistic humans, no photographic textures — 3D clay illustration only.\n- No extra fingers or warped shapes.\n- Background is solid navy gradient — never white, never light grey.",
+    "bytes": 28236,
     "model": "gpt-image-1",
     "cached": false
   }

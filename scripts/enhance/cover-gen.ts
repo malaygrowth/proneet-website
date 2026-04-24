@@ -1,24 +1,18 @@
-// Cover-image generator. One hero image per blog post, saved as
-// public/blog/<slug>/cover.webp. The generator runs a two-stage pipeline:
+// Cover-image generator — split pipeline.
 //
-//   1. analyze-post.ts extracts a structured visual brief (thesis, scene,
-//      subject, gesture, light, per-post exclusions) from the actual post
-//      body via GPT-4o-mini. This replaces the old category-template
-//      approach that produced formulaic chalkboard scenes.
+// The cover is assembled from two layers:
+//   1. gpt-image-1 renders ONLY the 3D-illustration background. The
+//      prompt pins the illustration to the right 50% of the frame and
+//      explicitly leaves the left 50% as empty navy gradient — no text,
+//      no objects. This makes the background a reliable substrate.
+//   2. satori + resvg render a transparent text overlay in pixel-
+//      perfect Inter (ProNEET wordmark top-left; headline + subhead
+//      bottom-left). sharp composites the two into the final cover.
 //
-//   2. buildPrompt() assembles a two-layer prompt:
-//        - Series bible (fixed across every cover: lens, grain, palette,
-//          lighting philosophy, color grade). Keeps the series cohesive.
-//        - Per-post scene (from the brief). Keeps each cover specific.
-//      Rendered as narrative prose with a hard constraint tail, per
-//      OpenAI's current prompting guidance.
-//
-// Key rule learned the hard way: do NOT name writing surfaces in the
-// scene (chalkboards, whiteboards, notebooks with visible writing, book
-// spines with titles, signboards, phone screens, posters). Negative
-// prompts cannot override a named-object prior in gpt-image-1. The fix
-// is scene-level — pick a scene that doesn't invite text in the first
-// place.
+// The per-post iconography and copy come from analyze-post.ts (GPT-4o).
+// Everything visual that is shared across the series — colours, layout,
+// typography, brand lockup — lives here or in text-overlay.ts and is
+// the same for every post.
 
 import OpenAI from "openai";
 import sharp from "sharp";
@@ -38,6 +32,7 @@ import {
 } from "./config.js";
 import { findPostFile, parsePost } from "./parse-post.js";
 import { analyzePost, type VisualBrief } from "./analyze-post.js";
+import { renderTextOverlayPng } from "./text-overlay.js";
 
 export interface BlogRegistryEntry {
   slug: string;
@@ -63,110 +58,49 @@ export interface GeneratedCover {
 }
 
 // ---------------------------------------------------------------------------
-// Series bible — fixed across every cover in the series.
-// Edit these values to shift the entire visual language of the blog.
+// Series bible for the illustration background. Edits here shift every
+// cover in the series.
 // ---------------------------------------------------------------------------
 
-const SERIES_BIBLE = {
-  medium: "35mm documentary editorial photograph, single exposure",
-  lens: "50mm prime, f/2.8, shallow depth of field",
-  lighting_philosophy:
-    "one directional light source, soft and warm, raking across the subject; the shadow side is allowed to fall into quiet muted tones",
-  color_temperature: "warm highlights around 4200K, cool muted shadows",
-  grain: "fine Kodak Portra 400 grain — organic, not stylised",
+const BG_STYLE = {
+  background:
+    "a rich solid navy-blue gradient filling the ENTIRE canvas; top-left corner is #0F172A deep navy, bottom-right is #1E3A8A brand blue, with a subtle diagonal sheen across the mid-frame; no white anywhere; no stars, no grid, no particles",
+  illustrationStyle:
+    "matte clay plastic 3D rendering in the Spline / Icons8 Isometric style; gentle bevels on every edge; soft contact shadows on the navy floor; cool blue studio key light from upper-left with one warm orange #F97316 rim light touching the hero element only; no harsh glossy reflections, no chrome, no glass",
   palette:
-    "warm paper whites, walnut browns, muted navy shadows, a single ember-orange accent in the lighting — never as painted objects",
-  color_grade:
-    "soft warm highlights, gently lifted shadows, natural skin tones, no HDR, no teal-and-orange, no painterly look",
-  composition:
-    "16:9 landscape, rule-of-thirds, subject off-centre, generous breathing room on one side",
-  craft_rules: [
-    "one subject, one gesture, one light source",
-    "real documentary restraint — never stylised, never staged-looking",
-    "materials and surfaces look worn and lived-in",
-    "human presence is implied more often than fully shown; hands, silhouettes, backs of heads preferred over faces",
-  ],
+    "objects in matte navy, mid-blue, and pale blue/white tones; exactly one hero element rendered in warm orange #F97316 as the brand accent",
 };
 
-// Text surfaces we ALWAYS exclude, on top of per-post exclusions from the
-// visual brief. Named nouns here are the ones gpt-image-1 reliably tries
-// to fill with fake text unless we forbid them at scene level.
-const GLOBAL_TEXT_SURFACE_EXCLUSIONS = [
-  "no chalkboards",
-  "no whiteboards",
-  "no blackboards",
-  "no visible book titles or spine lettering",
-  "no open notebooks with writing",
-  "no signboards or storefront lettering",
-  "no posters on walls",
-  "no phone screens, computer screens, or tablets",
-  "no printed receipts, bills, price tags, or currency notes",
-  "no calendars, clocks with readable numerals, or wall hangings with words",
-  "no logos, watermarks, trademarks, captions, or typography of any kind anywhere in the frame",
-];
+function buildBgPrompt(brief: VisualBrief): { prompt: string } {
+  const prompt = `A 16:9 landscape graphic for a blog cover. NOT a photograph — a modern B2B-SaaS editorial cover composed entirely of 3D clay illustration on a navy gradient background.
 
-function buildPrompt(
-  entry: BlogRegistryEntry,
-  brief: VisualBrief,
-): { prompt: string; alt: string } {
-  const exclusions = [
-    ...GLOBAL_TEXT_SURFACE_EXCLUSIONS,
-    ...(brief.scene_exclusions || []).map((e) => `no ${e}`),
-  ];
+BACKGROUND: ${BG_STYLE.background}.
 
-  const prompt = [
-    // Narrative opening — describe the photograph as a photograph.
-    `A ${SERIES_BIBLE.medium}. ${brief.scene}`,
-    "",
-    // The subject/gesture/light triple — one sentence each.
-    `Subject of the frame: ${brief.subject}, ${brief.gesture}.`,
-    `Lighting: ${brief.light}. Broader lighting philosophy for this series — ${SERIES_BIBLE.lighting_philosophy}. ${SERIES_BIBLE.color_temperature}.`,
-    "",
-    // Technical / craft layer (shared across the series).
-    `Shot on ${SERIES_BIBLE.lens}. ${SERIES_BIBLE.grain}. ${SERIES_BIBLE.composition}.`,
-    `Palette: ${SERIES_BIBLE.palette}.`,
-    `Colour grade: ${SERIES_BIBLE.color_grade}.`,
-    `Craft rules: ${SERIES_BIBLE.craft_rules.join("; ")}.`,
-    "",
-    // Mood anchor.
-    `Mood: ${brief.mood}. The image should feel honest, unposed, and quietly specific.`,
-    "",
-    // Hard constraint tail — scene-level exclusions AFTER the positive
-    // description. This ordering works better than a prefix.
-    `Hard constraints (strictly enforced): ${exclusions.join("; ")}. No extra fingers, no warped faces, no melting or surreal objects, no painterly brush texture, no illustration look — photographic realism only.`,
-  ].join(" ");
+LAYOUT RULE — ABSOLUTELY CRITICAL:
+The LEFT 50% of the frame MUST be empty navy gradient. No illustration, no objects, no figurines, no shapes, no decorative elements, nothing. This space is reserved for text which will be added separately. The RIGHT 50% of the frame is where all the 3D illustration lives. The illustration must be fully contained within the right half and must not cross the vertical midline.
 
-  const alt = `Editorial cover photograph for "${entry.title}". ${brief.scene}`;
-  return { prompt, alt };
+ILLUSTRATION (right 50% only):
+${brief.iconography}
+
+RENDERING:
+${BG_STYLE.illustrationStyle}.
+
+PALETTE (strict):
+${BG_STYLE.palette}.
+
+COMPOSITION: 16:9 landscape. The illustration group is vertically centred on the right 50% of the canvas, with generous breathing room on all sides. The left 50% of the canvas remains completely empty navy gradient. Subject off-centre, documentary negative space.
+
+HARD CONSTRAINTS:
+- ABSOLUTELY NO TEXT anywhere in the frame. No letters, no numbers, no words, no captions, no subtitles, no watermarks, no logos, no brand names. Zero typography.
+- The left 50% of the canvas is strictly empty navy gradient.
+- No real brand logos, no UI mockups, no browser chrome, no stat callouts.
+- No photorealistic humans, no photographic textures — 3D clay illustration only.
+- No extra fingers or warped shapes.
+- Background is solid navy gradient — never white, never light grey.`;
+  return { prompt };
 }
 
-async function compressWebp(
-  inputBuffer: Buffer,
-  targetKb: number = AUDIT_THRESHOLDS.maxImageSizeKb,
-): Promise<Buffer> {
-  const targetBytes = targetKb * 1024;
-  let quality = 82;
-  let result = await sharp(inputBuffer)
-    .resize(IMAGE_SIZE.width, IMAGE_SIZE.height, {
-      fit: "cover",
-      position: "center",
-    })
-    .webp({ quality, effort: 6 })
-    .toBuffer();
-  while (result.byteLength > targetBytes && quality > 30) {
-    quality -= 8;
-    result = await sharp(inputBuffer)
-      .resize(IMAGE_SIZE.width, IMAGE_SIZE.height, {
-        fit: "cover",
-        position: "center",
-      })
-      .webp({ quality, effort: 6 })
-      .toBuffer();
-  }
-  return result;
-}
-
-async function generateOne(
+async function generateBackground(
   client: OpenAI,
   prompt: string,
 ): Promise<{ bytes: Buffer; model: string }> {
@@ -174,8 +108,6 @@ async function generateOne(
   let lastErr: unknown = null;
   for (const model of tryModels) {
     try {
-      // gpt-image-1 supports 1536x1024 (3:2); dall-e-3 only supports
-      // 1024x1024, 1024x1792, and 1792x1024. Close-to-16:9 from both.
       const size = model === "dall-e-3" ? "1792x1024" : "1536x1024";
       const res = await client.images.generate({
         model,
@@ -200,6 +132,45 @@ async function generateOne(
     }
   }
   throw lastErr ?? new Error("All image models failed");
+}
+
+async function composeCover(
+  bgBytes: Buffer,
+  brief: VisualBrief,
+  repoRoot: string,
+): Promise<{ buffer: Buffer; quality: number }> {
+  const bgResized = await sharp(bgBytes)
+    .resize(IMAGE_SIZE.width, IMAGE_SIZE.height, {
+      fit: "cover",
+      position: "center",
+    })
+    .toBuffer();
+
+  const overlayPng = await renderTextOverlayPng(
+    {
+      wordmark: "ProNEET",
+      headline: brief.headline,
+      subhead: brief.subhead,
+      width: IMAGE_SIZE.width,
+      height: IMAGE_SIZE.height,
+    },
+    repoRoot,
+  );
+
+  const targetBytes = AUDIT_THRESHOLDS.maxImageSizeKb * 1024;
+  let quality = 86;
+  let composed = await sharp(bgResized)
+    .composite([{ input: overlayPng, top: 0, left: 0 }])
+    .webp({ quality, effort: 6 })
+    .toBuffer();
+  while (composed.byteLength > targetBytes && quality > 40) {
+    quality -= 8;
+    composed = await sharp(bgResized)
+      .composite([{ input: overlayPng, top: 0, left: 0 }])
+      .webp({ quality, effort: 6 })
+      .toBuffer();
+  }
+  return { buffer: composed, quality };
 }
 
 // Parse lib/blog-posts.ts into structured entries.
@@ -252,7 +223,6 @@ export async function generateCoverFor(opts: {
 
   const outDir = join(opts.repoRoot, PATHS.publicBlogImages, opts.entry.slug);
   mkdirSync(outDir, { recursive: true });
-
   const filePath = join(outDir, "cover.webp");
   const publicPath = `/blog/${opts.entry.slug}/cover.webp`;
 
@@ -270,7 +240,6 @@ export async function generateCoverFor(opts: {
     };
   }
 
-  // Step 1: read the actual post body.
   const postFile = findPostFile(opts.repoRoot, opts.entry.slug);
   if (!postFile) {
     throw new Error(
@@ -279,7 +248,6 @@ export async function generateCoverFor(opts: {
   }
   const post = parsePost(postFile, opts.entry.slug);
 
-  // Step 2: extract visual brief via GPT-4o-mini.
   process.stdout.write(`  → briefing ${opts.entry.slug} ... `);
   const brief = await analyzePost(client, {
     title: post.title,
@@ -290,19 +258,23 @@ export async function generateCoverFor(opts: {
     excerpt: opts.entry.excerpt,
   });
   process.stdout.write(`ok\n`);
-  process.stdout.write(`     thesis: ${brief.thesis}\n`);
-  process.stdout.write(`     scene:  ${brief.scene}\n`);
+  process.stdout.write(`     headline: ${brief.headline}\n`);
+  process.stdout.write(`     subhead:  ${brief.subhead}\n`);
+  process.stdout.write(`     iconography: ${brief.iconography.slice(0, 120)}...\n`);
 
-  // Step 3: build prompt and generate.
-  const { prompt, alt } = buildPrompt(opts.entry, brief);
+  const { prompt } = buildBgPrompt(brief);
+  process.stdout.write(`  → rendering 3D background ... `);
+  const { bytes: bgBytes, model } = await generateBackground(client, prompt);
+  process.stdout.write(`ok (${model})\n`);
 
-  process.stdout.write(`  → rendering cover ... `);
-  const { bytes, model } = await generateOne(client, prompt);
-  const compressed = await compressWebp(bytes);
-  writeFileSync(filePath, compressed);
+  process.stdout.write(`  → compositing text overlay ... `);
+  const { buffer, quality } = await composeCover(bgBytes, brief, opts.repoRoot);
+  writeFileSync(filePath, buffer);
   process.stdout.write(
-    `ok (${Math.round(compressed.byteLength / 1024)}KB, ${model})\n`,
+    `ok (${Math.round(buffer.byteLength / 1024)}KB, q${quality})\n`,
   );
+
+  const alt = `"${brief.headline} — ${brief.subhead}". 3D illustrated cover for "${opts.entry.title}" on ${opts.entry.targetKeyword}.`;
 
   return {
     slug: opts.entry.slug,
@@ -311,14 +283,15 @@ export async function generateCoverFor(opts: {
     alt,
     brief,
     promptUsed: prompt,
-    bytes: compressed.byteLength,
+    bytes: buffer.byteLength,
     model,
     cached: false,
   };
 }
 
-// Rewrite lib/blog-posts.ts to point featuredImage at the new cover for
-// each entry that has one on disk. Also refreshes featuredImageAlt.
+// Rewrite lib/blog-posts.ts featuredImage + featuredImageAlt for each
+// slug with a cover on disk. Regex is escape-aware so it handles
+// existing \" in string literals.
 export function updateRegistryFeaturedImages(opts: {
   repoRoot: string;
   covers: GeneratedCover[];
@@ -328,9 +301,6 @@ export function updateRegistryFeaturedImages(opts: {
   const updated: string[] = [];
   const skipped: string[] = [];
 
-  // Match a double-quoted TS string literal that correctly honours `\"`
-  // and `\\` escapes. The capture group is the quoted literal including
-  // its outer quotes, so the replacement can safely drop a new literal in.
   const quotedString = `"(?:[^"\\\\]|\\\\.)*"`;
 
   for (const cover of opts.covers) {
@@ -343,8 +313,6 @@ export function updateRegistryFeaturedImages(opts: {
     }
     raw = raw.replace(slugRe, `$1"${cover.publicPath}"`);
 
-    // Alt may span multiple lines with a leading newline + indentation.
-    // Use a non-greedy, escape-aware match for its literal value.
     const altRe = new RegExp(
       `(slug:\\s*"${cover.slug}"[\\s\\S]*?featuredImageAlt:\\s*\\n?\\s*)${quotedString}`,
     );

@@ -1,82 +1,98 @@
-// LLM pre-pass: read a blog post and extract a concrete visual-metaphor
-// brief we can render into a cover-image prompt. The aim is to move the
-// "what do we shoot?" decision out of category templates and into the
-// specific thesis of the specific post.
-//
-// Output contract is a strict JSON object. We do NOT let the model
-// write the final image prompt — only the semantic building blocks.
-// The prompt assembly lives in cover-gen.ts so the series bible stays
-// central and version-controlled.
+// LLM pre-pass: read a blog post and return the semantic brief that
+// drives cover image generation. Output schema is tuned for the
+// GrowLeads-style split pipeline — the model decides the 3D-illustration
+// iconography and the headline/subhead copy; cover-gen handles the
+// image rendering and text overlay.
 
 import OpenAI from "openai";
 import type { PostMetadata } from "./parse-post.js";
 
 export interface VisualBrief {
-  // One-sentence articulation of what the post is really arguing about.
+  // One-sentence central tension of the post. Used in reports.
   thesis: string;
-  // One specific physical scene that encodes the thesis. Must follow the
-  // "one subject, one gesture, one light source" rule. Must NOT include
-  // any writing surface (chalkboard, whiteboard, notebook with writing,
-  // signboard, book title, phone screen, bill, receipt, poster).
-  scene: string;
-  // The single foreground subject the eye should land on. 1-2 nouns max.
-  subject: string;
-  // The meaningful gesture or implied action. One short phrase.
-  gesture: string;
-  // The lighting motif, described in photographic terms.
-  light: string;
-  // Anti-cliché note: the obvious scene we are NOT shooting. Helps
-  // audit the brief before sending.
+  // 2–5 words, the bold headline for the cover. Usually a tightened
+  // version of the title (drops filler words, keeps the hook).
+  headline: string;
+  // 4–9 words, the subhead that sits under the headline in Inter Medium.
+  // Should sharpen or complete the headline, not repeat it.
+  subhead: string;
+  // A concrete description of the 3D clay illustration that will occupy
+  // the right half of the cover. Matte plastic 3D style.
+  iconography: string;
+  // The obvious cliché we chose NOT to use, for audit.
   avoided_cliche: string;
-  // Scene-specific exclusions. Things the model would naturally draw
-  // for this topic that we must keep out. Written as concrete nouns.
-  scene_exclusions: string[];
-  // One-word mood tag for the grade pass.
+  // One word mood tag.
   mood: string;
 }
 
-const SYSTEM_PROMPT = `You are an editorial photo director briefing a documentary photographer for a long-form blog cover image. The blog is ProNEET (Jaipur, India — NEET/JEE coaching). Readers are parents and serious students making a real decision.
+const SYSTEM_PROMPT = `You are an art director for a blog called ProNEET (Jaipur, India — NEET/JEE coaching). Readers are parents and serious students making a real decision.
 
-Your job: read the post and return a JSON brief that becomes a photograph. Do not write the image prompt yourself — only the semantic brief.
+Your job: read the post and produce a JSON brief that drives a blog cover graphic in the style of modern B2B-SaaS blog covers (think Attio, Gumroad, Webflow, Vercel). The cover has:
+- A deep navy/brand-blue gradient background
+- A small "ProNEET" wordmark top-left
+- A bold white headline and softer subhead on the LEFT HALF
+- A 3D matte-clay illustration on the RIGHT HALF, like a Spline or Icons8 Isometric scene
 
-THESIS RULE (this is the most important rule):
-A thesis is a DISAGREEMENT, not a description. It states a tension, a choice, a non-obvious claim, or a warning the author is making. "The post explains X" is NOT a thesis. "X looks like Y but is actually Z" IS a thesis. "Most people assume A, but the honest answer is B" IS a thesis. Find the one sentence from the post the author would be willing to argue about.
+You control the COPY (headline + subhead) and the ICONOGRAPHY (what the 3D clay scene depicts). You do NOT control colours, fonts, or background.
 
-SCENE RULES:
-1. One subject. One gesture. One light source. No crowds. No multi-action scenes.
-2. The scene MUST NOT contain any writing surface. That rules out: chalkboards, whiteboards, blackboards, open notebooks, open textbooks with visible titles, signboards, phone screens, laptop screens, posters, calendars with numbers, receipts, price tags, bills, letters, newspapers.
-3. Prefer hands, physical objects, architectural elements, domestic surfaces, windows, doorways, empty spaces. Faces are allowed only when the thesis is literally about reading a face.
-4. The scene must be something a documentary photographer could actually shoot in or near a Jaipur home, institute corridor, street, or kitchen — not metaphoric surrealism, not studio product shots.
-5. Avoid the obvious cliché. The obvious cliché for the topic is banned. If the post is about fees, do NOT use money, coins, wallets, calculators, envelopes of cash, ATMs. If the post is about choosing a teacher, do NOT use a teacher at a board. If the post is about self-study, do NOT use a lone student at a desk with books. Your value as a photo director is finding the non-obvious visual that encodes the thesis.
-6. The scene must visually carry the thesis, not just set a mood. If the thesis is "the 4.5x fee spread is not random", an empty classroom doesn't carry that — it's just mood. A better scene carries the spread itself: two very different rooms behind one doorway, or two hands of different age holding the same worn object.
+RULES FOR HEADLINE:
+- 2 to 5 words max. It must fit on one or two lines of very bold Inter.
+- Drop filler. Keep the hook. If the title is "NEET Coaching in Jaipur vs Kota vs Sikar: The Honest Parent's Guide", the headline is "Jaipur vs Kota vs Sikar".
+- Preserve specificity — "7 Things to Check" beats "NEET Coaching Tips".
+- Use title case.
+- TOPICALITY TEST: if a reader saw only the headline + illustration, would they correctly guess the post's primary subject? The headline must honour the post's primary keyword and title — NOT a secondary sub-thesis from the body. If the title says "JEE Coaching in Jaipur" and the primary keyword is "iit jee coaching classes in jaipur", the headline MUST contain "JEE" (e.g. "JEE Coaching in Jaipur" or "Jaipur JEE Shortlist"). Never let a compelling sub-argument hijack the headline away from the main topic.
 
-WORKED EXAMPLES (study the structure, don't copy them):
+RULES FOR SUBHEAD:
+- 4 to 9 words. Completes or frames the headline.
+- Never repeats the headline verbatim. Should sharpen the promise ("A 7-point parent checklist") or state the qualifier ("Before You Sign the Cheque").
+- Sentence case, no trailing period.
 
-Example A:
-Post thesis: "A weak Physics teacher leaks marks across the whole paper; the IIT tag matters less than you think."
-Bad scene: "a teacher writing an equation on a blackboard" (cliche + writing surface)
-Good scene: "a student's hand tracing a crack running down a plaster wall in a sunlit corridor, late-afternoon light raking across the surface, the crack disappearing into shadow" (carries "a small weakness that travels through the whole structure")
+RULES FOR ICONOGRAPHY:
+1. Describe one single 3D scene to be rendered in matte clay plastic style on a soft shadow plinth. 40 to 80 words.
+2. The scene contains abstract geometric objects, not realistic humans. Low-poly figurines, cubes, cylinders, cones, arrows, magnifying glasses, stacked discs/coins (but NEVER labelled with currency symbols), pins, targets, stairways, chart bars, pie wedges, books (closed, unlabelled), molecules, atoms, pendulums, prisms, keys, gears, trophies, clipboards (unlabelled), filters/funnels.
+3. The scene must visually encode the post's thesis. Two classroom batches of different sizes for a comparison; stacked discs in tiers for fees; a funnel filtering figurines for a selection/checklist post; a single figurine on a stairway for a self-study post; a cluster of three city-pins for a three-city comparison.
+4. MANDATORY: include a warm orange #F97316 accent on exactly one hero element. Everything else is in matte navy, mid-blue, and pale blue/white tones.
+5. DO NOT describe any text, labels, numbers, wordmarks, screens, brand logos, or signage. The illustration is text-free.
+6. DO NOT describe realistic humans, faces, or photographic textures — 3D clay only.
+7. Avoid the obvious cliché. Don't pick the first scene that comes to mind — push for one that carries the specific thesis.
 
-Example B:
-Post thesis: "You can crack NEET without coaching, but only if you keep the same seat at the same desk at the same time for 26 months."
-Bad scene: "a student alone at a desk studying" (cliche)
-Good scene: "an empty wooden chair pulled up to a bedroom window at first light, a faint imprint of daily use on the seat cushion, the rest of the room in shadow" (carries habit, discipline, solitude — without a book)
+WORKED EXAMPLES:
 
-Example C:
-Post thesis: "Jaipur fees span 4.5x from ₹60K to ₹2.8L — the gap is not about teaching quality, it's about what's in the invoice."
-Bad scene: "money piles with a calculator" (cliche)
-Good scene: "a mother's hand resting on a stone kitchen counter next to a single brass key, morning light low and warm from a high window, the counter scratched from years of use" (carries the quiet weight of a household decision, without any money or paperwork)
-
-Return STRICT JSON matching this schema, no prose, no markdown:
+Example A (a "7 things to check before enrolling" guide):
 {
-  "thesis": "one sentence, argumentative, must contain a tension or non-obvious claim",
-  "scene": "35-70 words describing ONE photograph in concrete physical detail",
-  "subject": "1-2 nouns, the hero of the frame",
-  "gesture": "one short phrase, e.g. 'hand pausing over the worn handle'",
-  "light": "one short phrase, e.g. 'first-light slanting through a window at low angle'",
-  "avoided_cliche": "the obvious scene you refused to shoot",
-  "scene_exclusions": ["concrete", "nouns", "the", "scene", "must", "not", "include"],
-  "mood": "one word — contemplative, resolute, watchful, tender, sober, patient, weighted, early, still, etc."
+  "headline": "7 Things to Check",
+  "subhead": "Before you sign the enrolment form",
+  "iconography": "A 3D clay funnel standing upright on a soft navy plinth. Above the funnel, seven small matte-blue cubes float in a staggered queue, each cube catching cool blue rim light. At the funnel's mouth, a single warm orange cube is about to enter, glowing softly. Below the funnel, a clean matte surface catches a soft contact shadow. The composition reads left-to-right as a selection filter.",
+  "avoided_cliche": "a generic checklist clipboard",
+  "mood": "discerning"
+}
+
+Example B (a fees breakdown post):
+{
+  "headline": "What You Actually Pay",
+  "subhead": "Jaipur NEET fees, tier by tier",
+  "iconography": "Three 3D clay discs stacked in a stepped column on a navy plinth, each disc wider than the one below, forming a tiered pyramid. The top disc is matte white, the middle is soft blue, the bottom is the largest and is rendered in warm orange #F97316. A thin white arrow rises from the orange disc, curving upward to suggest the climb between tiers. The scene is calm and architectural.",
+  "avoided_cliche": "stacks of rupee coins with a calculator",
+  "mood": "weighted"
+}
+
+Example C (a "prepare without coaching" pillar):
+{
+  "headline": "Without Coaching",
+  "subhead": "The 26-month self-study playbook",
+  "iconography": "A single low-poly matte white figurine stands at the base of a tall, narrow 3D clay staircase that rises upward out of the frame. The stairs are soft navy clay, lit from upper-left. At the first step, the figurine is rendered in warm orange #F97316. The rest of the scene is empty navy — no crowd, no books, no observer. The composition emphasises solitude and incremental climb.",
+  "avoided_cliche": "a student at a desk with a laptop",
+  "mood": "resolute"
+}
+
+Return STRICT JSON, no prose, no markdown:
+{
+  "thesis": "one sentence",
+  "headline": "2-5 words title-case",
+  "subhead": "4-9 words sentence-case",
+  "iconography": "40-80 word description of one 3D clay scene",
+  "avoided_cliche": "the obvious scene you rejected",
+  "mood": "one word"
 }`;
 
 export async function analyzePost(
@@ -115,18 +131,15 @@ export async function analyzePost(
 
   const text = res.choices[0]?.message?.content;
   if (!text) throw new Error("Empty response from visual-brief model");
-
   const parsed = JSON.parse(text) as VisualBrief;
 
-  // Light validation. We prefer a soft failure that still renders over a
-  // hard throw that kills the whole batch.
-  if (!parsed.scene || parsed.scene.length < 20) {
-    throw new Error(
-      `Visual brief is missing or too short: ${JSON.stringify(parsed)}`,
-    );
+  const required = ["thesis", "headline", "subhead", "iconography"] as const;
+  for (const key of required) {
+    if (!parsed[key] || typeof parsed[key] !== "string") {
+      throw new Error(
+        `Visual brief missing required field "${key}": ${JSON.stringify(parsed)}`,
+      );
+    }
   }
-  parsed.scene_exclusions = Array.isArray(parsed.scene_exclusions)
-    ? parsed.scene_exclusions
-    : [];
   return parsed;
 }
