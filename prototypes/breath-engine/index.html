@@ -1,6 +1,6 @@
-<title>Breath Engine</title>
+<title>Breath Coach</title>
 <style>
-  /* Single-theme by design: breathwork happens in dim rooms. All colors explicit. */
+  /* Single-theme by design: this coach lives in a dim room. All colors explicit. */
   :root {
     --bg: #0C111C;
     --surface: #151D2C;
@@ -9,326 +9,546 @@
     --ink: #E9EEF6;
     --muted: #8494AB;
     --faint: #5A6A85;
-    --in: #74C7B8;      /* inhale — cool aqua */
-    --out: #E0A87D;     /* exhale — warm sand */
-    --hold: #93A5C9;    /* hold — still blue */
-    --font: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', system-ui, sans-serif;
+    --acc: #74C7B8; /* set per experience by JS */
+    --sans: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', system-ui, sans-serif;
+    --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
   }
   * { box-sizing: border-box; margin: 0; }
   html, body { background: var(--bg); }
   body {
     color: var(--ink);
-    font-family: var(--font);
+    font-family: var(--sans);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     padding: 20px 16px 32px;
     -webkit-tap-highlight-color: transparent;
   }
-  .app { width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 22px; }
+  .app { width: 100%; max-width: 560px; position: relative; }
+
+  .screen { display: none; flex-direction: column; gap: 22px; animation: rise .5s ease both; }
+  .screen.active { display: flex; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .screen { animation: none; } }
 
   header { display: flex; align-items: baseline; justify-content: space-between; }
-  .wordmark { font-size: 15px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink); }
-  .wordmark span { color: var(--in); }
-  .proto-tag { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+  .wordmark { font-size: 14px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+  .wordmark span { color: var(--acc); }
+  .proto-tag { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
 
-  /* ---------- Stage ---------- */
-  .stage { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 8px 0 0; }
-  .orbWrap { position: relative; width: min(68vw, 320px); aspect-ratio: 1; display: grid; place-items: center; }
+  .eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 7vw, 36px); line-height: 1.15; text-wrap: balance; }
+  h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 6vw, 30px); line-height: 1.2; text-wrap: balance; }
+  .lede { color: var(--muted); font-size: 15.5px; line-height: 1.55; max-width: 46ch; }
 
-  .ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-  .ring .track { fill: none; stroke: var(--line); stroke-width: 2; }
-  .ring .prog  { fill: none; stroke: var(--hold); stroke-width: 3; stroke-linecap: round; transition: stroke .8s ease; }
-
-  .orb {
-    position: absolute; inset: 11%;
-    border-radius: 50%;
-    will-change: transform;
-  }
-  .glaze {
-    position: absolute; inset: 0; border-radius: 50%;
-    opacity: 0; transition: opacity .9s ease;
-  }
-  .g-in   { background: radial-gradient(circle at 38% 30%, #B9F0E6 0%, #74C7B8 38%, #1E5F58 100%); box-shadow: 0 0 70px 6px rgba(116,199,184,.28); }
-  .g-out  { background: radial-gradient(circle at 38% 30%, #F6DDBE 0%, #E0A87D 38%, #6E4526 100%); box-shadow: 0 0 70px 6px rgba(224,168,125,.25); }
-  .g-hold { background: radial-gradient(circle at 38% 30%, #C7D4EE 0%, #93A5C9 38%, #37476B 100%); box-shadow: 0 0 60px 4px rgba(147,165,201,.22); }
-  .orb[data-kind="in"] .g-in, .orb[data-kind="in2"] .g-in { opacity: .95; }
-  .orb[data-kind="out"] .g-out { opacity: .95; }
-  .orb[data-kind="hold"] .g-hold, .orb[data-kind="idle"] .g-hold { opacity: .9; }
-  .orb[data-kind="idle"] { opacity: .45; }
-
-  .orbText { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; pointer-events: none; }
-  #phaseLabel { font-size: 17px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; text-shadow: 0 1px 8px rgba(0,0,0,.35); }
-  #count { font-size: 44px; font-weight: 300; font-variant-numeric: tabular-nums; line-height: 1.05; text-shadow: 0 1px 10px rgba(0,0,0,.4); min-height: 48px; }
-
-  .status { font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 18px; }
-
-  /* ---------- Patterns ---------- */
-  .patterns { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(128px, 1fr); gap: 10px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
-  .pattern {
-    font-family: var(--font);
-    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
-    padding: 12px 12px 11px; text-align: left; color: var(--ink); cursor: pointer;
-    display: flex; flex-direction: column; gap: 3px;
+  /* ---------- Home: choose a feeling, not a technique ---------- */
+  .cards { display: flex; flex-direction: column; gap: 12px; }
+  .card {
+    font-family: var(--sans); text-align: left; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 18px 18px 16px; color: var(--ink);
+    display: flex; flex-direction: column; gap: 6px;
     transition: border-color .25s ease, background .25s ease;
   }
-  .pattern:hover { background: var(--surface-2); }
-  .pattern[aria-pressed="true"] { border-color: var(--in); background: var(--surface-2); }
-  .pattern .p-name { font-size: 14.5px; font-weight: 600; }
-  .pattern .p-timing { font-size: 12.5px; color: var(--in); font-variant-numeric: tabular-nums; letter-spacing: .04em; }
-  .pattern .p-tag { font-size: 12px; color: var(--muted); }
-
-  /* ---------- Controls ---------- */
-  .controls { display: flex; flex-direction: column; gap: 14px; }
-  .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-  .row-label { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
-
-  .seg { display: flex; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 2px; }
-  .seg button {
-    font-family: var(--font); font-size: 13px; font-variant-numeric: tabular-nums;
-    background: none; border: 0; border-radius: 7px; color: var(--muted);
-    padding: 6px 13px; cursor: pointer;
-  }
-  .seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
-
-  .toggles { display: flex; gap: 10px; }
-  .toggle {
-    font-family: var(--font); font-size: 13px;
-    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-    color: var(--muted); padding: 7px 14px; cursor: pointer;
-    transition: color .2s ease, border-color .2s ease;
-  }
-  .toggle[aria-pressed="true"] { color: var(--ink); border-color: var(--in); }
-  .toggle[aria-pressed="true"]::before { content: "● "; color: var(--in); font-size: 9px; vertical-align: 2px; }
-
-  .startBtn {
-    font-family: var(--font); font-size: 16px; font-weight: 600; letter-spacing: .05em;
-    background: var(--in); color: #08201C; border: 0; border-radius: 999px;
-    padding: 15px 0; width: 100%; cursor: pointer;
-    transition: filter .2s ease, background .3s ease, color .3s ease;
-  }
-  .startBtn:hover { filter: brightness(1.08); }
-  .startBtn.running { background: var(--surface-2); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
-
-  button:focus-visible { outline: 2px solid var(--in); outline-offset: 2px; }
-
-  /* ---------- Summary overlay ---------- */
-  .overlay {
-    position: fixed; inset: 0; background: rgba(8, 12, 20, .82);
-    display: none; place-items: center; padding: 24px; z-index: 10;
-  }
-  .overlay.open { display: grid; }
-  .card {
-    background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
-    padding: 28px 26px 22px; width: min(100%, 360px); text-align: center;
-    display: flex; flex-direction: column; gap: 18px;
-  }
-  .card h2 { font-size: 18px; font-weight: 600; letter-spacing: .04em; }
-  .stats { display: flex; justify-content: space-evenly; gap: 8px; }
-  .stat .n { font-size: 30px; font-weight: 300; font-variant-numeric: tabular-nums; color: var(--in); }
-  .stat .l { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
-  .card .startBtn { padding: 12px 0; }
+  .card:hover { background: var(--surface-2); border-color: var(--c, var(--line)); }
+  .card .moment { font-size: 11.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--c, var(--acc)); }
+  .card .name { font-family: var(--serif); font-size: 23px; line-height: 1.15; }
+  .card .promise { font-size: 14px; line-height: 1.5; color: var(--muted); max-width: 44ch; }
+  .card .dur { font-size: 12.5px; color: var(--faint); font-variant-numeric: tabular-nums; margin-top: 2px; }
 
   footer { font-size: 12px; line-height: 1.55; color: var(--faint); max-width: 56ch; }
 
-  @media (prefers-reduced-motion: reduce) {
-    .glaze, .prog, .toggle, .startBtn { transition: none; }
+  /* ---------- Intro / check-in ---------- */
+  .backBtn {
+    align-self: flex-start; font-family: var(--sans); font-size: 13px; color: var(--muted);
+    background: none; border: 0; cursor: pointer; padding: 4px 0;
   }
+  .backBtn:hover { color: var(--ink); }
+  .notice-list { display: flex; flex-direction: column; gap: 9px; }
+  .notice-list .item { display: flex; gap: 10px; font-size: 14.5px; line-height: 1.5; color: var(--muted); }
+  .notice-list .item::before { content: ""; flex: 0 0 6px; height: 6px; border-radius: 50%; background: var(--acc); margin-top: 7px; }
+  .footnote { font-size: 12.5px; line-height: 1.55; color: var(--faint); border-top: 1px solid var(--line); padding-top: 12px; max-width: 52ch; }
+
+  .checkin { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+  .checkin .q { font-size: 15px; line-height: 1.45; }
+  .scale { display: flex; flex-direction: column; gap: 8px; }
+  .scale input[type="range"] { width: 100%; accent-color: var(--acc); cursor: pointer; }
+  .scale .ends { display: flex; justify-content: space-between; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+
+  .primaryBtn {
+    font-family: var(--sans); font-size: 16px; font-weight: 600; letter-spacing: .04em;
+    background: var(--acc); color: #0B1512; border: 0; border-radius: 999px;
+    padding: 15px 0; width: 100%; cursor: pointer; transition: filter .2s ease;
+  }
+  .primaryBtn:hover { filter: brightness(1.08); }
+  .ghostBtn {
+    font-family: var(--sans); font-size: 14px; color: var(--muted);
+    background: none; border: 1px solid var(--line); border-radius: 999px;
+    padding: 12px 0; width: 100%; cursor: pointer; transition: color .2s ease, border-color .2s ease;
+  }
+  .ghostBtn:hover { color: var(--ink); border-color: var(--faint); }
+
+  /* ---------- Session ---------- */
+  #session { min-height: 78vh; justify-content: space-between; }
+  .sess-top { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+  .sess-name { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+  .coach {
+    font-family: var(--serif); font-style: italic; font-size: clamp(18px, 4.6vw, 22px);
+    line-height: 1.45; text-align: center; color: var(--ink); max-width: 34ch;
+    min-height: 4.2em; display: flex; align-items: center; justify-content: center;
+    opacity: 1; transition: opacity .5s ease;
+  }
+  .coach.dim { opacity: 0; }
+
+  .orbZone { display: flex; justify-content: center; }
+  .orbWrap { position: relative; width: min(62vw, 280px); aspect-ratio: 1; display: grid; place-items: center; }
+  .halo {
+    position: absolute; inset: -14%; border-radius: 50%;
+    background: var(--acc);
+    background: radial-gradient(circle, color-mix(in srgb, var(--acc) 20%, transparent) 0%, transparent 68%);
+    pointer-events: none;
+  }
+  .ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring .track { fill: none; stroke: var(--line); stroke-width: 1.6; }
+  .ring .prog  { fill: none; stroke: var(--acc); stroke-width: 2.6; stroke-linecap: round; }
+  .orb {
+    position: absolute; inset: 12%; border-radius: 50%; will-change: transform, filter;
+    background: var(--acc);
+    background: radial-gradient(circle at 38% 30%,
+      color-mix(in srgb, var(--acc) 55%, white) 0%,
+      var(--acc) 40%,
+      color-mix(in srgb, var(--acc) 40%, black) 100%);
+    box-shadow: 0 0 60px 4px rgba(0,0,0,.25);
+  }
+  .orb[data-kind="idle"] { opacity: .5; }
+  .orbText { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; }
+  #phaseWord { font-size: 16px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; text-shadow: 0 1px 8px rgba(0,0,0,.45); }
+
+  .sess-bottom { display: flex; flex-direction: column; gap: 14px; }
+  .progressBar { height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .progressBar .fill { height: 100%; width: 0%; background: var(--acc); border-radius: 2px; }
+  .sess-controls { display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .chip {
+    font-family: var(--sans); font-size: 12.5px; color: var(--muted);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+    padding: 7px 14px; cursor: pointer; transition: color .2s ease, border-color .2s ease;
+  }
+  .chip[aria-pressed="true"] { color: var(--ink); border-color: var(--acc); }
+  .chip:hover { color: var(--ink); }
+
+  /* ---------- Reflection ---------- */
+  .shift { font-family: var(--serif); font-size: clamp(30px, 8vw, 40px); font-variant-numeric: tabular-nums; }
+  .shift .arrow { color: var(--acc); padding: 0 8px; }
+  .hidden { display: none !important; }
+
+  button:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
 </style>
 
 <div class="app">
-  <header>
-    <div class="wordmark">Breath<span>·</span>Engine</div>
-    <div class="proto-tag">Prototype 01</div>
-  </header>
 
-  <section class="stage" aria-label="Breathing guide">
-    <div class="orbWrap">
-      <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
-        <circle class="track" cx="50" cy="50" r="47.5" />
-        <circle class="prog" id="progRing" cx="50" cy="50" r="47.5" pathLength="100"
-                stroke-dasharray="100" stroke-dashoffset="100" />
-      </svg>
-      <div class="orb" id="orb" data-kind="idle">
-        <div class="glaze g-in"></div>
-        <div class="glaze g-out"></div>
-        <div class="glaze g-hold"></div>
-      </div>
-      <div class="orbText" aria-live="polite">
-        <div id="phaseLabel">Ready</div>
-        <div id="count"></div>
-      </div>
+  <!-- ================= HOME ================= -->
+  <section class="screen active" id="home">
+    <header>
+      <div class="wordmark">Breath<span>·</span>Coach</div>
+      <div class="proto-tag">Prototype 02</div>
+    </header>
+    <div>
+      <p class="eyebrow">Right now</p>
+      <h1>How do you want to feel?</h1>
     </div>
-    <div class="status" id="status">Pick a pattern, then press start</div>
+    <div class="cards" id="cards"></div>
+    <footer>
+      Sit or lie down comfortably; breathe through the nose where you can. Stop if
+      you feel dizzy. Skip breath-holds if you're pregnant or have heart or
+      blood-pressure conditions. Never practice while driving or in water.
+      Prototype for concept testing — not medical advice.
+    </footer>
   </section>
 
-  <section class="patterns" id="patterns" aria-label="Breathing patterns"></section>
-
-  <section class="controls">
-    <div class="row">
-      <span class="row-label">Session</span>
-      <div class="seg" id="lengthSeg" role="group" aria-label="Session length"></div>
+  <!-- ================= INTRO ================= -->
+  <section class="screen" id="intro">
+    <button class="backBtn" id="introBack">&larr; All experiences</button>
+    <div>
+      <p class="eyebrow" id="introMoment"></p>
+      <h2 id="introName"></h2>
     </div>
-    <div class="row">
-      <span class="row-label">Pacing</span>
-      <div class="toggles">
-        <button class="toggle" id="soundToggle" aria-pressed="true">Sound</button>
-        <button class="toggle" id="hapticToggle" aria-pressed="true">Haptics</button>
+    <p class="lede" id="introPromise"></p>
+    <div>
+      <p class="eyebrow" style="margin-bottom:10px">What you'll notice</p>
+      <div class="notice-list" id="introNotices"></div>
+    </div>
+    <div class="checkin">
+      <p class="q" id="preQuestion"></p>
+      <div class="scale">
+        <input type="range" id="preScale" min="0" max="10" value="6" step="1"
+               aria-label="How you feel right now, from 0 to 10">
+        <div class="ends"><span id="preLow"></span><span id="preHigh"></span></div>
       </div>
     </div>
-    <button class="startBtn" id="startBtn">Begin</button>
+    <button class="primaryBtn" id="beginBtn"></button>
+    <p class="footnote" id="introFootnote"></p>
   </section>
 
-  <footer>
-    Sit or lie down comfortably and breathe through the nose where you can.
-    Stop if you feel dizzy. Skip breath-holds if you're pregnant or have heart
-    or blood-pressure conditions. Never practice while driving or in water.
-    Prototype for concept testing — not medical advice.
-  </footer>
-</div>
-
-<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Session complete">
-  <div class="card">
-    <h2>Session complete</h2>
-    <div class="stats">
-      <div class="stat"><div class="n" id="statBreaths">0</div><div class="l">Breaths</div></div>
-      <div class="stat"><div class="n" id="statMinutes">0:00</div><div class="l">Time</div></div>
-      <div class="stat"><div class="n" id="statRate">0</div><div class="l">Br / min</div></div>
+  <!-- ================= SESSION ================= -->
+  <section class="screen" id="session">
+    <div class="sess-top">
+      <div class="sess-name" id="sessName"></div>
+      <div class="coach" id="coach" aria-live="polite"></div>
     </div>
-    <button class="startBtn" id="doneBtn">Done</button>
-  </div>
+    <div class="orbZone">
+      <div class="orbWrap">
+        <div class="halo"></div>
+        <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="track" cx="50" cy="50" r="47.5" />
+          <circle class="prog" id="progRing" cx="50" cy="50" r="47.5" pathLength="100"
+                  stroke-dasharray="100" stroke-dashoffset="100" />
+        </svg>
+        <div class="orb" id="orb" data-kind="idle"></div>
+        <div class="orbText"><div id="phaseWord"></div></div>
+      </div>
+    </div>
+    <div class="sess-bottom">
+      <div class="progressBar"><div class="fill" id="sessFill"></div></div>
+      <div class="sess-controls">
+        <button class="chip" id="soundChip" aria-pressed="true">Sound</button>
+        <button class="chip" id="hapticChip" aria-pressed="true">Haptics</button>
+        <button class="chip" id="endChip">End early</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REFLECTION ================= -->
+  <section class="screen" id="reflect">
+    <div>
+      <p class="eyebrow" id="reflectMoment"></p>
+      <h2>Take one normal breath.<br>Nothing guided. Just yours.</h2>
+    </div>
+    <div id="reflectAsk">
+      <div class="checkin">
+        <p class="q" id="postQuestion"></p>
+        <div class="scale">
+          <input type="range" id="postScale" min="0" max="10" value="4" step="1"
+                 aria-label="How you feel now, from 0 to 10">
+          <div class="ends"><span id="postLow"></span><span id="postHigh"></span></div>
+        </div>
+        <button class="primaryBtn" id="shiftBtn">See the shift</button>
+      </div>
+    </div>
+    <div id="reflectResult" class="hidden">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="shift"><span id="shiftFrom"></span><span class="arrow">&rarr;</span><span id="shiftTo"></span></div>
+        <p class="lede" id="shiftLine"></p>
+        <p class="lede" id="closingLine" style="font-family:var(--serif);font-style:italic;color:var(--ink)"></p>
+        <button class="primaryBtn" id="againBtn">Once more</button>
+        <button class="ghostBtn" id="homeBtn">All experiences</button>
+      </div>
+    </div>
+  </section>
 </div>
 
 <script>
 (() => {
   'use strict';
 
-  // ---------- Pattern library: a pattern is just timed phases ----------
-  // kind: 'in' | 'in2' (second sip of air) | 'hold' | 'out'
-  const PATTERNS = [
+  // ================= The experience library =================
+  // Everything the user sees is feeling-first. The technique is a footnote.
+  const EXPERIENCES = [
     {
-      id: 'box', name: 'Box', tag: 'Focus & steadiness', timing: '4 · 4 · 4 · 4',
-      phases: [
-        { kind: 'in',   label: 'Inhale', secs: 4 },
-        { kind: 'hold', label: 'Hold',   secs: 4 },
-        { kind: 'out',  label: 'Exhale', secs: 4 },
-        { kind: 'hold', label: 'Hold',   secs: 4 },
+      id: 'unwind',
+      moment: 'After a long day',
+      name: 'The Unwind',
+      promise: 'Your shoulders don’t know the day is over yet. This is how you tell them.',
+      notices: [
+        'A wave of warmth arriving with each long exhale',
+        'Your jaw and shoulders quietly letting go',
+        'Thoughts slowing from a sprint to a walk',
       ],
+      accent: '#E0A87D',
+      mins: 4,
+      scaleQ: 'Before we start — how wound up are you right now?',
+      scaleEnds: ['Loose', 'Wound tight'],
+      tensionWord: 'tension',
+      footnote: 'Under the hood: extended-exhale breathing — in for 4, out for 6. The name doesn’t matter. The long exhale does.',
+      begin: 'Put the day down',
+      lead: 'Nothing to fix for the next four minutes. We’ll begin on your next breath.',
+      phases: [
+        { kind: 'in',  word: 'Breathe in', secs: 4 },
+        { kind: 'out', word: 'Let it go',  secs: 6 },
+      ],
+      script: {
+        settle: [
+          'Let the chair take your full weight.',
+          'You don’t have to breathe well. Just breathe along.',
+        ],
+        deepen: [
+          'Make the exhale a slow pour, not a push.',
+          'Somewhere on this breath out, let your jaw unclench.',
+          'Each exhale drops your shoulders a little further.',
+          'The day is over. Your body is the last to hear it — tell it now.',
+        ],
+        close: [
+          'Two more. Make this one the softest yet.',
+          'Last one. Empty all the way out.',
+        ],
+      },
+      closing: 'Whatever’s left of the day, it can wait until tomorrow.',
     },
     {
-      id: 'relax478', name: '4 · 7 · 8', tag: 'Wind down, pre-sleep', timing: '4 · 7 · 8',
-      phases: [
-        { kind: 'in',   label: 'Inhale', secs: 4 },
-        { kind: 'hold', label: 'Hold',   secs: 7 },
-        { kind: 'out',  label: 'Exhale', secs: 8 },
+      id: 'drift',
+      moment: 'At the edge of sleep',
+      name: 'The Drift',
+      promise: 'A slow tide, pulling you a little further out with every wave.',
+      notices: [
+        'A growing heaviness in your arms and eyelids',
+        'Your heartbeat slowing to a nighttime pace',
+        'The day’s noise turning down, notch by notch',
       ],
+      accent: '#8FA3E8',
+      mins: 5,
+      scaleQ: 'How awake are you right now?',
+      scaleEnds: ['Heavy-eyed', 'Wide awake'],
+      tensionWord: 'wakefulness',
+      footnote: 'Under the hood: 4‑7‑8 breathing. Do this one lying in bed — mild lightheadedness on the hold is normal, and the point is not to fight the drowsiness.',
+      begin: 'Start drifting',
+      lead: 'Lie down. Let the bed do the holding. We’ll begin on your next breath.',
+      phases: [
+        { kind: 'in',   word: 'Breathe in',   secs: 4 },
+        { kind: 'hold', word: 'Rest here',    secs: 7 },
+        { kind: 'out',  word: 'Sigh it out',  secs: 8 },
+      ],
+      script: {
+        settle: [
+          'Sink. The bed can carry all of it.',
+          'Eyes closed if they want to close.',
+        ],
+        deepen: [
+          'On the hold, do nothing. Floating counts.',
+          'Let the exhale sound like a sigh. No one’s listening.',
+          'Each wave takes you a little further from shore.',
+          'You don’t need to fall asleep. Just stop holding yourself awake.',
+        ],
+        close: [
+          'Nearly there. Heavier now.',
+          'Last one. Let it lower you all the way down.',
+        ],
+      },
+      closing: 'If sleep comes, let it. You’re done here.',
     },
     {
-      id: 'coherent', name: 'Coherent', tag: 'Balance · ~5½ breaths/min', timing: '5.5 · 5.5',
-      phases: [
-        { kind: 'in',  label: 'Inhale', secs: 5.5 },
-        { kind: 'out', label: 'Exhale', secs: 5.5 },
+      id: 'steady',
+      moment: 'Before something big',
+      name: 'Steady Ground',
+      promise: 'Walk in with a heartbeat that’s on your side.',
+      notices: [
+        'Stillness with edges — calm, but sharp',
+        'A level head where the noise was',
+        'Steadiness you can actually stand on',
       ],
+      accent: '#74C7B8',
+      mins: 3,
+      scaleQ: 'How jittery are you right now?',
+      scaleEnds: ['Grounded', 'Jittery'],
+      tensionWord: 'jitter',
+      footnote: 'Under the hood: box breathing — four equal sides of 4 seconds. Navy SEALs use it before the door opens. You can use it before yours does.',
+      begin: 'Find your footing',
+      lead: 'Sit tall. Feet on the floor. We’ll begin on your next breath.',
+      phases: [
+        { kind: 'in',   word: 'Breathe in', secs: 4 },
+        { kind: 'hold', word: 'Hold',       secs: 4 },
+        { kind: 'out',  word: 'Let it go',  secs: 4 },
+        { kind: 'hold', word: 'Stay empty', secs: 4 },
+      ],
+      script: {
+        settle: [
+          'Four equal sides. Nothing rushed, nothing dragged.',
+          'Feel your feet. That’s the ground you’re standing on.',
+        ],
+        deepen: [
+          'The holds are where the steadiness is built.',
+          'Same pace in, same pace out. You set the tempo now.',
+          'Whatever’s coming, it gets this version of you.',
+          'Square by square, the noise loses interest.',
+        ],
+        close: [
+          'Two more squares. Keep them clean.',
+          'Last one. Walk out of it steady.',
+        ],
+      },
+      closing: 'The room hasn’t changed. You have.',
     },
     {
-      id: 'sigh', name: 'Physio sigh', tag: 'Fast stress reset', timing: '2 + 1 · 6',
-      phases: [
-        { kind: 'in',  label: 'Inhale',   secs: 2 },
-        { kind: 'in2', label: 'Sip more', secs: 1 },
-        { kind: 'out', label: 'Long exhale', secs: 6 },
+      id: 'release',
+      moment: 'When it’s too much, right now',
+      name: 'The Release Valve',
+      promise: 'The fastest brake your body has — ninety seconds, borrowed from the way you already sigh.',
+      notices: [
+        'Pressure leaving on each long exhale',
+        'Your chest unclenching, breath by breath',
+        'Space coming back where the squeeze was',
       ],
+      accent: '#E8907D',
+      mins: 1.5,
+      scaleQ: 'How much pressure are you under right now?',
+      scaleEnds: ['Breathing room', 'Overwhelmed'],
+      tensionWord: 'pressure',
+      footnote: 'Under the hood: the physiological sigh — a double inhale and a long exhale, the same reflex your body uses after crying. Stanford measured it as the fastest way to downshift in real time.',
+      begin: 'Open the valve',
+      lead: 'This takes ninety seconds. You have ninety seconds. We’ll begin on your next breath.',
+      phases: [
+        { kind: 'in',  word: 'Breathe in',   secs: 2 },
+        { kind: 'in2', word: 'A little more', secs: 1 },
+        { kind: 'out', word: 'Let it all go', secs: 6 },
+      ],
+      script: {
+        settle: [
+          'Two sips of air in, one long pour out.',
+        ],
+        deepen: [
+          'That second sip pops your lungs open. That’s the trick.',
+          'The exhale is the valve. Open it slowly.',
+          'You’re not solving anything right now. Just releasing the grip.',
+        ],
+        close: [
+          'Two more. Longest exhales yet.',
+          'Last one. Let everything leave with it.',
+        ],
+      },
+      closing: 'Still a lot on your plate — but you’re holding it with looser hands.',
     },
     {
-      id: 'extended', name: 'Long exhale', tag: 'Gentle calm, beginner-safe', timing: '4 · 6',
-      phases: [
-        { kind: 'in',  label: 'Inhale', secs: 4 },
-        { kind: 'out', label: 'Exhale', secs: 6 },
+      id: 'firstlight',
+      moment: 'Before the day starts',
+      name: 'First Light',
+      promise: 'Set your own rhythm before the world sets it for you.',
+      notices: [
+        'A clean, even rhythm settling in',
+        'Quiet alertness — awake without the jangle',
+        'Room to think before the first ping arrives',
       ],
+      accent: '#E5C878',
+      mins: 4,
+      scaleQ: 'How foggy are you right now?',
+      scaleEnds: ['Clear', 'Foggy'],
+      tensionWord: 'fog',
+      footnote: 'Under the hood: coherent breathing at about 5½ breaths a minute — the pace where heart rhythm and breath fall into step.',
+      begin: 'Set the rhythm',
+      lead: 'Before the phone, before the list. We’ll begin on your next breath.',
+      phases: [
+        { kind: 'in',  word: 'Breathe in', secs: 5.5 },
+        { kind: 'out', word: 'Breathe out', secs: 5.5 },
+      ],
+      script: {
+        settle: [
+          'Even in, even out. Like drawing a slow circle.',
+          'No pushing. The rhythm does the work.',
+        ],
+        deepen: [
+          'This is your pace. The day will try to change it — it belongs to you.',
+          'Notice the turn at the top of the breath. Smooth it.',
+          'Awake is not the same as wired. This is awake.',
+          'One thing at a time today, starting with this breath.',
+        ],
+        close: [
+          'A few more. Memorise this tempo.',
+          'Last one. Carry it out the door with you.',
+        ],
+      },
+      closing: 'The day gets to join your rhythm today — not the other way round.',
     },
-  ];
-
-  const LENGTHS = [
-    { label: '1 min', secs: 60 },
-    { label: '3 min', secs: 180 },
-    { label: '5 min', secs: 300 },
-    { label: '∞', secs: Infinity },
   ];
 
   const $ = (id) => document.getElementById(id);
-  const orb = $('orb'), phaseLabel = $('phaseLabel'), countEl = $('count'),
-        statusEl = $('status'), progRing = $('progRing'), startBtn = $('startBtn');
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const LEAD_MS = 5200;
 
   const state = {
+    exp: null,
     running: false,
-    pattern: PATTERNS[0],
-    sessionSecs: 180,
     phaseIdx: 0,
     phaseStart: 0,
-    sessionStart: 0,
-    fullness: 0,      // 0 = empty lungs, 1 = full
-    fStart: 0,        // fullness at the start of the current phase
+    fullness: 0,
+    fStart: 0,
     breaths: 0,
+    totalBreaths: 0,
+    cycleSecs: 0,
+    preScore: 6,
     soundOn: true,
     hapticsOn: true,
     raf: 0,
+    leadTimer: 0,
+    coachTimer: 0,
     wakeLock: null,
   };
 
-  // ---------- UI: pattern cards ----------
-  const patternsEl = $('patterns');
-  PATTERNS.forEach((p) => {
-    const b = document.createElement('button');
-    b.className = 'pattern';
-    b.setAttribute('aria-pressed', String(p === state.pattern));
-    b.innerHTML = '<span class="p-name">' + p.name + '</span>' +
-                  '<span class="p-timing">' + p.timing + '</span>' +
-                  '<span class="p-tag">' + p.tag + '</span>';
-    b.addEventListener('click', () => {
-      state.pattern = p;
-      patternsEl.querySelectorAll('.pattern').forEach((el) => el.setAttribute('aria-pressed', 'false'));
-      b.setAttribute('aria-pressed', 'true');
-      if (state.running) restartPhases();
-      else statusEl.textContent = p.name + ' — ' + p.tag.toLowerCase();
-    });
-    patternsEl.appendChild(b);
-  });
-
-  // ---------- UI: session length ----------
-  const lengthSeg = $('lengthSeg');
-  LENGTHS.forEach((l) => {
-    const b = document.createElement('button');
-    b.textContent = l.label;
-    b.setAttribute('aria-pressed', String(l.secs === state.sessionSecs));
-    b.addEventListener('click', () => {
-      state.sessionSecs = l.secs;
-      lengthSeg.querySelectorAll('button').forEach((el) => el.setAttribute('aria-pressed', 'false'));
-      b.setAttribute('aria-pressed', 'true');
-    });
-    lengthSeg.appendChild(b);
-  });
-
-  // ---------- UI: toggles ----------
-  const flip = (btn) => {
-    const on = btn.getAttribute('aria-pressed') !== 'true';
-    btn.setAttribute('aria-pressed', String(on));
-    return on;
-  };
-  $('soundToggle').addEventListener('click', (e) => {
-    state.soundOn = flip(e.currentTarget);
-    if (audio.gain) audio.gain.gain.setTargetAtTime(state.soundOn && state.running ? DRONE_LEVEL : 0, audio.ctx.currentTime, 0.15);
-  });
-  $('hapticToggle').addEventListener('click', (e) => { state.hapticsOn = flip(e.currentTarget); });
-  if (!('vibrate' in navigator)) {
-    state.hapticsOn = false;
-    const ht = $('hapticToggle');
-    ht.setAttribute('aria-pressed', 'false');
-    ht.disabled = true;
-    ht.title = 'Not supported on this device';
+  // ================= Screens =================
+  const screens = ['home', 'intro', 'session', 'reflect'];
+  function show(id) {
+    screens.forEach((s) => $(s).classList.toggle('active', s === id));
+    window.scrollTo(0, 0);
   }
 
-  // ---------- Audio: a quiet drone whose pitch rises on inhale, falls on exhale ----------
-  const DRONE_LEVEL = 0.055;
+  // ================= Home cards =================
+  const cardsEl = $('cards');
+  EXPERIENCES.forEach((exp) => {
+    const b = document.createElement('button');
+    b.className = 'card';
+    b.style.setProperty('--c', exp.accent);
+    const durLabel = exp.mins < 2 ? Math.round(exp.mins * 60) + ' seconds' : exp.mins + ' minutes';
+    b.innerHTML =
+      '<span class="moment">' + exp.moment + '</span>' +
+      '<span class="name">' + exp.name + '</span>' +
+      '<span class="promise">' + exp.promise + '</span>' +
+      '<span class="dur">' + durLabel + ' · guided</span>';
+    b.addEventListener('click', () => openIntro(exp));
+    cardsEl.appendChild(b);
+  });
+
+  // ================= Intro =================
+  function openIntro(exp) {
+    state.exp = exp;
+    document.documentElement.style.setProperty('--acc', exp.accent);
+    $('introMoment').textContent = exp.moment;
+    $('introName').textContent = exp.name;
+    $('introPromise').textContent = exp.promise;
+    $('introNotices').innerHTML = exp.notices
+      .map((n) => '<div class="item">' + n + '</div>').join('');
+    $('preQuestion').textContent = exp.scaleQ;
+    $('preLow').textContent = exp.scaleEnds[0];
+    $('preHigh').textContent = exp.scaleEnds[1];
+    $('preScale').value = 6;
+    $('beginBtn').textContent = exp.begin;
+    $('introFootnote').textContent = exp.footnote;
+    show('intro');
+  }
+  $('introBack').addEventListener('click', () => show('home'));
+  $('beginBtn').addEventListener('click', () => {
+    state.preScore = Number($('preScale').value);
+    startSession();
+  });
+
+  // ================= Coach lines =================
+  function lineFor(cycle) {
+    const s = state.exp.script;
+    const total = state.totalBreaths;
+    const settleN = Math.max(1, Math.round(total * 0.25));
+    const closeN = Math.max(1, Math.round(total * 0.2));
+    if (cycle < settleN) return s.settle[cycle % s.settle.length];
+    if (cycle >= total - closeN) return s.close[(cycle - (total - closeN)) % s.close.length];
+    return s.deepen[(cycle - settleN) % s.deepen.length];
+  }
+  function setCoach(text, instant) {
+    const el = $('coach');
+    clearTimeout(state.coachTimer);
+    if (instant) { el.textContent = text; el.classList.remove('dim'); return; }
+    el.classList.add('dim');
+    state.coachTimer = setTimeout(() => {
+      el.textContent = text;
+      el.classList.remove('dim');
+    }, 520);
+  }
+
+  // ================= Audio: pitch rises on inhale, falls on exhale =================
+  const DRONE_LEVEL = 0.05;
   const audio = { ctx: null, osc: null, gain: null };
   function ensureAudio() {
     if (audio.ctx) { audio.ctx.resume(); return; }
@@ -355,7 +575,6 @@
     freq.setValueAtTime(freq.value, now);
     if (ph.kind === 'in' || ph.kind === 'in2') freq.linearRampToValueAtTime(215, now + ph.secs);
     else if (ph.kind === 'out') freq.linearRampToValueAtTime(135, now + ph.secs);
-    // hold: pitch stays where it is — stillness is audible too
     ping(ph.kind);
   }
   function ping(kind) {
@@ -366,7 +585,7 @@
     o.frequency.value = kind === 'out' ? 392 : kind === 'hold' ? 494 : 587;
     const g = audio.ctx.createGain();
     g.gain.setValueAtTime(0.0001, now);
-    g.gain.exponentialRampToValueAtTime(0.09, now + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.08, now + 0.02);
     g.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
     o.connect(g).connect(audio.ctx.destination);
     o.start(now);
@@ -377,14 +596,15 @@
     audio.gain.gain.setTargetAtTime(state.soundOn ? level : 0, audio.ctx.currentTime, 0.3);
   }
 
-  // ---------- Haptics ----------
+  // ================= Haptics =================
   function buzz(kind) {
     if (!state.hapticsOn || !('vibrate' in navigator)) return;
     navigator.vibrate(kind === 'out' ? [40, 60, 40] : kind === 'hold' ? 20 : 40);
   }
 
-  // ---------- Engine ----------
+  // ================= Engine =================
   const easeInOutSine = (p) => -(Math.cos(Math.PI * p) - 1) / 2;
+  const orb = $('orb'), phaseWord = $('phaseWord'), progRing = $('progRing'), sessFill = $('sessFill');
 
   function targetFullness(kind) {
     return (kind === 'in' || kind === 'in2') ? 1 : kind === 'out' ? 0 : state.fullness;
@@ -394,22 +614,16 @@
     state.phaseIdx = idx;
     state.phaseStart = now;
     state.fStart = state.fullness;
-    const ph = state.pattern.phases[idx];
+    const ph = state.exp.phases[idx];
     orb.dataset.kind = ph.kind;
-    phaseLabel.textContent = ph.label;
-    progRing.style.stroke = (ph.kind === 'out') ? 'var(--out)' : (ph.kind === 'hold') ? 'var(--hold)' : 'var(--in)';
+    phaseWord.textContent = ph.word;
     phaseAudio(ph);
     buzz(ph.kind);
   }
 
-  function restartPhases() {
-    state.fullness = 0;
-    enterPhase(0, performance.now());
-  }
-
   function tick(now) {
     if (!state.running) return;
-    const ph = state.pattern.phases[state.phaseIdx];
+    const ph = state.exp.phases[state.phaseIdx];
     const t = (now - state.phaseStart) / 1000;
     const p = Math.min(t / ph.secs, 1);
 
@@ -421,80 +635,133 @@
       orb.style.opacity = String(0.45 + 0.55 * state.fullness);
     } else {
       orb.style.transform = 'scale(' + (0.62 + 0.38 * state.fullness).toFixed(4) + ')';
+      orb.style.filter = 'brightness(' + (0.85 + 0.3 * state.fullness).toFixed(3) + ')';
     }
     progRing.style.strokeDashoffset = String(100 - p * 100);
-    countEl.textContent = String(Math.max(1, Math.ceil(ph.secs - t - 1e-9)));
 
-    const elapsed = (now - state.sessionStart) / 1000;
-    const left = state.sessionSecs - elapsed;
-    statusEl.textContent = (isFinite(state.sessionSecs) ? fmt(Math.max(0, left)) + ' left · ' : fmt(elapsed) + ' · ') +
-      state.breaths + (state.breaths === 1 ? ' breath' : ' breaths');
+    const done = state.breaths * state.cycleSecs +
+      state.exp.phases.slice(0, state.phaseIdx).reduce((a, x) => a + x.secs, 0) + Math.min(t, ph.secs);
+    sessFill.style.width = Math.min(100, (done / (state.totalBreaths * state.cycleSecs)) * 100) + '%';
 
     if (p >= 1) {
-      const nextIdx = (state.phaseIdx + 1) % state.pattern.phases.length;
+      const nextIdx = (state.phaseIdx + 1) % state.exp.phases.length;
       if (nextIdx === 0) {
         state.breaths++;
-        if (isFinite(state.sessionSecs) && elapsed >= state.sessionSecs) { endSession(true); return; }
+        if (state.breaths >= state.totalBreaths) { endSession(); return; }
+        setCoach(lineFor(state.breaths));
       }
       enterPhase(nextIdx, now);
     }
     state.raf = requestAnimationFrame(tick);
   }
 
-  function fmt(secs) {
-    const m = Math.floor(secs / 60), s = Math.floor(secs % 60);
-    return m + ':' + String(s).padStart(2, '0');
-  }
-
-  // ---------- Session lifecycle ----------
+  // ================= Session lifecycle =================
   async function startSession() {
+    const exp = state.exp;
     ensureAudio();
-    state.running = true;
+    state.cycleSecs = exp.phases.reduce((a, x) => a + x.secs, 0);
+    state.totalBreaths = Math.max(3, Math.round((exp.mins * 60) / state.cycleSecs));
     state.breaths = 0;
-    state.sessionStart = performance.now();
-    startBtn.textContent = 'End session';
-    startBtn.classList.add('running');
+    state.fullness = 0;
+    state.running = false;
+
+    $('sessName').textContent = exp.name;
+    setCoach(exp.lead, true);
+    orb.dataset.kind = 'idle';
+    orb.style.transform = '';
+    orb.style.filter = '';
+    orb.style.opacity = '';
+    phaseWord.textContent = '';
+    progRing.style.strokeDashoffset = '100';
+    sessFill.style.width = '0%';
+    show('session');
+
     droneTo(DRONE_LEVEL);
-    restartPhases();
-    state.raf = requestAnimationFrame(tick);
     try { state.wakeLock = await navigator.wakeLock.request('screen'); } catch (e) {}
+
+    clearTimeout(state.leadTimer);
+    state.leadTimer = setTimeout(() => {
+      state.running = true;
+      setCoach(lineFor(0));
+      enterPhase(0, performance.now());
+      state.raf = requestAnimationFrame(tick);
+    }, LEAD_MS);
   }
 
-  function endSession(completed) {
+  function endSession() {
     state.running = false;
+    clearTimeout(state.leadTimer);
+    clearTimeout(state.coachTimer);
     cancelAnimationFrame(state.raf);
     droneTo(0);
     if (state.wakeLock) { state.wakeLock.release().catch(() => {}); state.wakeLock = null; }
-    startBtn.textContent = 'Begin';
-    startBtn.classList.remove('running');
-    orb.dataset.kind = 'idle';
-    orb.style.transform = '';
-    orb.style.opacity = '';
-    phaseLabel.textContent = 'Ready';
-    countEl.textContent = '';
-    progRing.style.strokeDashoffset = '100';
-
-    const mins = (performance.now() - state.sessionStart) / 60000;
-    if (completed || state.breaths > 0) {
-      $('statBreaths').textContent = String(state.breaths);
-      $('statMinutes').textContent = fmt(mins * 60);
-      $('statRate').textContent = mins > 0.05 ? (state.breaths / mins).toFixed(1) : '—';
-      $('overlay').classList.add('open');
-    }
-    statusEl.textContent = 'Pick a pattern, then press start';
+    openReflect();
   }
 
-  startBtn.addEventListener('click', () => state.running ? endSession(false) : startSession());
-  $('doneBtn').addEventListener('click', () => $('overlay').classList.remove('open'));
-  document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space' && e.target === document.body) {
-      e.preventDefault();
-      state.running ? endSession(false) : startSession();
+  // ================= Reflection =================
+  function openReflect() {
+    const exp = state.exp;
+    $('reflectMoment').textContent = exp.name;
+    $('postQuestion').textContent = 'And now — ' + exp.scaleQ.replace(/^Before we start — /, '').toLowerCase();
+    $('postLow').textContent = exp.scaleEnds[0];
+    $('postHigh').textContent = exp.scaleEnds[1];
+    $('postScale').value = Math.max(0, state.preScore - 2);
+    $('reflectAsk').classList.remove('hidden');
+    $('reflectResult').classList.add('hidden');
+    show('reflect');
+  }
+
+  $('shiftBtn').addEventListener('click', () => {
+    const post = Number($('postScale').value);
+    const delta = state.preScore - post;
+    const exp = state.exp;
+    $('shiftFrom').textContent = state.preScore;
+    $('shiftTo').textContent = post;
+    let line;
+    if (delta > 0) {
+      line = 'You just put down ' + delta + (delta === 1 ? ' point' : ' points') +
+             ' of ' + exp.tensionWord + ' in ' +
+             (exp.mins < 2 ? Math.round(exp.mins * 60) + ' seconds' : exp.mins + ' minutes') +
+             '. No screen did that — your breath did.';
+    } else if (delta === 0) {
+      line = 'The number didn’t move — the shift is sometimes quieter than a scale. Notice your breath: it’s slower than when you arrived.';
+    } else {
+      line = 'Some days it doesn’t drop — that’s honest data, not failure. A second round, or a longer exhale, usually finds the release.';
     }
+    $('shiftLine').textContent = line;
+    $('closingLine').textContent = '“' + exp.closing + '”';
+    $('reflectAsk').classList.add('hidden');
+    $('reflectResult').classList.remove('hidden');
   });
+
+  $('againBtn').addEventListener('click', () => openIntro(state.exp));
+  $('homeBtn').addEventListener('click', () => show('home'));
+
+  // ================= Session controls =================
+  const flip = (btn) => {
+    const on = btn.getAttribute('aria-pressed') !== 'true';
+    btn.setAttribute('aria-pressed', String(on));
+    return on;
+  };
+  $('soundChip').addEventListener('click', (e) => {
+    state.soundOn = flip(e.currentTarget);
+    if (audio.gain) audio.gain.gain.setTargetAtTime(state.soundOn ? DRONE_LEVEL : 0, audio.ctx.currentTime, 0.15);
+  });
+  $('hapticChip').addEventListener('click', (e) => { state.hapticsOn = flip(e.currentTarget); });
+  if (!('vibrate' in navigator)) {
+    state.hapticsOn = false;
+    const hc = $('hapticChip');
+    hc.setAttribute('aria-pressed', 'false');
+    hc.disabled = true;
+    hc.title = 'Not supported on this device';
+  }
+  $('endChip').addEventListener('click', endSession);
+
   document.addEventListener('visibilitychange', () => {
-    // rAF pauses in background tabs; a paced session can't survive that honestly, so end it.
-    if (document.hidden && state.running) endSession(false);
+    // rAF pauses in background tabs; a paced session can't survive that honestly.
+    if (document.hidden && (state.running || state.leadTimer)) {
+      if ($('session').classList.contains('active')) endSession();
+    }
   });
 })();
 </script>
