@@ -19,6 +19,10 @@ browser storage**. Built as a single-file progressive web app (PWA).
   macros, quick-add favourites, daily targets, browse past days.
 - **Body** — weight log, 30-entry trend chart with goal line, BMI, delta since
   last weigh-in.
+- **Sleep** — bed/wake time log with 7-night bars and average, nightly
+  wind-down reminder (default 22:30) to be in bed by 11pm.
+- **Cardio distance** — exercises in the Cardio group log km × minutes
+  instead of kg × reps; PRs show longest distance and best pace.
 - **Settings** — goals, units (kg/lb), default rest time, reminders,
   export/import JSON backup, full reset.
 
