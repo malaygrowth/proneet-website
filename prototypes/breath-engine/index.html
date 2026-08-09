@@ -1,0 +1,500 @@
+<title>Breath Engine</title>
+<style>
+  /* Single-theme by design: breathwork happens in dim rooms. All colors explicit. */
+  :root {
+    --bg: #0C111C;
+    --surface: #151D2C;
+    --surface-2: #1B2536;
+    --line: #26324A;
+    --ink: #E9EEF6;
+    --muted: #8494AB;
+    --faint: #5A6A85;
+    --in: #74C7B8;      /* inhale — cool aqua */
+    --out: #E0A87D;     /* exhale — warm sand */
+    --hold: #93A5C9;    /* hold — still blue */
+    --font: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { background: var(--bg); }
+  body {
+    color: var(--ink);
+    font-family: var(--font);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 20px 16px 32px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .app { width: 100%; max-width: 620px; display: flex; flex-direction: column; gap: 22px; }
+
+  header { display: flex; align-items: baseline; justify-content: space-between; }
+  .wordmark { font-size: 15px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink); }
+  .wordmark span { color: var(--in); }
+  .proto-tag { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+
+  /* ---------- Stage ---------- */
+  .stage { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 8px 0 0; }
+  .orbWrap { position: relative; width: min(68vw, 320px); aspect-ratio: 1; display: grid; place-items: center; }
+
+  .ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring .track { fill: none; stroke: var(--line); stroke-width: 2; }
+  .ring .prog  { fill: none; stroke: var(--hold); stroke-width: 3; stroke-linecap: round; transition: stroke .8s ease; }
+
+  .orb {
+    position: absolute; inset: 11%;
+    border-radius: 50%;
+    will-change: transform;
+  }
+  .glaze {
+    position: absolute; inset: 0; border-radius: 50%;
+    opacity: 0; transition: opacity .9s ease;
+  }
+  .g-in   { background: radial-gradient(circle at 38% 30%, #B9F0E6 0%, #74C7B8 38%, #1E5F58 100%); box-shadow: 0 0 70px 6px rgba(116,199,184,.28); }
+  .g-out  { background: radial-gradient(circle at 38% 30%, #F6DDBE 0%, #E0A87D 38%, #6E4526 100%); box-shadow: 0 0 70px 6px rgba(224,168,125,.25); }
+  .g-hold { background: radial-gradient(circle at 38% 30%, #C7D4EE 0%, #93A5C9 38%, #37476B 100%); box-shadow: 0 0 60px 4px rgba(147,165,201,.22); }
+  .orb[data-kind="in"] .g-in, .orb[data-kind="in2"] .g-in { opacity: .95; }
+  .orb[data-kind="out"] .g-out { opacity: .95; }
+  .orb[data-kind="hold"] .g-hold, .orb[data-kind="idle"] .g-hold { opacity: .9; }
+  .orb[data-kind="idle"] { opacity: .45; }
+
+  .orbText { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; pointer-events: none; }
+  #phaseLabel { font-size: 17px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; text-shadow: 0 1px 8px rgba(0,0,0,.35); }
+  #count { font-size: 44px; font-weight: 300; font-variant-numeric: tabular-nums; line-height: 1.05; text-shadow: 0 1px 10px rgba(0,0,0,.4); min-height: 48px; }
+
+  .status { font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 18px; }
+
+  /* ---------- Patterns ---------- */
+  .patterns { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(128px, 1fr); gap: 10px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+  .pattern {
+    font-family: var(--font);
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 12px 12px 11px; text-align: left; color: var(--ink); cursor: pointer;
+    display: flex; flex-direction: column; gap: 3px;
+    transition: border-color .25s ease, background .25s ease;
+  }
+  .pattern:hover { background: var(--surface-2); }
+  .pattern[aria-pressed="true"] { border-color: var(--in); background: var(--surface-2); }
+  .pattern .p-name { font-size: 14.5px; font-weight: 600; }
+  .pattern .p-timing { font-size: 12.5px; color: var(--in); font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+  .pattern .p-tag { font-size: 12px; color: var(--muted); }
+
+  /* ---------- Controls ---------- */
+  .controls { display: flex; flex-direction: column; gap: 14px; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .row-label { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+
+  .seg { display: flex; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 2px; }
+  .seg button {
+    font-family: var(--font); font-size: 13px; font-variant-numeric: tabular-nums;
+    background: none; border: 0; border-radius: 7px; color: var(--muted);
+    padding: 6px 13px; cursor: pointer;
+  }
+  .seg button[aria-pressed="true"] { background: var(--surface-2); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+
+  .toggles { display: flex; gap: 10px; }
+  .toggle {
+    font-family: var(--font); font-size: 13px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    color: var(--muted); padding: 7px 14px; cursor: pointer;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .toggle[aria-pressed="true"] { color: var(--ink); border-color: var(--in); }
+  .toggle[aria-pressed="true"]::before { content: "● "; color: var(--in); font-size: 9px; vertical-align: 2px; }
+
+  .startBtn {
+    font-family: var(--font); font-size: 16px; font-weight: 600; letter-spacing: .05em;
+    background: var(--in); color: #08201C; border: 0; border-radius: 999px;
+    padding: 15px 0; width: 100%; cursor: pointer;
+    transition: filter .2s ease, background .3s ease, color .3s ease;
+  }
+  .startBtn:hover { filter: brightness(1.08); }
+  .startBtn.running { background: var(--surface-2); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+
+  button:focus-visible { outline: 2px solid var(--in); outline-offset: 2px; }
+
+  /* ---------- Summary overlay ---------- */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(8, 12, 20, .82);
+    display: none; place-items: center; padding: 24px; z-index: 10;
+  }
+  .overlay.open { display: grid; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 18px;
+    padding: 28px 26px 22px; width: min(100%, 360px); text-align: center;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .card h2 { font-size: 18px; font-weight: 600; letter-spacing: .04em; }
+  .stats { display: flex; justify-content: space-evenly; gap: 8px; }
+  .stat .n { font-size: 30px; font-weight: 300; font-variant-numeric: tabular-nums; color: var(--in); }
+  .stat .l { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+  .card .startBtn { padding: 12px 0; }
+
+  footer { font-size: 12px; line-height: 1.55; color: var(--faint); max-width: 56ch; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glaze, .prog, .toggle, .startBtn { transition: none; }
+  }
+</style>
+
+<div class="app">
+  <header>
+    <div class="wordmark">Breath<span>·</span>Engine</div>
+    <div class="proto-tag">Prototype 01</div>
+  </header>
+
+  <section class="stage" aria-label="Breathing guide">
+    <div class="orbWrap">
+      <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="track" cx="50" cy="50" r="47.5" />
+        <circle class="prog" id="progRing" cx="50" cy="50" r="47.5" pathLength="100"
+                stroke-dasharray="100" stroke-dashoffset="100" />
+      </svg>
+      <div class="orb" id="orb" data-kind="idle">
+        <div class="glaze g-in"></div>
+        <div class="glaze g-out"></div>
+        <div class="glaze g-hold"></div>
+      </div>
+      <div class="orbText" aria-live="polite">
+        <div id="phaseLabel">Ready</div>
+        <div id="count"></div>
+      </div>
+    </div>
+    <div class="status" id="status">Pick a pattern, then press start</div>
+  </section>
+
+  <section class="patterns" id="patterns" aria-label="Breathing patterns"></section>
+
+  <section class="controls">
+    <div class="row">
+      <span class="row-label">Session</span>
+      <div class="seg" id="lengthSeg" role="group" aria-label="Session length"></div>
+    </div>
+    <div class="row">
+      <span class="row-label">Pacing</span>
+      <div class="toggles">
+        <button class="toggle" id="soundToggle" aria-pressed="true">Sound</button>
+        <button class="toggle" id="hapticToggle" aria-pressed="true">Haptics</button>
+      </div>
+    </div>
+    <button class="startBtn" id="startBtn">Begin</button>
+  </section>
+
+  <footer>
+    Sit or lie down comfortably and breathe through the nose where you can.
+    Stop if you feel dizzy. Skip breath-holds if you're pregnant or have heart
+    or blood-pressure conditions. Never practice while driving or in water.
+    Prototype for concept testing — not medical advice.
+  </footer>
+</div>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Session complete">
+  <div class="card">
+    <h2>Session complete</h2>
+    <div class="stats">
+      <div class="stat"><div class="n" id="statBreaths">0</div><div class="l">Breaths</div></div>
+      <div class="stat"><div class="n" id="statMinutes">0:00</div><div class="l">Time</div></div>
+      <div class="stat"><div class="n" id="statRate">0</div><div class="l">Br / min</div></div>
+    </div>
+    <button class="startBtn" id="doneBtn">Done</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ---------- Pattern library: a pattern is just timed phases ----------
+  // kind: 'in' | 'in2' (second sip of air) | 'hold' | 'out'
+  const PATTERNS = [
+    {
+      id: 'box', name: 'Box', tag: 'Focus & steadiness', timing: '4 · 4 · 4 · 4',
+      phases: [
+        { kind: 'in',   label: 'Inhale', secs: 4 },
+        { kind: 'hold', label: 'Hold',   secs: 4 },
+        { kind: 'out',  label: 'Exhale', secs: 4 },
+        { kind: 'hold', label: 'Hold',   secs: 4 },
+      ],
+    },
+    {
+      id: 'relax478', name: '4 · 7 · 8', tag: 'Wind down, pre-sleep', timing: '4 · 7 · 8',
+      phases: [
+        { kind: 'in',   label: 'Inhale', secs: 4 },
+        { kind: 'hold', label: 'Hold',   secs: 7 },
+        { kind: 'out',  label: 'Exhale', secs: 8 },
+      ],
+    },
+    {
+      id: 'coherent', name: 'Coherent', tag: 'Balance · ~5½ breaths/min', timing: '5.5 · 5.5',
+      phases: [
+        { kind: 'in',  label: 'Inhale', secs: 5.5 },
+        { kind: 'out', label: 'Exhale', secs: 5.5 },
+      ],
+    },
+    {
+      id: 'sigh', name: 'Physio sigh', tag: 'Fast stress reset', timing: '2 + 1 · 6',
+      phases: [
+        { kind: 'in',  label: 'Inhale',   secs: 2 },
+        { kind: 'in2', label: 'Sip more', secs: 1 },
+        { kind: 'out', label: 'Long exhale', secs: 6 },
+      ],
+    },
+    {
+      id: 'extended', name: 'Long exhale', tag: 'Gentle calm, beginner-safe', timing: '4 · 6',
+      phases: [
+        { kind: 'in',  label: 'Inhale', secs: 4 },
+        { kind: 'out', label: 'Exhale', secs: 6 },
+      ],
+    },
+  ];
+
+  const LENGTHS = [
+    { label: '1 min', secs: 60 },
+    { label: '3 min', secs: 180 },
+    { label: '5 min', secs: 300 },
+    { label: '∞', secs: Infinity },
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const orb = $('orb'), phaseLabel = $('phaseLabel'), countEl = $('count'),
+        statusEl = $('status'), progRing = $('progRing'), startBtn = $('startBtn');
+  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const state = {
+    running: false,
+    pattern: PATTERNS[0],
+    sessionSecs: 180,
+    phaseIdx: 0,
+    phaseStart: 0,
+    sessionStart: 0,
+    fullness: 0,      // 0 = empty lungs, 1 = full
+    fStart: 0,        // fullness at the start of the current phase
+    breaths: 0,
+    soundOn: true,
+    hapticsOn: true,
+    raf: 0,
+    wakeLock: null,
+  };
+
+  // ---------- UI: pattern cards ----------
+  const patternsEl = $('patterns');
+  PATTERNS.forEach((p) => {
+    const b = document.createElement('button');
+    b.className = 'pattern';
+    b.setAttribute('aria-pressed', String(p === state.pattern));
+    b.innerHTML = '<span class="p-name">' + p.name + '</span>' +
+                  '<span class="p-timing">' + p.timing + '</span>' +
+                  '<span class="p-tag">' + p.tag + '</span>';
+    b.addEventListener('click', () => {
+      state.pattern = p;
+      patternsEl.querySelectorAll('.pattern').forEach((el) => el.setAttribute('aria-pressed', 'false'));
+      b.setAttribute('aria-pressed', 'true');
+      if (state.running) restartPhases();
+      else statusEl.textContent = p.name + ' — ' + p.tag.toLowerCase();
+    });
+    patternsEl.appendChild(b);
+  });
+
+  // ---------- UI: session length ----------
+  const lengthSeg = $('lengthSeg');
+  LENGTHS.forEach((l) => {
+    const b = document.createElement('button');
+    b.textContent = l.label;
+    b.setAttribute('aria-pressed', String(l.secs === state.sessionSecs));
+    b.addEventListener('click', () => {
+      state.sessionSecs = l.secs;
+      lengthSeg.querySelectorAll('button').forEach((el) => el.setAttribute('aria-pressed', 'false'));
+      b.setAttribute('aria-pressed', 'true');
+    });
+    lengthSeg.appendChild(b);
+  });
+
+  // ---------- UI: toggles ----------
+  const flip = (btn) => {
+    const on = btn.getAttribute('aria-pressed') !== 'true';
+    btn.setAttribute('aria-pressed', String(on));
+    return on;
+  };
+  $('soundToggle').addEventListener('click', (e) => {
+    state.soundOn = flip(e.currentTarget);
+    if (audio.gain) audio.gain.gain.setTargetAtTime(state.soundOn && state.running ? DRONE_LEVEL : 0, audio.ctx.currentTime, 0.15);
+  });
+  $('hapticToggle').addEventListener('click', (e) => { state.hapticsOn = flip(e.currentTarget); });
+  if (!('vibrate' in navigator)) {
+    state.hapticsOn = false;
+    const ht = $('hapticToggle');
+    ht.setAttribute('aria-pressed', 'false');
+    ht.disabled = true;
+    ht.title = 'Not supported on this device';
+  }
+
+  // ---------- Audio: a quiet drone whose pitch rises on inhale, falls on exhale ----------
+  const DRONE_LEVEL = 0.055;
+  const audio = { ctx: null, osc: null, gain: null };
+  function ensureAudio() {
+    if (audio.ctx) { audio.ctx.resume(); return; }
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      audio.ctx = new Ctx();
+      audio.osc = audio.ctx.createOscillator();
+      audio.osc.type = 'sine';
+      audio.osc.frequency.value = 150;
+      const filter = audio.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 900;
+      audio.gain = audio.ctx.createGain();
+      audio.gain.gain.value = 0;
+      audio.osc.connect(filter).connect(audio.gain).connect(audio.ctx.destination);
+      audio.osc.start();
+    } catch (e) { audio.ctx = null; }
+  }
+  function phaseAudio(ph) {
+    if (!audio.ctx || !state.soundOn) return;
+    const now = audio.ctx.currentTime;
+    const freq = audio.osc.frequency;
+    freq.cancelScheduledValues(now);
+    freq.setValueAtTime(freq.value, now);
+    if (ph.kind === 'in' || ph.kind === 'in2') freq.linearRampToValueAtTime(215, now + ph.secs);
+    else if (ph.kind === 'out') freq.linearRampToValueAtTime(135, now + ph.secs);
+    // hold: pitch stays where it is — stillness is audible too
+    ping(ph.kind);
+  }
+  function ping(kind) {
+    if (!audio.ctx || !state.soundOn) return;
+    const now = audio.ctx.currentTime;
+    const o = audio.ctx.createOscillator();
+    o.type = 'sine';
+    o.frequency.value = kind === 'out' ? 392 : kind === 'hold' ? 494 : 587;
+    const g = audio.ctx.createGain();
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(0.09, now + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.7);
+    o.connect(g).connect(audio.ctx.destination);
+    o.start(now);
+    o.stop(now + 0.75);
+  }
+  function droneTo(level) {
+    if (!audio.ctx) return;
+    audio.gain.gain.setTargetAtTime(state.soundOn ? level : 0, audio.ctx.currentTime, 0.3);
+  }
+
+  // ---------- Haptics ----------
+  function buzz(kind) {
+    if (!state.hapticsOn || !('vibrate' in navigator)) return;
+    navigator.vibrate(kind === 'out' ? [40, 60, 40] : kind === 'hold' ? 20 : 40);
+  }
+
+  // ---------- Engine ----------
+  const easeInOutSine = (p) => -(Math.cos(Math.PI * p) - 1) / 2;
+
+  function targetFullness(kind) {
+    return (kind === 'in' || kind === 'in2') ? 1 : kind === 'out' ? 0 : state.fullness;
+  }
+
+  function enterPhase(idx, now) {
+    state.phaseIdx = idx;
+    state.phaseStart = now;
+    state.fStart = state.fullness;
+    const ph = state.pattern.phases[idx];
+    orb.dataset.kind = ph.kind;
+    phaseLabel.textContent = ph.label;
+    progRing.style.stroke = (ph.kind === 'out') ? 'var(--out)' : (ph.kind === 'hold') ? 'var(--hold)' : 'var(--in)';
+    phaseAudio(ph);
+    buzz(ph.kind);
+  }
+
+  function restartPhases() {
+    state.fullness = 0;
+    enterPhase(0, performance.now());
+  }
+
+  function tick(now) {
+    if (!state.running) return;
+    const ph = state.pattern.phases[state.phaseIdx];
+    const t = (now - state.phaseStart) / 1000;
+    const p = Math.min(t / ph.secs, 1);
+
+    const target = targetFullness(ph.kind);
+    state.fullness = state.fStart + (target - state.fStart) * easeInOutSine(p);
+
+    if (REDUCED) {
+      orb.style.transform = 'scale(0.82)';
+      orb.style.opacity = String(0.45 + 0.55 * state.fullness);
+    } else {
+      orb.style.transform = 'scale(' + (0.62 + 0.38 * state.fullness).toFixed(4) + ')';
+    }
+    progRing.style.strokeDashoffset = String(100 - p * 100);
+    countEl.textContent = String(Math.max(1, Math.ceil(ph.secs - t - 1e-9)));
+
+    const elapsed = (now - state.sessionStart) / 1000;
+    const left = state.sessionSecs - elapsed;
+    statusEl.textContent = (isFinite(state.sessionSecs) ? fmt(Math.max(0, left)) + ' left · ' : fmt(elapsed) + ' · ') +
+      state.breaths + (state.breaths === 1 ? ' breath' : ' breaths');
+
+    if (p >= 1) {
+      const nextIdx = (state.phaseIdx + 1) % state.pattern.phases.length;
+      if (nextIdx === 0) {
+        state.breaths++;
+        if (isFinite(state.sessionSecs) && elapsed >= state.sessionSecs) { endSession(true); return; }
+      }
+      enterPhase(nextIdx, now);
+    }
+    state.raf = requestAnimationFrame(tick);
+  }
+
+  function fmt(secs) {
+    const m = Math.floor(secs / 60), s = Math.floor(secs % 60);
+    return m + ':' + String(s).padStart(2, '0');
+  }
+
+  // ---------- Session lifecycle ----------
+  async function startSession() {
+    ensureAudio();
+    state.running = true;
+    state.breaths = 0;
+    state.sessionStart = performance.now();
+    startBtn.textContent = 'End session';
+    startBtn.classList.add('running');
+    droneTo(DRONE_LEVEL);
+    restartPhases();
+    state.raf = requestAnimationFrame(tick);
+    try { state.wakeLock = await navigator.wakeLock.request('screen'); } catch (e) {}
+  }
+
+  function endSession(completed) {
+    state.running = false;
+    cancelAnimationFrame(state.raf);
+    droneTo(0);
+    if (state.wakeLock) { state.wakeLock.release().catch(() => {}); state.wakeLock = null; }
+    startBtn.textContent = 'Begin';
+    startBtn.classList.remove('running');
+    orb.dataset.kind = 'idle';
+    orb.style.transform = '';
+    orb.style.opacity = '';
+    phaseLabel.textContent = 'Ready';
+    countEl.textContent = '';
+    progRing.style.strokeDashoffset = '100';
+
+    const mins = (performance.now() - state.sessionStart) / 60000;
+    if (completed || state.breaths > 0) {
+      $('statBreaths').textContent = String(state.breaths);
+      $('statMinutes').textContent = fmt(mins * 60);
+      $('statRate').textContent = mins > 0.05 ? (state.breaths / mins).toFixed(1) : '—';
+      $('overlay').classList.add('open');
+    }
+    statusEl.textContent = 'Pick a pattern, then press start';
+  }
+
+  startBtn.addEventListener('click', () => state.running ? endSession(false) : startSession());
+  $('doneBtn').addEventListener('click', () => $('overlay').classList.remove('open'));
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && e.target === document.body) {
+      e.preventDefault();
+      state.running ? endSession(false) : startSession();
+    }
+  });
+  document.addEventListener('visibilitychange', () => {
+    // rAF pauses in background tabs; a paced session can't survive that honestly, so end it.
+    if (document.hidden && state.running) endSession(false);
+  });
+})();
+</script>
