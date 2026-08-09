@@ -302,7 +302,10 @@ const DEF_EX=[
   ['Cossack squat','Mobility'],['Thoracic rotations','Mobility'],['Ankle rocks','Mobility'],['Glute bridge','Mobility'],
   ['Burpees','Conditioning'],['Mountain climbers','Conditioning'],['Jumping jacks','Conditioning'],
   ['High knees','Conditioning'],['Kettlebell swing','Conditioning'],['Farmer’s carry','Conditioning'],
-  ['Bear crawl','Conditioning'],['Broad jump','Conditioning']
+  ['Bear crawl','Conditioning'],['Broad jump','Conditioning'],
+  ['Rowing (erg)','Cardio'],['SkiErg','Cardio'],
+  ['Wall balls','Conditioning'],['Burpee broad jump','Conditioning'],
+  ['Sled push','Conditioning'],['Sled pull','Conditioning'],['Sandbag lunges','Conditioning']
 ];
 /* starter routines (by exercise name) and lacto-veg quick foods */
 const SEED_RT=[
@@ -314,6 +317,7 @@ const SEED_RT=[
   {name:'Legs — knee-safe return', ex:['Glute bridge','Romanian deadlift','Hip thrust','Leg curl','Calf raise','Wall sit (pain-free)']},
   {name:'Rehab: knee & wrist (~15 min)', ex:['Wrist circles & prayer stretch','Straight-leg raise','Wall sit (pain-free)','Glute bridge','Ankle rocks','Deep squat hold']},
   {name:'Conditioning — joint-friendly', ex:['Cycling','Kettlebell swing','Farmer’s carry','Glute bridge','Plank']},
+  {name:'Hyrox stations', ex:['Rowing (erg)','Wall balls','Burpee broad jump','Farmer’s carry','Sandbag lunges','Kettlebell swing']},
   {name:'Mobility & flexibility (~20 min)', ex:['Cat-cow','Downward dog to cobra',"World's greatest stretch",'90/90 hip switch','Deep squat hold','Couch stretch','Standing hamstring fold','Shoulder dislocates (stick)','Cossack squat','Dead hang']},
   {name:'Agility & conditioning', ex:['Jumping jacks','High knees','Mountain climbers','Cossack squat','Bear crawl','Burpees','Kettlebell swing']}
 ];
@@ -460,6 +464,20 @@ const HIST=[
     S.sessions.push({id:uid(), name:h.n, date:h.d, dur:h.min*60, vol:vol, ex:ex, imported:true});
   });
   S.sessions.sort(function(a,b){ return a.date<b.date?-1:1; });
+  save();
+})();
+/* v5: Hyrox station exercises + routine */
+(function seedV5(){
+  if(S.seedV5) return; S.seedV5=true;
+  DEF_EX.forEach(function(e){
+    if(!S.exercises.some(function(x){return x.name===e[0];}))
+      S.exercises.push({id:uid(), name:e[0], group:e[1]});
+  });
+  SEED_RT.forEach(function(r){
+    if(S.routines.some(function(x){return x.name===r.name;})) return;
+    const ids=r.ex.map(function(n){ const e=S.exercises.find(function(x){return x.name===n;}); return e&&e.id; }).filter(Boolean);
+    if(ids.length) S.routines.push({id:uid(), name:r.name, exIds:ids});
+  });
   save();
 })();
 function save(){ try{ localStorage.setItem(K, JSON.stringify(S)); }catch(e){ toast('Could not save — storage unavailable'); } }
@@ -918,10 +936,11 @@ function sessionHTML(){
     '<div class="tiny muted num" id="sesTime">0:00</div></div>'+
     '<div class="row"><button class="btn sm danger" onclick="cancelSession()">Discard</button>'+
     '<button class="btn primary sm" onclick="finishSession()">Finish</button></div></div>'+
-    '<div class="tiny muted" style="margin-top:8px">Ticking an empty set fills in last time’s numbers. Tap a set number to mark it a warm-up (W) — warm-ups don’t count toward records.</div></div>';
+    '<div class="tiny muted" style="margin-top:8px">Ticking an empty set fills in last time’s numbers. Tap a set number to mark it a warm-up (W). Tap ⏱ to set that exercise’s own rest time.</div></div>';
   a.ex.forEach(function(e,ei){
     h+='<div class="card exblock" style="border-top:0"><div class="spread"><button class="exname" style="text-align:left" onclick="openExInfo(\''+e.exId+'\')">'+esc(exName(e.exId))+' <span class="muted tiny">ⓘ</span></button>'+
-      '<button class="btn ghost sm danger" onclick="rmSessionEx('+ei+')">remove</button></div>';
+      '<span class="row" style="gap:6px"><button class="btn ghost sm" onclick="restPicker(\''+e.exId+'\')">⏱ '+fmtRest(exRest(e.exId))+'</button>'+
+      '<button class="btn ghost sm danger" onclick="rmSessionEx('+ei+')">✕</button></span></div>';
     const pv=prevSets(e.exId), grp=exGroupOf(e.exId), pa=prevArr(e.exId);
     if(pv) h+='<div class="tiny muted num" style="margin-top:2px">last time: '+pv+'</div>';
     const c1=grp==='Cardio'?'km':unit(), c2=grp==='Cardio'?'min':(grp==='Mobility'?'secs':'reps');
@@ -951,7 +970,31 @@ function toggleSet(ei,si){
   }
   st.done=!st.done; save(); renderWorkout();
   const g=exGroupOf(ex.exId);
-  if(st.done && g!=='Cardio' && g!=='Mobility') startRest(S.settings.rest);
+  if(st.done && g!=='Cardio' && g!=='Mobility') startRest(exRest(ex.exId));
+}
+function exRest(exId){
+  const e=S.exercises.find(function(x){return x.id===exId;});
+  return (e && e.rest) ? e.rest : S.settings.rest;
+}
+function fmtRest(s){ return s<60 ? s+'s' : (s%60===0 ? (s/60)+'m' : Math.floor(s/60)+':'+pad(s%60)); }
+function restPicker(exId){
+  const ex=S.exercises.find(function(x){return x.id===exId;}); if(!ex) return;
+  const cur=ex.rest||0;
+  openSheet('<h3>Rest after each set — '+esc(ex.name)+'</h3>'+
+    '<div class="row wrap">'+[30,60,90,120,150,180,240].map(function(s){
+      return '<button class="chip'+(cur===s?' on':'')+'" onclick="setExRest(\''+exId+'\','+s+')">'+fmtRest(s)+'</button>';
+    }).join('')+'</div>'+
+    '<div class="row" style="margin-top:12px"><input type="number" id="exRestC" inputmode="numeric" placeholder="Custom seconds">'+
+    '<button class="btn" onclick="setExRest(\''+exId+'\', +document.querySelector(\'#exRestC\').value)">Set</button></div>'+
+    '<button class="btn ghost wide" style="margin-top:10px" onclick="setExRest(\''+exId+'\',0)">Use app default ('+fmtRest(S.settings.rest)+')</button>'+
+    '<p class="tiny muted" style="margin-top:12px">Starts automatically when you tick a set of this exercise. Vibrates each of the last 5 seconds so you’re ready before it rings.</p>');
+}
+function setExRest(exId,s){
+  const ex=S.exercises.find(function(x){return x.id===exId;}); if(!ex) return;
+  s=Math.round(+s||0);
+  if(s>0) ex.rest=s; else delete ex.rest;
+  save(); closeSheet(); renderWorkout();
+  toast(s>0 ? esc(ex.name)+' rest: '+fmtRest(s) : 'Using app default rest');
 }
 function toggleWU(ei,si){
   const st=S.active.ex[ei].sets[si]; st.wu=!st.wu;
@@ -1185,7 +1228,7 @@ setInterval(function(){
 },1000);
 
 /* ============ REST TIMER ============ */
-let restEnd=0, restTotal=0, restInt=null;
+let restEnd=0, restTotal=0, restInt=null, restLastS=-1;
 const REST_PRESETS=[30,60,90,120,180,300];
 function drawRestPresets(){
   $('#restPresets').innerHTML = REST_PRESETS.map(function(s){
@@ -1194,7 +1237,7 @@ function drawRestPresets(){
   }).join('');
 }
 function startRest(sec){
-  sec=+sec||90; restTotal=sec; restEnd=Date.now()+sec*1000;
+  sec=+sec||90; restTotal=sec; restEnd=Date.now()+sec*1000; restLastS=-1;
   $('#rest').classList.add('on');
   clearInterval(restInt); restInt=setInterval(restTick,150); restTick();
 }
@@ -1205,6 +1248,11 @@ function restTick(){
   const s=Math.ceil(left/1000);
   $('#restClock').textContent = Math.floor(s/60)+':'+pad(s%60);
   $('#restBar').style.width = (restTotal? (left/1000)/restTotal*100 :0)+'%';
+  if(s!==restLastS){
+    restLastS=s;
+    if(s<=5 && s>0){ vib(140); $('#restClock').style.color='var(--wk)'; }
+    else $('#restClock').style.color='';
+  }
   if(left<=0){
     clearInterval(restInt); restInt=null;
     beep(3); vib([300,100,300]); notify('Rest over','Next set!');
