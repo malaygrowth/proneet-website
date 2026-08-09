@@ -1,14 +1,12 @@
 <title>Breath Coach</title>
 <style>
-  /* Single-theme by design: this coach lives in a dim room. All colors explicit. */
+  /* Single visual world by design: a dim room where the screen itself breathes. */
   :root {
-    --bg: #0C111C;
-    --surface: #151D2C;
-    --surface-2: #1B2536;
-    --line: #26324A;
-    --ink: #E9EEF6;
-    --muted: #8494AB;
-    --faint: #5A6A85;
+    --bg: #0A0E17;
+    --ink: #F2F1EC;
+    --muted: #9BA3B5;
+    --faint: #626C81;
+    --line: rgba(242, 241, 236, .14);
     --acc: #74C7B8; /* set per experience by JS */
     --sans: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', system-ui, sans-serif;
     --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, 'Times New Roman', serif;
@@ -19,144 +17,165 @@
     color: var(--ink);
     font-family: var(--sans);
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 20px 16px 32px;
     -webkit-tap-highlight-color: transparent;
   }
-  .app { width: 100%; max-width: 560px; position: relative; }
 
-  .screen { display: none; flex-direction: column; gap: 22px; animation: rise .5s ease both; }
+  /* The breathing surface — behind everything, always alive */
+  #aura { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; }
+
+  .shell { position: relative; display: flex; justify-content: center; min-height: 100vh; }
+  .app { width: 100%; max-width: 600px; padding: 22px 18px 36px; }
+
+  .screen { display: none; flex-direction: column; gap: 26px; animation: rise .55s ease both; }
   .screen.active { display: flex; }
-  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) { .screen { animation: none; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
   header { display: flex; align-items: baseline; justify-content: space-between; }
-  .wordmark { font-size: 14px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
-  .wordmark span { color: var(--acc); }
+  .wordmark { font-size: 13px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
+  .wordmark em { font-style: normal; color: var(--acc); }
   .proto-tag { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
 
-  .eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
-  h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 7vw, 36px); line-height: 1.15; text-wrap: balance; }
-  h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 6vw, 30px); line-height: 1.2; text-wrap: balance; }
-  .lede { color: var(--muted); font-size: 15.5px; line-height: 1.55; max-width: 46ch; }
+  .eyebrow { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
 
-  /* ---------- Home: choose a feeling, not a technique ---------- */
-  .cards { display: flex; flex-direction: column; gap: 12px; }
-  .card {
-    font-family: var(--sans); text-align: left; cursor: pointer;
-    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
-    padding: 18px 18px 16px; color: var(--ink);
-    display: flex; flex-direction: column; gap: 6px;
-    transition: border-color .25s ease, background .25s ease;
+  /* Poster-scale editorial type */
+  .poster {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(40px, 11vw, 62px); line-height: 1.02;
+    letter-spacing: -0.01em; text-wrap: balance;
   }
-  .card:hover { background: var(--surface-2); border-color: var(--c, var(--line)); }
-  .card .moment { font-size: 11.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--c, var(--acc)); }
-  .card .name { font-family: var(--serif); font-size: 23px; line-height: 1.15; }
-  .card .promise { font-size: 14px; line-height: 1.5; color: var(--muted); max-width: 44ch; }
-  .card .dur { font-size: 12.5px; color: var(--faint); font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .poster em { font-style: italic; color: var(--acc); }
+  h2.poster { font-size: clamp(34px, 9vw, 50px); }
+  .lede { color: var(--muted); font-size: 16px; line-height: 1.55; max-width: 46ch; }
 
-  footer { font-size: 12px; line-height: 1.55; color: var(--faint); max-width: 56ch; }
+  /* ---------- Home: each experience is a poster band ---------- */
+  .bands { display: flex; flex-direction: column; }
+  .band {
+    position: relative; overflow: hidden; text-align: left; cursor: pointer;
+    font-family: var(--sans); color: var(--ink);
+    background: none; border: 0; border-top: 1px solid var(--line);
+    padding: 26px 4px 28px; width: 100%;
+    display: flex; flex-direction: column; gap: 7px;
+  }
+  .band:last-child { border-bottom: 1px solid var(--line); }
+  .band::before {
+    content: ""; position: absolute; inset: -40% -10%;
+    background:
+      radial-gradient(38% 55% at 26% 50%, var(--c1) 0%, transparent 70%),
+      radial-gradient(34% 50% at 74% 45%, var(--c2) 0%, transparent 70%);
+    opacity: 0; transform: scale(.92);
+    transition: opacity .5s ease, transform 1.2s ease;
+    pointer-events: none;
+  }
+  .band:hover::before, .band:focus-visible::before { opacity: .32; transform: scale(1); }
+  .band > * { position: relative; }
+  .band .moment { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--bandAcc); }
+  .band .name {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: clamp(34px, 9vw, 48px); line-height: 1.04; letter-spacing: -0.01em;
+  }
+  .band .promise { font-size: 14px; line-height: 1.5; color: var(--muted); max-width: 46ch; }
+  .band .dur { font-size: 12px; letter-spacing: .06em; color: var(--faint); font-variant-numeric: tabular-nums; }
 
-  /* ---------- Intro / check-in ---------- */
+  footer { font-size: 12px; line-height: 1.6; color: var(--faint); max-width: 56ch; }
+
+  /* ---------- Intro ---------- */
   .backBtn {
     align-self: flex-start; font-family: var(--sans); font-size: 13px; color: var(--muted);
     background: none; border: 0; cursor: pointer; padding: 4px 0;
   }
   .backBtn:hover { color: var(--ink); }
-  .notice-list { display: flex; flex-direction: column; gap: 9px; }
-  .notice-list .item { display: flex; gap: 10px; font-size: 14.5px; line-height: 1.5; color: var(--muted); }
-  .notice-list .item::before { content: ""; flex: 0 0 6px; height: 6px; border-radius: 50%; background: var(--acc); margin-top: 7px; }
-  .footnote { font-size: 12.5px; line-height: 1.55; color: var(--faint); border-top: 1px solid var(--line); padding-top: 12px; max-width: 52ch; }
+  .notice-list { display: flex; flex-direction: column; gap: 10px; }
+  .notice-list .item { display: flex; gap: 12px; font-size: 15px; line-height: 1.5; color: var(--muted); }
+  .notice-list .item::before { content: ""; flex: 0 0 6px; height: 6px; border-radius: 50%; background: var(--acc); margin-top: 8px; }
+  .footnote { font-size: 12.5px; line-height: 1.6; color: var(--faint); border-top: 1px solid var(--line); padding-top: 14px; max-width: 52ch; }
 
-  .checkin { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
-  .checkin .q { font-size: 15px; line-height: 1.45; }
-  .scale { display: flex; flex-direction: column; gap: 8px; }
+  .checkin { border: 1px solid var(--line); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 16px; background: rgba(10, 14, 23, .45); backdrop-filter: blur(6px); }
+  .checkin .q { font-size: 15.5px; line-height: 1.45; }
   .scale input[type="range"] { width: 100%; accent-color: var(--acc); cursor: pointer; }
-  .scale .ends { display: flex; justify-content: space-between; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); }
+  .scale .ends { display: flex; justify-content: space-between; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-top: 8px; }
 
   .primaryBtn {
     font-family: var(--sans); font-size: 16px; font-weight: 600; letter-spacing: .04em;
-    background: var(--acc); color: #0B1512; border: 0; border-radius: 999px;
-    padding: 15px 0; width: 100%; cursor: pointer; transition: filter .2s ease;
+    background: var(--acc); color: #0A0E17; border: 0; border-radius: 999px;
+    padding: 16px 0; width: 100%; cursor: pointer; transition: filter .2s ease;
   }
-  .primaryBtn:hover { filter: brightness(1.08); }
+  .primaryBtn:hover { filter: brightness(1.1); }
   .ghostBtn {
     font-family: var(--sans); font-size: 14px; color: var(--muted);
     background: none; border: 1px solid var(--line); border-radius: 999px;
-    padding: 12px 0; width: 100%; cursor: pointer; transition: color .2s ease, border-color .2s ease;
+    padding: 13px 0; width: 100%; cursor: pointer; transition: color .2s ease, border-color .2s ease;
   }
   .ghostBtn:hover { color: var(--ink); border-color: var(--faint); }
 
-  /* ---------- Session ---------- */
-  #session { min-height: 78vh; justify-content: space-between; }
-  .sess-top { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
-  .sess-name { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+  /* ---------- Session: nothing but breath and words ---------- */
+  #session { min-height: calc(100vh - 58px); justify-content: space-between; }
+  .sess-top { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding-top: 6px; }
+  .sess-name { font-size: 11.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--faint); }
   .coach {
-    font-family: var(--serif); font-style: italic; font-size: clamp(18px, 4.6vw, 22px);
-    line-height: 1.45; text-align: center; color: var(--ink); max-width: 34ch;
-    min-height: 4.2em; display: flex; align-items: center; justify-content: center;
+    font-family: var(--sans); font-size: 15.5px; line-height: 1.5; letter-spacing: .01em;
+    text-align: center; color: var(--muted); max-width: 36ch;
+    min-height: 3.2em; display: flex; align-items: center; justify-content: center;
     opacity: 1; transition: opacity .5s ease;
+    text-shadow: 0 1px 14px rgba(10, 14, 23, .8);
   }
   .coach.dim { opacity: 0; }
 
-  .orbZone { display: flex; justify-content: center; }
-  .orbWrap { position: relative; width: min(62vw, 280px); aspect-ratio: 1; display: grid; place-items: center; }
-  .halo {
-    position: absolute; inset: -14%; border-radius: 50%;
-    background: var(--acc);
-    background: radial-gradient(circle, color-mix(in srgb, var(--acc) 20%, transparent) 0%, transparent 68%);
-    pointer-events: none;
+  .phaseZone { display: grid; place-items: center; padding: 4vh 0; }
+  .phaseWord {
+    font-family: var(--serif); font-style: italic; font-weight: 400;
+    font-size: clamp(44px, 13vw, 76px); line-height: 1.05; letter-spacing: -0.01em;
+    text-align: center; text-wrap: balance;
+    text-shadow: 0 2px 30px rgba(10, 14, 23, .55);
+    opacity: 1; transition: opacity .45s ease;
+    min-height: 1.2em;
   }
-  .ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-  .ring .track { fill: none; stroke: var(--line); stroke-width: 1.6; }
-  .ring .prog  { fill: none; stroke: var(--acc); stroke-width: 2.6; stroke-linecap: round; }
-  .orb {
-    position: absolute; inset: 12%; border-radius: 50%; will-change: transform, filter;
-    background: var(--acc);
-    background: radial-gradient(circle at 38% 30%,
-      color-mix(in srgb, var(--acc) 55%, white) 0%,
-      var(--acc) 40%,
-      color-mix(in srgb, var(--acc) 40%, black) 100%);
-    box-shadow: 0 0 60px 4px rgba(0,0,0,.25);
-  }
-  .orb[data-kind="idle"] { opacity: .5; }
-  .orbText { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; }
-  #phaseWord { font-size: 16px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; text-shadow: 0 1px 8px rgba(0,0,0,.45); }
+  .phaseWord.dim { opacity: 0; }
 
-  .sess-bottom { display: flex; flex-direction: column; gap: 14px; }
-  .progressBar { height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .sess-bottom { display: flex; flex-direction: column; gap: 16px; padding-bottom: 4px; }
+  .progressBar { height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
   .progressBar .fill { height: 100%; width: 0%; background: var(--acc); border-radius: 2px; }
   .sess-controls { display: flex; align-items: center; justify-content: center; gap: 10px; }
   .chip {
     font-family: var(--sans); font-size: 12.5px; color: var(--muted);
-    background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
-    padding: 7px 14px; cursor: pointer; transition: color .2s ease, border-color .2s ease;
+    background: rgba(10, 14, 23, .5); border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 15px; cursor: pointer; transition: color .2s ease, border-color .2s ease;
+    backdrop-filter: blur(6px);
   }
   .chip[aria-pressed="true"] { color: var(--ink); border-color: var(--acc); }
   .chip:hover { color: var(--ink); }
 
   /* ---------- Reflection ---------- */
-  .shift { font-family: var(--serif); font-size: clamp(30px, 8vw, 40px); font-variant-numeric: tabular-nums; }
-  .shift .arrow { color: var(--acc); padding: 0 8px; }
+  .shift {
+    font-family: var(--serif); font-size: clamp(56px, 18vw, 104px); line-height: 1;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+  }
+  .shift .arrow { font-style: italic; color: var(--acc); padding: 0 14px; }
+  .closingLine { font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.5; color: var(--ink); }
   .hidden { display: none !important; }
 
-  button:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+  button:focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .screen { animation: none; }
+    .band::before { transition: opacity .5s ease; transform: none; }
+  }
 </style>
 
-<div class="app">
+<canvas id="aura" aria-hidden="true"></canvas>
+
+<div class="shell"><div class="app">
 
   <!-- ================= HOME ================= -->
   <section class="screen active" id="home">
     <header>
-      <div class="wordmark">Breath<span>·</span>Coach</div>
-      <div class="proto-tag">Prototype 02</div>
+      <div class="wordmark">Breath<em>·</em>Coach</div>
+      <div class="proto-tag">Prototype 03</div>
     </header>
-    <div>
-      <p class="eyebrow">Right now</p>
-      <h1>How do you want to feel?</h1>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <p class="eyebrow">A coach, not an app</p>
+      <h1 class="poster">How do you<br>want to <em>feel?</em></h1>
     </div>
-    <div class="cards" id="cards"></div>
+    <div class="bands" id="bands"></div>
     <footer>
       Sit or lie down comfortably; breathe through the nose where you can. Stop if
       you feel dizzy. Skip breath-holds if you're pregnant or have heart or
@@ -168,13 +187,13 @@
   <!-- ================= INTRO ================= -->
   <section class="screen" id="intro">
     <button class="backBtn" id="introBack">&larr; All experiences</button>
-    <div>
+    <div style="display:flex;flex-direction:column;gap:12px">
       <p class="eyebrow" id="introMoment"></p>
-      <h2 id="introName"></h2>
+      <h2 class="poster" id="introName"></h2>
     </div>
     <p class="lede" id="introPromise"></p>
     <div>
-      <p class="eyebrow" style="margin-bottom:10px">What you'll notice</p>
+      <p class="eyebrow" style="margin-bottom:12px">What you'll notice</p>
       <div class="notice-list" id="introNotices"></div>
     </div>
     <div class="checkin">
@@ -195,17 +214,8 @@
       <div class="sess-name" id="sessName"></div>
       <div class="coach" id="coach" aria-live="polite"></div>
     </div>
-    <div class="orbZone">
-      <div class="orbWrap">
-        <div class="halo"></div>
-        <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
-          <circle class="track" cx="50" cy="50" r="47.5" />
-          <circle class="prog" id="progRing" cx="50" cy="50" r="47.5" pathLength="100"
-                  stroke-dasharray="100" stroke-dashoffset="100" />
-        </svg>
-        <div class="orb" id="orb" data-kind="idle"></div>
-        <div class="orbText"><div id="phaseWord"></div></div>
-      </div>
+    <div class="phaseZone">
+      <div class="phaseWord" id="phaseWord"></div>
     </div>
     <div class="sess-bottom">
       <div class="progressBar"><div class="fill" id="sessFill"></div></div>
@@ -219,9 +229,10 @@
 
   <!-- ================= REFLECTION ================= -->
   <section class="screen" id="reflect">
-    <div>
+    <div style="display:flex;flex-direction:column;gap:12px">
       <p class="eyebrow" id="reflectMoment"></p>
-      <h2>Take one normal breath.<br>Nothing guided. Just yours.</h2>
+      <h2 class="poster">Take one <em>normal</em> breath.</h2>
+      <p class="lede">Nothing guided. Just yours.</p>
     </div>
     <div id="reflectAsk">
       <div class="checkin">
@@ -231,27 +242,27 @@
                  aria-label="How you feel now, from 0 to 10">
           <div class="ends"><span id="postLow"></span><span id="postHigh"></span></div>
         </div>
-        <button class="primaryBtn" id="shiftBtn">See the shift</button>
+        <button class="primaryBtn" id="shiftBtn" style="margin-top:4px">See the shift</button>
       </div>
     </div>
     <div id="reflectResult" class="hidden">
-      <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:flex;flex-direction:column;gap:22px">
         <div class="shift"><span id="shiftFrom"></span><span class="arrow">&rarr;</span><span id="shiftTo"></span></div>
         <p class="lede" id="shiftLine"></p>
-        <p class="lede" id="closingLine" style="font-family:var(--serif);font-style:italic;color:var(--ink)"></p>
+        <p class="closingLine" id="closingLine"></p>
         <button class="primaryBtn" id="againBtn">Once more</button>
         <button class="ghostBtn" id="homeBtn">All experiences</button>
       </div>
     </div>
   </section>
-</div>
+
+</div></div>
 
 <script>
 (() => {
   'use strict';
 
   // ================= The experience library =================
-  // Everything the user sees is feeling-first. The technique is a footnote.
   const EXPERIENCES = [
     {
       id: 'unwind',
@@ -263,7 +274,7 @@
         'Your jaw and shoulders quietly letting go',
         'Thoughts slowing from a sprint to a walk',
       ],
-      accent: '#E0A87D',
+      accent: '#E8A06A', aura: ['#E8A06A', '#C05B54'],
       mins: 4,
       scaleQ: 'Before we start — how wound up are you right now?',
       scaleEnds: ['Loose', 'Wound tight'],
@@ -272,8 +283,8 @@
       begin: 'Put the day down',
       lead: 'Nothing to fix for the next four minutes. We’ll begin on your next breath.',
       phases: [
-        { kind: 'in',  word: 'Breathe in', secs: 4 },
-        { kind: 'out', word: 'Let it go',  secs: 6 },
+        { kind: 'in',  word: 'breathe in', secs: 4 },
+        { kind: 'out', word: 'let it go',  secs: 6 },
       ],
       script: {
         settle: [
@@ -303,7 +314,7 @@
         'Your heartbeat slowing to a nighttime pace',
         'The day’s noise turning down, notch by notch',
       ],
-      accent: '#8FA3E8',
+      accent: '#8F9FE8', aura: ['#5E6FD8', '#7C5BC0'],
       mins: 5,
       scaleQ: 'How awake are you right now?',
       scaleEnds: ['Heavy-eyed', 'Wide awake'],
@@ -312,9 +323,9 @@
       begin: 'Start drifting',
       lead: 'Lie down. Let the bed do the holding. We’ll begin on your next breath.',
       phases: [
-        { kind: 'in',   word: 'Breathe in',   secs: 4 },
-        { kind: 'hold', word: 'Rest here',    secs: 7 },
-        { kind: 'out',  word: 'Sigh it out',  secs: 8 },
+        { kind: 'in',   word: 'breathe in',  secs: 4 },
+        { kind: 'hold', word: 'rest here',   secs: 7 },
+        { kind: 'out',  word: 'sigh it out', secs: 8 },
       ],
       script: {
         settle: [
@@ -344,7 +355,7 @@
         'A level head where the noise was',
         'Steadiness you can actually stand on',
       ],
-      accent: '#74C7B8',
+      accent: '#63C2AF', aura: ['#3FA893', '#4A7FB5'],
       mins: 3,
       scaleQ: 'How jittery are you right now?',
       scaleEnds: ['Grounded', 'Jittery'],
@@ -353,10 +364,10 @@
       begin: 'Find your footing',
       lead: 'Sit tall. Feet on the floor. We’ll begin on your next breath.',
       phases: [
-        { kind: 'in',   word: 'Breathe in', secs: 4 },
-        { kind: 'hold', word: 'Hold',       secs: 4 },
-        { kind: 'out',  word: 'Let it go',  secs: 4 },
-        { kind: 'hold', word: 'Stay empty', secs: 4 },
+        { kind: 'in',   word: 'breathe in', secs: 4 },
+        { kind: 'hold', word: 'hold',       secs: 4 },
+        { kind: 'out',  word: 'let it go',  secs: 4 },
+        { kind: 'hold', word: 'stay empty', secs: 4 },
       ],
       script: {
         settle: [
@@ -386,7 +397,7 @@
         'Your chest unclenching, breath by breath',
         'Space coming back where the squeeze was',
       ],
-      accent: '#E8907D',
+      accent: '#EE8873', aura: ['#E8705E', '#C24E8A'],
       mins: 1.5,
       scaleQ: 'How much pressure are you under right now?',
       scaleEnds: ['Breathing room', 'Overwhelmed'],
@@ -395,9 +406,9 @@
       begin: 'Open the valve',
       lead: 'This takes ninety seconds. You have ninety seconds. We’ll begin on your next breath.',
       phases: [
-        { kind: 'in',  word: 'Breathe in',   secs: 2 },
-        { kind: 'in2', word: 'A little more', secs: 1 },
-        { kind: 'out', word: 'Let it all go', secs: 6 },
+        { kind: 'in',  word: 'breathe in',    secs: 2 },
+        { kind: 'in2', word: 'a little more', secs: 1 },
+        { kind: 'out', word: 'let it all go', secs: 6 },
       ],
       script: {
         settle: [
@@ -425,7 +436,7 @@
         'Quiet alertness — awake without the jangle',
         'Room to think before the first ping arrives',
       ],
-      accent: '#E5C878',
+      accent: '#E9CB7B', aura: ['#E5C878', '#E08A5E'],
       mins: 4,
       scaleQ: 'How foggy are you right now?',
       scaleEnds: ['Clear', 'Foggy'],
@@ -434,8 +445,8 @@
       begin: 'Set the rhythm',
       lead: 'Before the phone, before the list. We’ll begin on your next breath.',
       phases: [
-        { kind: 'in',  word: 'Breathe in', secs: 5.5 },
-        { kind: 'out', word: 'Breathe out', secs: 5.5 },
+        { kind: 'in',  word: 'breathe in',  secs: 5.5 },
+        { kind: 'out', word: 'breathe out', secs: 5.5 },
       ],
       script: {
         settle: [
@@ -457,6 +468,8 @@
     },
   ];
 
+  const HOME_AURA = ['#3A4A78', '#2E5F5A'];
+
   const $ = (id) => document.getElementById(id);
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const LEAD_MS = 5200;
@@ -464,6 +477,7 @@
   const state = {
     exp: null,
     running: false,
+    inSession: false,
     phaseIdx: 0,
     phaseStart: 0,
     fullness: 0,
@@ -474,11 +488,104 @@
     preScore: 6,
     soundOn: true,
     hapticsOn: true,
-    raf: 0,
     leadTimer: 0,
     coachTimer: 0,
+    wordTimer: 0,
     wakeLock: null,
   };
+
+  // ================= The aura: the screen is the breath =================
+  const canvas = $('aura');
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0, DPR = 1;
+  let auraColors = HOME_AURA;
+  let auraLevel = 0.5;       // rendered breath level (smoothed)
+
+  function resize() {
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.round(W * DPR);
+    canvas.height = Math.round(H * DPR);
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function hexToRgb(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function blob(x, y, r, rgb, alpha) {
+    if (r <= 1) return;
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + alpha + ')');
+    g.addColorStop(0.55, 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + (alpha * 0.45) + ')');
+    g.addColorStop(1, 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawAura(now, level) {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = '#0A0E17';
+    ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+
+    const cx = W / 2, cy = H * 0.46;
+    const R = Math.min(W, H) * 0.52;
+    const s = 0.5 + 0.62 * level;
+    const t = REDUCED ? 0 : now * 0.00012;
+    const a = hexToRgb(auraColors[0]);
+    const b = hexToRgb(auraColors[1]);
+
+    blob(cx - R * 0.22 + Math.sin(t) * R * 0.06,       cy - R * 0.12 + Math.cos(t * 0.8) * R * 0.05, R * 1.05 * s, a, 0.5);
+    blob(cx + R * 0.24 + Math.sin(t * 1.3 + 2) * R * 0.06, cy + R * 0.16 + Math.cos(t + 4) * R * 0.05, R * 0.92 * s, b, 0.45);
+    blob(cx, cy, R * 0.34 * s, [244, 240, 230], 0.10 + 0.14 * level);
+  }
+
+  // ================= Engine + render loop (one heartbeat) =================
+  const easeInOutSine = (p) => -(Math.cos(Math.PI * p) - 1) / 2;
+  const phaseWord = $('phaseWord'), sessFill = $('sessFill');
+
+  function targetFullness(kind) {
+    return (kind === 'in' || kind === 'in2') ? 1 : kind === 'out' ? 0 : state.fullness;
+  }
+
+  function loop(now) {
+    // engine step
+    if (state.running) {
+      const ph = state.exp.phases[state.phaseIdx];
+      const t = (now - state.phaseStart) / 1000;
+      const p = Math.min(t / ph.secs, 1);
+      const target = targetFullness(ph.kind);
+      state.fullness = state.fStart + (target - state.fStart) * easeInOutSine(p);
+
+      const done = state.breaths * state.cycleSecs +
+        state.exp.phases.slice(0, state.phaseIdx).reduce((acc, x) => acc + x.secs, 0) + Math.min(t, ph.secs);
+      sessFill.style.width = Math.min(100, (done / (state.totalBreaths * state.cycleSecs)) * 100) + '%';
+
+      if (p >= 1) {
+        const nextIdx = (state.phaseIdx + 1) % state.exp.phases.length;
+        if (nextIdx === 0) {
+          state.breaths++;
+          if (state.breaths >= state.totalBreaths) { endSession(); requestAnimationFrame(loop); return; }
+          setCoach(lineFor(state.breaths));
+        }
+        enterPhase(nextIdx, now);
+      }
+    }
+
+    // breath level: engine-driven in session, slow idle tide otherwise
+    const wanted = state.running ? state.fullness
+                 : state.inSession ? 0.35
+                 : 0.4 + 0.18 * Math.sin(now * (REDUCED ? 0 : 0.0005));
+    auraLevel += (wanted - auraLevel) * 0.08;
+    drawAura(now, auraLevel);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
 
   // ================= Screens =================
   const screens = ['home', 'intro', 'session', 'reflect'];
@@ -486,13 +593,19 @@
     screens.forEach((s) => $(s).classList.toggle('active', s === id));
     window.scrollTo(0, 0);
   }
+  function setPalette(exp) {
+    auraColors = exp ? exp.aura : HOME_AURA;
+    document.documentElement.style.setProperty('--acc', exp ? exp.accent : '#74C7B8');
+  }
 
-  // ================= Home cards =================
-  const cardsEl = $('cards');
+  // ================= Home bands =================
+  const bandsEl = $('bands');
   EXPERIENCES.forEach((exp) => {
     const b = document.createElement('button');
-    b.className = 'card';
-    b.style.setProperty('--c', exp.accent);
+    b.className = 'band';
+    b.style.setProperty('--c1', exp.aura[0]);
+    b.style.setProperty('--c2', exp.aura[1]);
+    b.style.setProperty('--bandAcc', exp.accent);
     const durLabel = exp.mins < 2 ? Math.round(exp.mins * 60) + ' seconds' : exp.mins + ' minutes';
     b.innerHTML =
       '<span class="moment">' + exp.moment + '</span>' +
@@ -500,13 +613,13 @@
       '<span class="promise">' + exp.promise + '</span>' +
       '<span class="dur">' + durLabel + ' · guided</span>';
     b.addEventListener('click', () => openIntro(exp));
-    cardsEl.appendChild(b);
+    bandsEl.appendChild(b);
   });
 
   // ================= Intro =================
   function openIntro(exp) {
     state.exp = exp;
-    document.documentElement.style.setProperty('--acc', exp.accent);
+    setPalette(exp);
     $('introMoment').textContent = exp.moment;
     $('introName').textContent = exp.name;
     $('introPromise').textContent = exp.promise;
@@ -520,13 +633,13 @@
     $('introFootnote').textContent = exp.footnote;
     show('intro');
   }
-  $('introBack').addEventListener('click', () => show('home'));
+  $('introBack').addEventListener('click', () => { setPalette(null); show('home'); });
   $('beginBtn').addEventListener('click', () => {
     state.preScore = Number($('preScale').value);
     startSession();
   });
 
-  // ================= Coach lines =================
+  // ================= Coach lines & phase words =================
   function lineFor(cycle) {
     const s = state.exp.script;
     const total = state.totalBreaths;
@@ -546,8 +659,17 @@
       el.classList.remove('dim');
     }, 520);
   }
+  function setWord(text, instant) {
+    clearTimeout(state.wordTimer);
+    if (instant) { phaseWord.textContent = text; phaseWord.classList.remove('dim'); return; }
+    phaseWord.classList.add('dim');
+    state.wordTimer = setTimeout(() => {
+      phaseWord.textContent = text;
+      phaseWord.classList.remove('dim');
+    }, 430);
+  }
 
-  // ================= Audio: pitch rises on inhale, falls on exhale =================
+  // ================= Audio =================
   const DRONE_LEVEL = 0.05;
   const audio = { ctx: null, osc: null, gain: null };
   function ensureAudio() {
@@ -602,60 +724,17 @@
     navigator.vibrate(kind === 'out' ? [40, 60, 40] : kind === 'hold' ? 20 : 40);
   }
 
-  // ================= Engine =================
-  const easeInOutSine = (p) => -(Math.cos(Math.PI * p) - 1) / 2;
-  const orb = $('orb'), phaseWord = $('phaseWord'), progRing = $('progRing'), sessFill = $('sessFill');
-
-  function targetFullness(kind) {
-    return (kind === 'in' || kind === 'in2') ? 1 : kind === 'out' ? 0 : state.fullness;
-  }
-
+  // ================= Session lifecycle =================
   function enterPhase(idx, now) {
     state.phaseIdx = idx;
     state.phaseStart = now;
     state.fStart = state.fullness;
     const ph = state.exp.phases[idx];
-    orb.dataset.kind = ph.kind;
-    phaseWord.textContent = ph.word;
+    setWord(ph.word);
     phaseAudio(ph);
     buzz(ph.kind);
   }
 
-  function tick(now) {
-    if (!state.running) return;
-    const ph = state.exp.phases[state.phaseIdx];
-    const t = (now - state.phaseStart) / 1000;
-    const p = Math.min(t / ph.secs, 1);
-
-    const target = targetFullness(ph.kind);
-    state.fullness = state.fStart + (target - state.fStart) * easeInOutSine(p);
-
-    if (REDUCED) {
-      orb.style.transform = 'scale(0.82)';
-      orb.style.opacity = String(0.45 + 0.55 * state.fullness);
-    } else {
-      orb.style.transform = 'scale(' + (0.62 + 0.38 * state.fullness).toFixed(4) + ')';
-      orb.style.filter = 'brightness(' + (0.85 + 0.3 * state.fullness).toFixed(3) + ')';
-    }
-    progRing.style.strokeDashoffset = String(100 - p * 100);
-
-    const done = state.breaths * state.cycleSecs +
-      state.exp.phases.slice(0, state.phaseIdx).reduce((a, x) => a + x.secs, 0) + Math.min(t, ph.secs);
-    sessFill.style.width = Math.min(100, (done / (state.totalBreaths * state.cycleSecs)) * 100) + '%';
-
-    if (p >= 1) {
-      const nextIdx = (state.phaseIdx + 1) % state.exp.phases.length;
-      if (nextIdx === 0) {
-        state.breaths++;
-        if (state.breaths >= state.totalBreaths) { endSession(); return; }
-        setCoach(lineFor(state.breaths));
-      }
-      enterPhase(nextIdx, now);
-    }
-    state.raf = requestAnimationFrame(tick);
-  }
-
-  // ================= Session lifecycle =================
   async function startSession() {
     const exp = state.exp;
     ensureAudio();
@@ -664,15 +743,11 @@
     state.breaths = 0;
     state.fullness = 0;
     state.running = false;
+    state.inSession = true;
 
     $('sessName').textContent = exp.name;
     setCoach(exp.lead, true);
-    orb.dataset.kind = 'idle';
-    orb.style.transform = '';
-    orb.style.filter = '';
-    orb.style.opacity = '';
-    phaseWord.textContent = '';
-    progRing.style.strokeDashoffset = '100';
+    setWord('', true);
     sessFill.style.width = '0%';
     show('session');
 
@@ -684,15 +759,15 @@
       state.running = true;
       setCoach(lineFor(0));
       enterPhase(0, performance.now());
-      state.raf = requestAnimationFrame(tick);
     }, LEAD_MS);
   }
 
   function endSession() {
     state.running = false;
+    state.inSession = false;
     clearTimeout(state.leadTimer);
     clearTimeout(state.coachTimer);
-    cancelAnimationFrame(state.raf);
+    clearTimeout(state.wordTimer);
     droneTo(0);
     if (state.wakeLock) { state.wakeLock.release().catch(() => {}); state.wakeLock = null; }
     openReflect();
@@ -735,7 +810,7 @@
   });
 
   $('againBtn').addEventListener('click', () => openIntro(state.exp));
-  $('homeBtn').addEventListener('click', () => show('home'));
+  $('homeBtn').addEventListener('click', () => { setPalette(null); show('home'); });
 
   // ================= Session controls =================
   const flip = (btn) => {
@@ -759,8 +834,8 @@
 
   document.addEventListener('visibilitychange', () => {
     // rAF pauses in background tabs; a paced session can't survive that honestly.
-    if (document.hidden && (state.running || state.leadTimer)) {
-      if ($('session').classList.contains('active')) endSession();
+    if (document.hidden && state.inSession && $('session').classList.contains('active')) {
+      endSession();
     }
   });
 })();
