@@ -47,7 +47,17 @@
   h2.poster { font-size: clamp(34px, 9vw, 50px); }
   .lede { color: var(--muted); font-size: 16px; line-height: 1.55; max-width: 46ch; }
 
-  /* ---------- Home: each experience is a poster band ---------- */
+  /* ---------- Memory strip ---------- */
+  .memoryStrip {
+    display: none; align-items: baseline; justify-content: space-between; gap: 12px;
+    font-family: var(--sans); text-align: left; width: 100%;
+    background: none; border: 0; cursor: pointer; padding: 0; color: var(--muted);
+    font-size: 13.5px; line-height: 1.5;
+  }
+  .memoryStrip.on { display: flex; }
+  .memoryStrip .go { color: var(--acc); white-space: nowrap; font-size: 13px; letter-spacing: .04em; }
+
+  /* ---------- Poster bands ---------- */
   .bands { display: flex; flex-direction: column; }
   .band {
     position: relative; overflow: hidden; text-align: left; cursor: pointer;
@@ -60,15 +70,15 @@
   .band::before {
     content: ""; position: absolute; inset: -40% -10%;
     background:
-      radial-gradient(38% 55% at 26% 50%, var(--c1) 0%, transparent 70%),
-      radial-gradient(34% 50% at 74% 45%, var(--c2) 0%, transparent 70%);
+      radial-gradient(38% 55% at 26% 50%, var(--c1, #3A4A78) 0%, transparent 70%),
+      radial-gradient(34% 50% at 74% 45%, var(--c2, #2E5F5A) 0%, transparent 70%);
     opacity: 0; transform: scale(.92);
     transition: opacity .5s ease, transform 1.2s ease;
     pointer-events: none;
   }
   .band:hover::before, .band:focus-visible::before { opacity: .32; transform: scale(1); }
   .band > * { position: relative; }
-  .band .moment { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--bandAcc); }
+  .band .moment { font-size: 11.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--bandAcc, var(--acc)); }
   .band .name {
     font-family: var(--serif); font-style: italic; font-weight: 400;
     font-size: clamp(34px, 9vw, 48px); line-height: 1.04; letter-spacing: -0.01em;
@@ -84,15 +94,27 @@
     background: none; border: 0; cursor: pointer; padding: 4px 0;
   }
   .backBtn:hover { color: var(--ink); }
+  .framing { font-family: var(--serif); font-style: italic; font-size: 17px; color: var(--acc); }
   .notice-list { display: flex; flex-direction: column; gap: 10px; }
   .notice-list .item { display: flex; gap: 12px; font-size: 15px; line-height: 1.5; color: var(--muted); }
   .notice-list .item::before { content: ""; flex: 0 0 6px; height: 6px; border-radius: 50%; background: var(--acc); margin-top: 8px; }
   .footnote { font-size: 12.5px; line-height: 1.6; color: var(--faint); border-top: 1px solid var(--line); padding-top: 14px; max-width: 52ch; }
+  .paceNote { font-size: 12.5px; line-height: 1.6; color: var(--acc); }
 
   .checkin { border: 1px solid var(--line); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 16px; background: rgba(10, 14, 23, .45); backdrop-filter: blur(6px); }
   .checkin .q { font-size: 15.5px; line-height: 1.45; }
   .scale input[type="range"] { width: 100%; accent-color: var(--acc); cursor: pointer; }
   .scale .ends { display: flex; justify-content: space-between; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-top: 8px; }
+
+  .chipRow { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: var(--sans); font-size: 12.5px; color: var(--muted);
+    background: rgba(10, 14, 23, .5); border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 15px; cursor: pointer; transition: color .2s ease, border-color .2s ease;
+    backdrop-filter: blur(6px);
+  }
+  .chip[aria-pressed="true"] { color: var(--ink); border-color: var(--acc); }
+  .chip:hover { color: var(--ink); }
 
   .primaryBtn {
     font-family: var(--sans); font-size: 16px; font-weight: 600; letter-spacing: .04em;
@@ -107,7 +129,7 @@
   }
   .ghostBtn:hover { color: var(--ink); border-color: var(--faint); }
 
-  /* ---------- Session: nothing but breath and words ---------- */
+  /* ---------- Session ---------- */
   #session { min-height: calc(100vh - 58px); justify-content: space-between; }
   .sess-top { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding-top: 6px; }
   .sess-name { font-size: 11.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--faint); }
@@ -135,14 +157,6 @@
   .progressBar { height: 2px; background: var(--line); border-radius: 2px; overflow: hidden; }
   .progressBar .fill { height: 100%; width: 0%; background: var(--acc); border-radius: 2px; }
   .sess-controls { display: flex; align-items: center; justify-content: center; gap: 10px; }
-  .chip {
-    font-family: var(--sans); font-size: 12.5px; color: var(--muted);
-    background: rgba(10, 14, 23, .5); border: 1px solid var(--line); border-radius: 999px;
-    padding: 8px 15px; cursor: pointer; transition: color .2s ease, border-color .2s ease;
-    backdrop-filter: blur(6px);
-  }
-  .chip[aria-pressed="true"] { color: var(--ink); border-color: var(--acc); }
-  .chip:hover { color: var(--ink); }
 
   /* ---------- Reflection ---------- */
   .shift {
@@ -151,7 +165,45 @@
   }
   .shift .arrow { font-style: italic; color: var(--acc); padding: 0 14px; }
   .closingLine { font-family: var(--serif); font-style: italic; font-size: 19px; line-height: 1.5; color: var(--ink); }
+  .spotFollow { font-size: 14.5px; color: var(--muted); }
+  .wordAsk { display: flex; flex-direction: column; gap: 8px; }
+  .wordAsk label { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+  .wordAsk input {
+    font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--ink);
+    background: none; border: 0; border-bottom: 1px solid var(--line);
+    padding: 6px 2px 8px; outline: none; max-width: 260px;
+  }
+  .wordAsk input:focus { border-bottom-color: var(--acc); }
   .hidden { display: none !important; }
+
+  /* ---------- Insights ---------- */
+  .statBig { font-family: var(--serif); font-size: clamp(26px, 7vw, 34px); line-height: 1.25; text-wrap: balance; }
+  .statBig em { font-style: italic; color: var(--acc); }
+  .chartBlock { display: flex; flex-direction: column; gap: 10px; }
+  .chartCap { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+  .barStrip { display: flex; align-items: flex-end; gap: 2px; height: 84px; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
+  .barStrip .bar { flex: 1 1 0; max-width: 26px; background: var(--acc); border-radius: 4px 4px 0 0; min-height: 3px; }
+  .barStrip .bar.nil { background: var(--faint); opacity: .5; }
+  .chartNote { font-size: 12.5px; color: var(--faint); }
+  .expRows { display: flex; flex-direction: column; }
+  .expRow { display: flex; align-items: baseline; gap: 12px; padding: 13px 2px; border-top: 1px solid var(--line); font-size: 14.5px; }
+  .expRow:last-child { border-bottom: 1px solid var(--line); }
+  .expRow .dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px; align-self: center; }
+  .expRow .n { flex: 1; }
+  .expRow .v { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .insightLine { font-family: var(--serif); font-style: italic; font-size: 18px; line-height: 1.5; }
+  .wordRow { font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--muted); line-height: 1.7; }
+
+  /* ---------- BOLT ---------- */
+  .boltTimer {
+    font-family: var(--serif); font-size: clamp(72px, 26vw, 140px); line-height: 1;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.02em; text-align: center;
+  }
+  .boltTimer small { font-size: .3em; color: var(--muted); font-family: var(--sans); letter-spacing: .1em; }
+  .boltPrompt {
+    font-family: var(--serif); font-style: italic; font-size: clamp(24px, 6.5vw, 34px);
+    line-height: 1.25; text-align: center; text-wrap: balance; min-height: 2.6em;
+  }
 
   button:focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; }
 
@@ -169,24 +221,53 @@
   <section class="screen active" id="home">
     <header>
       <div class="wordmark">Breath<em>·</em>Coach</div>
-      <div class="proto-tag">Prototype 03</div>
+      <div class="proto-tag">Prototype 04</div>
     </header>
     <div style="display:flex;flex-direction:column;gap:14px">
       <p class="eyebrow">A coach, not an app</p>
       <h1 class="poster">How do you<br>want to <em>feel?</em></h1>
     </div>
+    <button class="memoryStrip" id="memoryStrip">
+      <span id="threadLine"></span><span class="go">Your shifts &rarr;</span>
+    </button>
+    <div class="bands">
+      <button class="band" id="guideBand">
+        <span class="moment" style="--acc:#74C7B8;color:var(--acc)">Don't want to choose?</span>
+        <span class="name">Breathe me.</span>
+        <span class="promise">One question, and the coach picks for you.</span>
+      </button>
+    </div>
     <div class="bands" id="bands"></div>
+    <div class="bands">
+      <button class="band" id="boltBand" style="--c1:#3FA893;--c2:#4A7FB5;--bandAcc:#63C2AF">
+        <span class="moment">The check-up · 2 minutes</span>
+        <span class="name">How well do you breathe?</span>
+        <span class="promise" id="boltBandNote">A gentle breath-hold test that scores your everyday breathing — and shows it improving as you practice.</span>
+      </button>
+    </div>
     <footer>
       Sit or lie down comfortably; breathe through the nose where you can. Stop if
       you feel dizzy. Skip breath-holds if you're pregnant or have heart or
       blood-pressure conditions. Never practice while driving or in water.
-      Prototype for concept testing — not medical advice.
+      Prototype for concept testing — not medical advice. Everything is stored
+      only on this device.
     </footer>
+  </section>
+
+  <!-- ================= ARRIVAL (Breathe me) ================= -->
+  <section class="screen" id="arrival">
+    <button class="backBtn" id="arrivalBack">&larr; Back</button>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <p class="eyebrow">Right now</p>
+      <h2 class="poster">What's <em>true?</em></h2>
+    </div>
+    <div class="bands" id="arrivalBands"></div>
   </section>
 
   <!-- ================= INTRO ================= -->
   <section class="screen" id="intro">
     <button class="backBtn" id="introBack">&larr; All experiences</button>
+    <p class="framing hidden" id="introFraming"></p>
     <div style="display:flex;flex-direction:column;gap:12px">
       <p class="eyebrow" id="introMoment"></p>
       <h2 class="poster" id="introName"></h2>
@@ -195,6 +276,10 @@
     <div>
       <p class="eyebrow" style="margin-bottom:12px">What you'll notice</p>
       <div class="notice-list" id="introNotices"></div>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom:12px">Where is it sitting? <span style="text-transform:none;letter-spacing:0">(optional)</span></p>
+      <div class="chipRow" id="spotRow"></div>
     </div>
     <div class="checkin">
       <p class="q" id="preQuestion"></p>
@@ -205,6 +290,7 @@
       </div>
     </div>
     <button class="primaryBtn" id="beginBtn"></button>
+    <p class="paceNote hidden" id="paceNote"></p>
     <p class="footnote" id="introFootnote"></p>
   </section>
 
@@ -249,9 +335,83 @@
       <div style="display:flex;flex-direction:column;gap:22px">
         <div class="shift"><span id="shiftFrom"></span><span class="arrow">&rarr;</span><span id="shiftTo"></span></div>
         <p class="lede" id="shiftLine"></p>
+        <p class="spotFollow hidden" id="spotFollow"></p>
         <p class="closingLine" id="closingLine"></p>
+        <div class="wordAsk">
+          <label for="wordInput">One word for how you feel now</label>
+          <input id="wordInput" type="text" maxlength="24" autocomplete="off" placeholder="&hellip;">
+        </div>
         <button class="primaryBtn" id="againBtn">Once more</button>
         <button class="ghostBtn" id="homeBtn">All experiences</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INSIGHTS ================= -->
+  <section class="screen" id="insights">
+    <button class="backBtn" id="insightsBack">&larr; Back</button>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <p class="eyebrow">The coach remembers</p>
+      <h2 class="poster">Your <em>shifts</em></h2>
+    </div>
+    <p class="statBig" id="insTotal"></p>
+    <div class="chartBlock" id="insChartBlock">
+      <p class="chartCap">Recent sessions — how much you put down</p>
+      <div class="barStrip" id="insBars" role="img" aria-label="Bar chart of recent session shifts"></div>
+      <p class="chartNote" id="insChartNote"></p>
+    </div>
+    <p class="insightLine hidden" id="insPattern"></p>
+    <div>
+      <p class="eyebrow" style="margin-bottom:2px">By experience</p>
+      <div class="expRows" id="insExpRows"></div>
+    </div>
+    <div class="hidden" id="insBoltBlock">
+      <p class="eyebrow" style="margin-bottom:10px">Check-up scores</p>
+      <p class="lede" id="insBoltLine"></p>
+    </div>
+    <div class="hidden" id="insWordsBlock">
+      <p class="eyebrow" style="margin-bottom:10px">In your words</p>
+      <p class="wordRow" id="insWords"></p>
+    </div>
+  </section>
+
+  <!-- ================= BOLT CHECK-UP ================= -->
+  <section class="screen" id="bolt">
+    <button class="backBtn" id="boltBack">&larr; Back</button>
+    <div id="boltIntro">
+      <div style="display:flex;flex-direction:column;gap:26px">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <p class="eyebrow">The check-up</p>
+          <h2 class="poster">How well do you breathe when you're <em>not trying?</em></h2>
+        </div>
+        <p class="lede">A simple measure used by breathing coaches everywhere:
+          after a normal exhale, how many seconds pass before your body first
+          asks for air? Not a contest — you stop at the <em>first clear urge</em>,
+          not your limit. Higher scores mean calmer everyday breathing, and the
+          practice moves this number.</p>
+        <div class="checkin">
+          <p class="q">Sit down for this. It's a gentle test, not a challenge.
+            Skip it if you're pregnant or have heart or blood-pressure conditions.</p>
+          <button class="primaryBtn" id="boltStart">I'm sitting — begin</button>
+        </div>
+      </div>
+    </div>
+    <div id="boltRun" class="hidden">
+      <div style="display:flex;flex-direction:column;gap:34px;padding-top:6vh">
+        <p class="boltPrompt" id="boltPrompt"></p>
+        <div class="boltTimer hidden" id="boltTimer">0<small> SEC</small></div>
+        <button class="primaryBtn hidden" id="boltStop">That's the first urge</button>
+      </div>
+    </div>
+    <div id="boltResult" class="hidden">
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <p class="eyebrow">Your score</p>
+        <div class="boltTimer" id="boltScore"></div>
+        <p class="lede" id="boltBandText"></p>
+        <p class="insightLine hidden" id="boltDelta"></p>
+        <p class="footnote">Re-test every few weeks, at the same time of day —
+          mornings are most honest. One score is a snapshot; the trend is the truth.</p>
+        <button class="primaryBtn" id="boltDone">Done</button>
       </div>
     </div>
   </section>
@@ -469,13 +629,100 @@
   ];
 
   const HOME_AURA = ['#3A4A78', '#2E5F5A'];
+  const BOLT_AURA = ['#3FA893', '#4A7FB5'];
+
+  // Body-map lines the coach weaves into the deepen stage
+  const SPOT_LINES = {
+    jaw: [
+      'Find your jaw. On this exhale, let the teeth come apart.',
+      'The jaw again — let the tongue rest loose behind your teeth.',
+    ],
+    shoulders: [
+      'Those shoulders you mentioned — let them fall away from your ears.',
+      'On the way out, let the shoulder blades slide down your back.',
+    ],
+    chest: [
+      'The tightness in your chest — give it one size bigger on this inhale.',
+      'Let the breath widen the chest instead of lifting it.',
+    ],
+    belly: [
+      'Let the belly go soft. It doesn’t have to hold anything in.',
+      'Breathe low — let the belly do the moving this time.',
+    ],
+    head: [
+      'Let the forehead smooth out on this exhale.',
+      'The noise upstairs — let it ride out on the breath.',
+    ],
+    everywhere: [
+      'All of it — one piece at a time, one breath at a time.',
+      'Wherever it sits, send this exhale there.',
+    ],
+  };
+  const SPOTS = [
+    { id: 'jaw', label: 'Jaw' }, { id: 'shoulders', label: 'Shoulders' },
+    { id: 'chest', label: 'Chest' }, { id: 'belly', label: 'Belly' },
+    { id: 'head', label: 'Head' }, { id: 'everywhere', label: 'Everywhere' },
+  ];
+
+  const ARRIVALS = [
+    { text: 'The day won’t let go of me', expId: 'unwind' },
+    { text: 'I can’t switch off', expId: 'drift' },
+    { text: 'Something big is coming', expId: 'steady' },
+    { text: 'It’s all too much, right now', expId: 'release' },
+    { text: 'I’m foggy and the day hasn’t started', expId: 'firstlight' },
+    { text: 'I just want a reset', expId: 'auto' },
+  ];
+
+  // Paces that grow with practice (level = completions / 3, hard caps; protocols stay fixed)
+  const PROGRESSION = {
+    unwind:     (ph, lvl) => ph.map((p) => p.kind === 'out' ? { ...p, secs: Math.min(8, 6 + lvl) } : { ...p }),
+    firstlight: (ph, lvl) => ph.map((p) => ({ ...p, secs: Math.min(6, 5.5 + 0.5 * lvl) })),
+    steady:     (ph, lvl) => ph.map((p) => ({ ...p, secs: Math.min(5, 4 + lvl) })),
+  };
 
   const $ = (id) => document.getElementById(id);
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const LEAD_MS = 5200;
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const byId = (id) => EXPERIENCES.find((e) => e.id === id);
+  const fmtDate = (ts) => { const d = new Date(ts); return d.getDate() + ' ' + MONTHS[d.getMonth()]; };
+  const trimNum = (n) => (Math.round(n * 10) / 10).toString();
+  const fmtPace = (phases) => phases.map((p) => trimNum(p.secs)).join(' · ');
+
+  // ================= Device-local memory =================
+  const store = {
+    data: { sessions: [], bolts: [], progress: {} },
+    ok: true,
+    load() {
+      try {
+        const raw = localStorage.getItem('breathcoach.v1');
+        if (raw) {
+          const d = JSON.parse(raw);
+          this.data = { sessions: d.sessions || [], bolts: d.bolts || [], progress: d.progress || {} };
+        }
+      } catch (e) { this.ok = false; }
+    },
+    persist() {
+      if (!this.ok) return;
+      try { localStorage.setItem('breathcoach.v1', JSON.stringify(this.data)); }
+      catch (e) { this.ok = false; }
+    },
+    saveSession(rec) {
+      this.data.sessions.push(rec);
+      if (rec.completed) this.data.progress[rec.expId] = (this.data.progress[rec.expId] || 0) + 1;
+      this.persist();
+    },
+    saveBolt(secs) { this.data.bolts.push({ ts: Date.now(), secs: secs }); this.persist(); },
+    // any session the user scored afterwards counts — ending early is still showing up
+    scored() { return this.data.sessions.filter((s) => s.post != null); },
+  };
+  store.load();
 
   const state = {
     exp: null,
+    phases: [],
+    script: null,
+    spot: null,
     running: false,
     inSession: false,
     phaseIdx: 0,
@@ -486,20 +733,24 @@
     totalBreaths: 0,
     cycleSecs: 0,
     preScore: 6,
+    lastRec: null,
     soundOn: true,
     hapticsOn: true,
     leadTimer: 0,
     coachTimer: 0,
     wordTimer: 0,
     wakeLock: null,
+    boltTimers: [],
+    boltTick: 0,
+    boltStartTs: 0,
   };
 
-  // ================= The aura: the screen is the breath =================
+  // ================= The aura =================
   const canvas = $('aura');
   const ctx = canvas.getContext('2d');
   let W = 0, H = 0, DPR = 1;
   let auraColors = HOME_AURA;
-  let auraLevel = 0.5;       // rendered breath level (smoothed)
+  let auraLevel = 0.5;
 
   function resize() {
     DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -526,26 +777,23 @@
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fill();
   }
-
   function drawAura(now, level) {
     ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = '#0A0E17';
     ctx.fillRect(0, 0, W, H);
     ctx.globalCompositeOperation = 'lighter';
-
     const cx = W / 2, cy = H * 0.46;
     const R = Math.min(W, H) * 0.52;
     const s = 0.5 + 0.62 * level;
     const t = REDUCED ? 0 : now * 0.00012;
     const a = hexToRgb(auraColors[0]);
     const b = hexToRgb(auraColors[1]);
-
-    blob(cx - R * 0.22 + Math.sin(t) * R * 0.06,       cy - R * 0.12 + Math.cos(t * 0.8) * R * 0.05, R * 1.05 * s, a, 0.5);
-    blob(cx + R * 0.24 + Math.sin(t * 1.3 + 2) * R * 0.06, cy + R * 0.16 + Math.cos(t + 4) * R * 0.05, R * 0.92 * s, b, 0.45);
+    blob(cx - R * 0.22 + Math.sin(t) * R * 0.06,           cy - R * 0.12 + Math.cos(t * 0.8) * R * 0.05, R * 1.05 * s, a, 0.5);
+    blob(cx + R * 0.24 + Math.sin(t * 1.3 + 2) * R * 0.06, cy + R * 0.16 + Math.cos(t + 4) * R * 0.05,   R * 0.92 * s, b, 0.45);
     blob(cx, cy, R * 0.34 * s, [244, 240, 230], 0.10 + 0.14 * level);
   }
 
-  // ================= Engine + render loop (one heartbeat) =================
+  // ================= Engine + render loop =================
   const easeInOutSine = (p) => -(Math.cos(Math.PI * p) - 1) / 2;
   const phaseWord = $('phaseWord'), sessFill = $('sessFill');
 
@@ -554,20 +802,19 @@
   }
 
   function loop(now) {
-    // engine step
     if (state.running) {
-      const ph = state.exp.phases[state.phaseIdx];
+      const ph = state.phases[state.phaseIdx];
       const t = (now - state.phaseStart) / 1000;
       const p = Math.min(t / ph.secs, 1);
       const target = targetFullness(ph.kind);
       state.fullness = state.fStart + (target - state.fStart) * easeInOutSine(p);
 
       const done = state.breaths * state.cycleSecs +
-        state.exp.phases.slice(0, state.phaseIdx).reduce((acc, x) => acc + x.secs, 0) + Math.min(t, ph.secs);
+        state.phases.slice(0, state.phaseIdx).reduce((acc, x) => acc + x.secs, 0) + Math.min(t, ph.secs);
       sessFill.style.width = Math.min(100, (done / (state.totalBreaths * state.cycleSecs)) * 100) + '%';
 
       if (p >= 1) {
-        const nextIdx = (state.phaseIdx + 1) % state.exp.phases.length;
+        const nextIdx = (state.phaseIdx + 1) % state.phases.length;
         if (nextIdx === 0) {
           state.breaths++;
           if (state.breaths >= state.totalBreaths) { endSession(); requestAnimationFrame(loop); return; }
@@ -576,8 +823,6 @@
         enterPhase(nextIdx, now);
       }
     }
-
-    // breath level: engine-driven in session, slow idle tide otherwise
     const wanted = state.running ? state.fullness
                  : state.inSession ? 0.35
                  : 0.4 + 0.18 * Math.sin(now * (REDUCED ? 0 : 0.0005));
@@ -588,7 +833,7 @@
   requestAnimationFrame(loop);
 
   // ================= Screens =================
-  const screens = ['home', 'intro', 'session', 'reflect'];
+  const screens = ['home', 'arrival', 'intro', 'session', 'reflect', 'insights', 'bolt'];
   function show(id) {
     screens.forEach((s) => $(s).classList.toggle('active', s === id));
     window.scrollTo(0, 0);
@@ -597,8 +842,9 @@
     auraColors = exp ? exp.aura : HOME_AURA;
     document.documentElement.style.setProperty('--acc', exp ? exp.accent : '#74C7B8');
   }
+  function goHome() { setPalette(null); renderHome(); show('home'); }
 
-  // ================= Home bands =================
+  // ================= Home =================
   const bandsEl = $('bands');
   EXPERIENCES.forEach((exp) => {
     const b = document.createElement('button');
@@ -616,10 +862,92 @@
     bandsEl.appendChild(b);
   });
 
+  function renderHome() {
+    // memory strip — gentle thread, never a broken streak
+    const strip = $('memoryStrip');
+    if (!store.data.sessions.length) { strip.classList.remove('on'); }
+    else {
+      const dayKeys = new Set();
+      const now = Date.now();
+      for (let i = 0; i < 7; i++) {
+        const key = new Date(now - i * 864e5).toDateString();
+        if (store.data.sessions.some((s) => new Date(s.ts).toDateString() === key)) dayKeys.add(key);
+      }
+      const n = dayKeys.size;
+      $('threadLine').textContent = n === 0
+        ? 'Welcome back. The thread picks up wherever you do.'
+        : 'You’ve shown up ' + n + ' of the last 7 days — the thread holds.';
+      strip.classList.add('on');
+    }
+    // check-up nudge
+    const bolts = store.data.bolts;
+    if (bolts.length && Date.now() - bolts[bolts.length - 1].ts > 28 * 864e5) {
+      $('boltBandNote').textContent = 'It’s been a month since your last score — time for a check-up.';
+    } else if (bolts.length) {
+      $('boltBandNote').textContent = 'Last score: ' + bolts[bolts.length - 1].secs + 's. The trend is the truth — re-test in a few weeks.';
+    }
+  }
+  $('memoryStrip').addEventListener('click', () => { renderInsights(); show('insights'); });
+  $('guideBand').addEventListener('click', () => { setPalette(null); show('arrival'); });
+  $('boltBand').addEventListener('click', () => openBolt());
+
+  // ================= Arrival ("Breathe me") =================
+  const arrivalBandsEl = $('arrivalBands');
+  ARRIVALS.forEach((a) => {
+    const exp = a.expId === 'auto' ? null : byId(a.expId);
+    const b = document.createElement('button');
+    b.className = 'band';
+    if (exp) {
+      b.style.setProperty('--c1', exp.aura[0]);
+      b.style.setProperty('--c2', exp.aura[1]);
+    }
+    b.innerHTML = '<span class="name" style="font-size:clamp(26px,7vw,36px)">' + a.text + '</span>';
+    b.addEventListener('click', () => {
+      let target = exp;
+      if (!target) {
+        // "just a reset" → whatever has moved this person most; a first-timer gets the fast one
+        const scored = store.scored();
+        let bestId = 'release', bestAvg = -Infinity;
+        EXPERIENCES.forEach((e) => {
+          const mine = scored.filter((s) => s.expId === e.id);
+          if (mine.length >= 2) {
+            const avg = mine.reduce((acc, s) => acc + (s.pre - s.post), 0) / mine.length;
+            if (avg > bestAvg) { bestAvg = avg; bestId = e.id; }
+          }
+        });
+        target = byId(bestId);
+      }
+      openIntro(target, 'Then we’ll do ' + target.name + '.');
+    });
+    arrivalBandsEl.appendChild(b);
+  });
+  $('arrivalBack').addEventListener('click', goHome);
+
   // ================= Intro =================
-  function openIntro(exp) {
+  const spotRow = $('spotRow');
+  SPOTS.forEach((s) => {
+    const c = document.createElement('button');
+    c.className = 'chip';
+    c.textContent = s.label;
+    c.dataset.spot = s.id;
+    c.setAttribute('aria-pressed', 'false');
+    c.addEventListener('click', () => {
+      const was = c.getAttribute('aria-pressed') === 'true';
+      spotRow.querySelectorAll('.chip').forEach((el) => el.setAttribute('aria-pressed', 'false'));
+      state.spot = was ? null : s.id;
+      if (!was) c.setAttribute('aria-pressed', 'true');
+    });
+    spotRow.appendChild(c);
+  });
+
+  function openIntro(exp, framing) {
     state.exp = exp;
+    state.spot = null;
+    spotRow.querySelectorAll('.chip').forEach((el) => el.setAttribute('aria-pressed', 'false'));
     setPalette(exp);
+    const fr = $('introFraming');
+    if (framing) { fr.textContent = framing; fr.classList.remove('hidden'); }
+    else fr.classList.add('hidden');
     $('introMoment').textContent = exp.moment;
     $('introName').textContent = exp.name;
     $('introPromise').textContent = exp.promise;
@@ -631,17 +959,30 @@
     $('preScale').value = 6;
     $('beginBtn').textContent = exp.begin;
     $('introFootnote').textContent = exp.footnote;
+    // grown pace note
+    const grown = buildPhases(exp);
+    const pace = $('paceNote');
+    if (fmtPace(grown) !== fmtPace(exp.phases)) {
+      pace.textContent = 'Your pace has grown: ' + fmtPace(grown) + ' (started at ' + fmtPace(exp.phases) + ').';
+      pace.classList.remove('hidden');
+    } else pace.classList.add('hidden');
     show('intro');
   }
-  $('introBack').addEventListener('click', () => { setPalette(null); show('home'); });
+  $('introBack').addEventListener('click', goHome);
   $('beginBtn').addEventListener('click', () => {
     state.preScore = Number($('preScale').value);
     startSession();
   });
 
+  function buildPhases(exp) {
+    const lvl = Math.floor((store.data.progress[exp.id] || 0) / 3);
+    const f = PROGRESSION[exp.id];
+    return f && lvl > 0 ? f(exp.phases, lvl) : exp.phases.map((p) => ({ ...p }));
+  }
+
   // ================= Coach lines & phase words =================
   function lineFor(cycle) {
-    const s = state.exp.script;
+    const s = state.script;
     const total = state.totalBreaths;
     const settleN = Math.max(1, Math.round(total * 0.25));
     const closeN = Math.max(1, Math.round(total * 0.2));
@@ -729,7 +1070,7 @@
     state.phaseIdx = idx;
     state.phaseStart = now;
     state.fStart = state.fullness;
-    const ph = state.exp.phases[idx];
+    const ph = state.phases[idx];
     setWord(ph.word);
     phaseAudio(ph);
     buzz(ph.kind);
@@ -738,15 +1079,32 @@
   async function startSession() {
     const exp = state.exp;
     ensureAudio();
-    state.cycleSecs = exp.phases.reduce((a, x) => a + x.secs, 0);
+    state.phases = buildPhases(exp);
+    state.cycleSecs = state.phases.reduce((a, x) => a + x.secs, 0);
     state.totalBreaths = Math.max(3, Math.round((exp.mins * 60) / state.cycleSecs));
     state.breaths = 0;
     state.fullness = 0;
     state.running = false;
     state.inSession = true;
 
+    // weave the chosen body spot into the deepen rotation
+    const deepen = exp.script.deepen.slice();
+    if (state.spot && SPOT_LINES[state.spot]) {
+      const sl = SPOT_LINES[state.spot];
+      deepen.splice(Math.min(1, deepen.length), 0, sl[0]);
+      if (deepen.length > 3) deepen.splice(3, 0, sl[1]);
+      else deepen.push(sl[1]);
+    }
+    state.script = { settle: exp.script.settle, deepen: deepen, close: exp.script.close };
+
+    // once per level-up, the coach acknowledges the growth
+    const count = store.data.progress[exp.id] || 0;
+    const lead = (PROGRESSION[exp.id] && count > 0 && count % 3 === 0)
+      ? 'Your exhale is longer than when you started. We’ll begin on your next breath.'
+      : exp.lead;
+
     $('sessName').textContent = exp.name;
-    setCoach(exp.lead, true);
+    setCoach(lead, true);
     setWord('', true);
     sessFill.style.width = '0%';
     show('session');
@@ -770,6 +1128,18 @@
     clearTimeout(state.wordTimer);
     droneTo(0);
     if (state.wakeLock) { state.wakeLock.release().catch(() => {}); state.wakeLock = null; }
+
+    state.lastRec = {
+      ts: Date.now(),
+      expId: state.exp.id,
+      pre: state.preScore,
+      post: null,
+      breaths: state.breaths,
+      completed: state.breaths >= state.totalBreaths,
+    };
+    if (state.spot) state.lastRec.spot = state.spot;
+    store.saveSession(state.lastRec);
+
     openReflect();
   }
 
@@ -781,6 +1151,7 @@
     $('postLow').textContent = exp.scaleEnds[0];
     $('postHigh').textContent = exp.scaleEnds[1];
     $('postScale').value = Math.max(0, state.preScore - 2);
+    $('wordInput').value = '';
     $('reflectAsk').classList.remove('hidden');
     $('reflectResult').classList.add('hidden');
     show('reflect');
@@ -790,6 +1161,7 @@
     const post = Number($('postScale').value);
     const delta = state.preScore - post;
     const exp = state.exp;
+    if (state.lastRec) { state.lastRec.post = post; store.persist(); }
     $('shiftFrom').textContent = state.preScore;
     $('shiftTo').textContent = post;
     let line;
@@ -804,13 +1176,188 @@
       line = 'Some days it doesn’t drop — that’s honest data, not failure. A second round, or a longer exhale, usually finds the release.';
     }
     $('shiftLine').textContent = line;
+    const sf = $('spotFollow');
+    if (state.spot && state.spot !== 'everywhere') {
+      sf.textContent = 'And the ' + state.spot + '? Check it now.';
+      sf.classList.remove('hidden');
+    } else sf.classList.add('hidden');
     $('closingLine').textContent = '“' + exp.closing + '”';
     $('reflectAsk').classList.add('hidden');
     $('reflectResult').classList.remove('hidden');
   });
 
+  $('wordInput').addEventListener('change', (e) => {
+    const w = e.target.value.trim();
+    if (w && state.lastRec) { state.lastRec.word = w; store.persist(); }
+  });
+
   $('againBtn').addEventListener('click', () => openIntro(state.exp));
-  $('homeBtn').addEventListener('click', () => { setPalette(null); show('home'); });
+  $('homeBtn').addEventListener('click', goHome);
+
+  // ================= Insights ("Your shifts") =================
+  function renderInsights() {
+    const completed = store.scored();
+    const drops = completed.map((s) => s.pre - s.post);
+    const totalDrop = drops.reduce((a, d) => a + Math.max(0, d), 0);
+
+    $('insTotal').innerHTML = completed.length
+      ? 'You’ve put down <em>' + totalDrop + ' points</em> of tension across ' +
+        completed.length + (completed.length === 1 ? ' session.' : ' sessions.')
+      : 'No shifts recorded yet — your first session writes the first line.';
+
+    // Bar strip: one bar per recent session, height = how much was put down. Single hue; identity via tooltip.
+    const recent = completed.slice(-14);
+    const bars = $('insBars');
+    bars.innerHTML = '';
+    $('insChartBlock').classList.toggle('hidden', !recent.length);
+    recent.forEach((s) => {
+      const d = s.pre - s.post;
+      const el = document.createElement('div');
+      el.className = 'bar' + (d <= 0 ? ' nil' : '');
+      el.style.height = d > 0 ? (8 + (Math.min(d, 10) / 10) * 74) + 'px' : '3px';
+      el.title = fmtDate(s.ts) + ' · ' + byId(s.expId).name + ' · ' + s.pre + ' → ' + s.post;
+      bars.appendChild(el);
+    });
+    $('insChartNote').textContent = recent.length
+      ? 'Each bar is one session — taller means more put down. Touch a bar for the details.'
+      : '';
+
+    // Pattern insight
+    const pat = $('insPattern');
+    if (completed.length >= 5) {
+      const buckets = { morning: [], afternoon: [], evening: [], night: [] };
+      completed.forEach((s) => {
+        const h = new Date(s.ts).getHours();
+        const k = h >= 5 && h < 11 ? 'morning' : h >= 11 && h < 17 ? 'afternoon' : h >= 17 && h < 22 ? 'evening' : 'night';
+        buckets[k].push(s.pre);
+      });
+      let heavyK = null, heavyAvg = -Infinity;
+      Object.keys(buckets).forEach((k) => {
+        if (buckets[k].length >= 2) {
+          const avg = buckets[k].reduce((a, v) => a + v, 0) / buckets[k].length;
+          if (avg > heavyAvg) { heavyAvg = avg; heavyK = k; }
+        }
+      });
+      let bestExp = null, bestAvg = -Infinity;
+      EXPERIENCES.forEach((e) => {
+        const mine = completed.filter((s) => s.expId === e.id);
+        if (mine.length >= 2) {
+          const avg = mine.reduce((a, s) => a + (s.pre - s.post), 0) / mine.length;
+          if (avg > bestAvg) { bestAvg = avg; bestExp = e; }
+        }
+      });
+      const parts = [];
+      if (heavyK) parts.push('You arrive heaviest in the ' + heavyK + '.');
+      if (bestExp && bestAvg > 0) parts.push(bestExp.name + ' is doing the most work for you — an average drop of ' + trimNum(bestAvg) + '.');
+      if (parts.length) { pat.textContent = parts.join(' '); pat.classList.remove('hidden'); }
+      else pat.classList.add('hidden');
+    } else pat.classList.add('hidden');
+
+    // Per-experience rows
+    const rows = $('insExpRows');
+    rows.innerHTML = '';
+    EXPERIENCES.forEach((e) => {
+      const mine = completed.filter((s) => s.expId === e.id);
+      if (!mine.length) return;
+      const avg = mine.reduce((a, s) => a + (s.pre - s.post), 0) / mine.length;
+      const row = document.createElement('div');
+      row.className = 'expRow';
+      row.innerHTML = '<span class="dot" style="background:' + e.accent + '"></span>' +
+        '<span class="n">' + e.name + '</span>' +
+        '<span class="v">' + mine.length + (mine.length === 1 ? ' session' : ' sessions') +
+        ' · avg drop ' + trimNum(avg) + '</span>';
+      rows.appendChild(row);
+    });
+
+    // BOLT trend
+    const bolts = store.data.bolts;
+    $('insBoltBlock').classList.toggle('hidden', !bolts.length);
+    if (bolts.length) {
+      const last = bolts[bolts.length - 1];
+      let text = 'Latest: ' + last.secs + 's (' + fmtDate(last.ts) + ')';
+      if (bolts.length >= 2) {
+        const prev = bolts[bolts.length - 2];
+        const d = last.secs - prev.secs;
+        text += d > 0 ? ' — up ' + d + 's since ' + fmtDate(prev.ts) + '. That’s the practice working.'
+             : d === 0 ? ' — holding steady since ' + fmtDate(prev.ts) + '.'
+             : ' — down ' + (-d) + 's since ' + fmtDate(prev.ts) + '. Scores dip with poor sleep or stress; the trend is what counts.';
+      }
+      $('insBoltLine').textContent = text;
+    }
+
+    // Words
+    const words = store.data.sessions.filter((s) => s.word).map((s) => s.word).slice(-8);
+    $('insWordsBlock').classList.toggle('hidden', !words.length);
+    if (words.length) $('insWords').textContent = words.join(' · ');
+  }
+  $('insightsBack').addEventListener('click', goHome);
+
+  // ================= BOLT check-up =================
+  function clearBoltTimers() {
+    state.boltTimers.forEach(clearTimeout);
+    state.boltTimers = [];
+    clearInterval(state.boltTick);
+  }
+  function openBolt() {
+    clearBoltTimers();
+    auraColors = BOLT_AURA;
+    document.documentElement.style.setProperty('--acc', '#63C2AF');
+    $('boltIntro').classList.remove('hidden');
+    $('boltRun').classList.add('hidden');
+    $('boltResult').classList.add('hidden');
+    show('bolt');
+  }
+  $('boltBack').addEventListener('click', () => { clearBoltTimers(); goHome(); });
+
+  $('boltStart').addEventListener('click', () => {
+    $('boltIntro').classList.add('hidden');
+    $('boltRun').classList.remove('hidden');
+    $('boltTimer').classList.add('hidden');
+    $('boltStop').classList.add('hidden');
+    const say = (text, delay) => state.boltTimers.push(setTimeout(() => { $('boltPrompt').textContent = text; }, delay));
+    say('Breathe normally for a moment…', 0);
+    say('A normal breath in…', 4000);
+    say('…and a normal breath out.', 7000);
+    say('Now pinch your nose and hold.', 10500);
+    state.boltTimers.push(setTimeout(() => {
+      $('boltPrompt').textContent = 'Tap the moment you feel the first clear urge to breathe.';
+      $('boltTimer').classList.remove('hidden');
+      $('boltStop').classList.remove('hidden');
+      state.boltStartTs = performance.now();
+      state.boltTick = setInterval(() => {
+        const secs = Math.floor((performance.now() - state.boltStartTs) / 1000);
+        $('boltTimer').innerHTML = secs + '<small> SEC</small>';
+        if (secs >= 90) finishBolt(90); // safety backstop — nobody should chase past this
+      }, 200);
+    }, 12000));
+  });
+
+  function finishBolt(secs) {
+    clearBoltTimers();
+    const prev = store.data.bolts.length ? store.data.bolts[store.data.bolts.length - 1] : null;
+    store.saveBolt(secs);
+    $('boltRun').classList.add('hidden');
+    $('boltResult').classList.remove('hidden');
+    $('boltScore').innerHTML = secs + '<small> SEC</small>';
+    $('boltBandText').textContent =
+      secs < 10 ? 'Under 10 — your everyday breathing has real room to grow. Good news: this number moves fast with practice.' :
+      secs < 20 ? 'A solid base — most people start here. Watch it climb as your exhales lengthen.' :
+      secs < 30 ? 'Good functional breathing — your body tolerates calm well.' :
+      'Excellent — keep what you’re doing. Maintain it; don’t chase it.';
+    const bd = $('boltDelta');
+    if (prev) {
+      const d = secs - prev.secs;
+      bd.textContent = d > 0 ? 'Up ' + d + ' seconds since ' + fmtDate(prev.ts) + ' — that’s the practice working.'
+        : d === 0 ? 'Level with your last score from ' + fmtDate(prev.ts) + '.'
+        : 'Down ' + (-d) + ' seconds since ' + fmtDate(prev.ts) + '. Sleep and stress move this — the trend is what counts.';
+      bd.classList.remove('hidden');
+    } else bd.classList.add('hidden');
+    renderHome();
+  }
+  $('boltStop').addEventListener('click', () => {
+    finishBolt(Math.max(1, Math.round((performance.now() - state.boltStartTs) / 1000)));
+  });
+  $('boltDone').addEventListener('click', () => { renderInsights(); show('insights'); });
 
   // ================= Session controls =================
   const flip = (btn) => {
@@ -838,5 +1385,7 @@
       endSession();
     }
   });
+
+  renderHome();
 })();
 </script>
