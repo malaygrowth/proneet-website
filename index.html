@@ -316,7 +316,7 @@ function defaults(){
       sleepRemind:'22:30', sleepGoal:8, stepGoal:8000},
     exercises: DEF_EX.map(function(e,i){ return {id:'ex'+i, name:e[0], group:e[1]}; }),
     routines:[], sessions:[], active:null,
-    water:{}, food:{}, quick:[], weights:[], sleep:{}, steps:{}, measures:[]
+    water:{}, food:{}, quick:[], weights:[], sleep:{}, steps:{}, measures:[], reminders:[]
   };
 }
 let S;
@@ -481,14 +481,23 @@ function beep(times){
     }
   }catch(e){}
 }
-function notify(title, body){
+function notify(title, body, sound){
+  /* Android only shows notifications via a service worker registration;
+     desktop and iOS Safari accept the Notification constructor. Try both. */
   try{
     if('Notification' in window && Notification.permission==='granted'){
-      new Notification(title,{body:body, tag:'fitlog'});
+      const fallback=function(){ try{ new Notification(title,{body:body, tag:'fitlog'}); }catch(e){} };
+      if(navigator.serviceWorker && navigator.serviceWorker.getRegistration){
+        navigator.serviceWorker.getRegistration().then(function(reg){
+          if(reg && reg.showNotification) reg.showNotification(title,{body:body, tag:'fitlog', vibrate:[200,80,200]});
+          else fallback();
+        }).catch(fallback);
+      } else fallback();
     }
   }catch(e){}
   toast(title + (body ? ' — '+body : ''));
   vib([200,80,200]);
+  if(sound) beep(2);
 }
 function askNotify(){
   if(!('Notification' in window)){ toast('Notifications not supported here'); return; }
@@ -688,6 +697,15 @@ function renderToday(){
   const notifOK = ('Notification' in window) && Notification.permission==='granted';
 
   let h='';
+  /* notifications enable card */
+  if('Notification' in window && Notification.permission!=='granted'){
+    h+='<button class="card" style="width:100%; text-align:left; display:block; border-color:#f2a03d66" onclick="askNotify()">'+
+      '<b>🔔 Turn on notifications</b><div class="tiny muted" style="margin-top:4px">'+
+      (Notification.permission==='denied'
+        ? 'Blocked by the browser — allow notifications for this site in your browser settings. Until then, reminders still ring inside the app with sound and vibration.'
+        : 'One tap and your water, workout, sleep and custom reminders can ring properly. Reminders fire while the app is open.')+
+      '</div></button>';
+  }
   /* water */
   h+='<div class="card"><h2><span class="dot" style="background:var(--wa)"></span>Water</h2>'+
     '<div class="row" style="gap:16px">'+
@@ -1308,9 +1326,15 @@ function openSettings(){
     '<div class="field"><label for="sSlRemind">Sleep wind-down time</label><input id="sSlRemind" type="time" value="'+esc(st.sleepRemind)+'"></div>'+
     '<div class="field"><label for="sSlGoal">Sleep goal (hours)</label><input id="sSlGoal" type="number" inputmode="decimal" step="0.5" value="'+(+st.sleepGoal||8)+'"></div></div>'+
     '<div class="field"><label for="sStpGoal">Step goal (per day)</label><input id="sStpGoal" type="number" inputmode="numeric" value="'+(+st.stepGoal||8000)+'"></div>'+
+    '<div class="tiny muted" style="font-weight:700; letter-spacing:.07em; text-transform:uppercase; margin:14px 0 8px">Custom daily reminders</div>'+
+    ((S.reminders&&S.reminders.length)
+      ? S.reminders.map(function(r){ return '<div class="listrow"><span class="small">'+esc(r.label)+' <span class="muted num">· '+r.time+'</span></span><button class="btn ghost sm danger" onclick="delReminder(\''+r.id+'\')">✕</button></div>'; }).join('')
+      : '<p class="tiny muted" style="margin-bottom:6px">e.g. “Creatine” at 09:00, “Casein shake” at 22:45, “Stretch break” at 17:00</p>')+
+    '<div class="row" style="margin:8px 0 12px"><input id="remLabel" placeholder="Reminder name"><input id="remTime" type="time" value="09:00" style="max-width:130px"><button class="btn sm" onclick="addReminder()">Add</button></div>'+
     (notifState!=='granted' && notifState!=='unsupported'
       ? '<button class="btn wide" style="margin-bottom:10px" onclick="askNotify()">Allow notifications</button>' : '')+
     (notifState==='granted' ? '<p class="tiny muted" style="margin-bottom:10px">Notifications: allowed ✓ (they fire while the app is open)</p>':'')+
+    '<button class="btn wide" style="margin-bottom:10px" onclick="notify(\'Test notification 🔔\',\'This is exactly how reminders will look and sound.\', true)">Send test notification</button>'+
     '<button class="btn primary wide" onclick="saveSettings()">Save settings</button>'+
     '<hr style="border:0;border-top:1px solid var(--line); margin:16px 0">'+
     '<div class="row" style="gap:10px"><button class="btn grow" onclick="exportData()">Export backup</button>'+
@@ -1318,7 +1342,25 @@ function openSettings(){
     '<button class="btn danger wide" style="margin-top:10px" onclick="resetAll()">Erase all data</button>'+
     '<p class="tiny muted" style="margin-top:14px">All data lives only on this device (browser storage). Export a backup now and then.</p>');
 }
+function addReminder(){
+  const label=$('#remLabel').value.trim(), time=$('#remTime').value;
+  if(!label || !time){ toast('Give the reminder a name and a time'); return; }
+  collectSettings();
+  S.reminders.push({id:uid(), label:label, time:time});
+  save(); openSettings(); toast('Reminder added — '+time+' daily');
+}
+function delReminder(id){
+  collectSettings();
+  S.reminders=S.reminders.filter(function(r){ return r.id!==id; });
+  save(); openSettings();
+}
 function saveSettings(){
+  collectSettings();
+  save(); closeSheet(); render(); toast('Saved');
+  const st=S.settings;
+  if(st.waterRemind && ('Notification' in window) && Notification.permission==='default') askNotify();
+}
+function collectSettings(){
   const st=S.settings;
   st.name=$('#sName').value.trim(); st.unit=$('#sUnit').value;
   st.height=$('#sHeight').value; st.waterGoal=+$('#sWater').value||3000;
@@ -1329,8 +1371,6 @@ function saveSettings(){
   st.workoutRemind=$('#sWkRemind').value;
   st.sleepRemind=$('#sSlRemind').value; st.sleepGoal=+$('#sSlGoal').value||8;
   st.stepGoal=+$('#sStpGoal').value||8000;
-  save(); closeSheet(); render(); toast('Saved');
-  if(st.waterRemind && ('Notification' in window) && Notification.permission==='default') askNotify();
 }
 function exportData(){
   const blob=new Blob([JSON.stringify(S,null,1)],{type:'application/json'});
@@ -1361,26 +1401,31 @@ function resetAll(){
 }
 
 /* ============ reminders engine ============ */
-let lastDrinkTs=Date.now(), lastRemindTs=0, wkRemindedOn='', slRemindedOn='';
+let lastDrinkTs=Date.now(), lastRemindTs=0, wkRemindedOn='', slRemindedOn='', remFiredOn={};
 setInterval(function(){
   const st=S.settings, now=new Date(), hr=now.getHours();
   const hm=pad(hr)+':'+pad(now.getMinutes());
   if(st.sleepRemind && slRemindedOn!==today() && hm===st.sleepRemind){
     slRemindedOn=today();
-    notify('Wind down 🌙','In bed by 11pm — sleep is where the muscle gets built.');
+    notify('Wind down 🌙','In bed by 11pm — sleep is where the muscle gets built.', true);
   }
+  (S.reminders||[]).forEach(function(r){
+    if(remFiredOn[r.id]===today() || hm!==r.time) return;
+    remFiredOn[r.id]=today();
+    notify('⏰ '+r.label,'', true);
+  });
   if(st.waterRemind && hr>=8 && hr<22){
     const since=Date.now()-Math.max(lastDrinkTs,lastRemindTs);
     if(since > st.waterEvery*60000){
       lastRemindTs=Date.now();
       const left=Math.max(0, st.waterGoal-waterToday());
-      notify('Time to drink water 💧', left>0 ? Math.round(left/1000*10)/10+'L to go today' : 'Goal already met — sip anyway');
+      notify('Time to drink water 💧', left>0 ? Math.round(left/1000*10)/10+'L to go today' : 'Goal already met — sip anyway', true);
     }
   }
   if(st.workoutRemind && wkRemindedOn!==today()){
     if(hm===st.workoutRemind && !S.sessions.some(function(s){return s.date===today();})){
       wkRemindedOn=today();
-      notify('Workout time 🏋️','You planned to train at '+st.workoutRemind);
+      notify('Workout time 🏋️','You planned to train at '+st.workoutRemind, true);
     }
   }
 }, 30000);

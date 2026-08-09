@@ -30,6 +30,11 @@ browser storage**. Built as a single-file progressive web app (PWA).
 - **Weekly report** — this week vs last across training volume, PRs,
   cardio distance, steps, sleep, nutrition, water and weight, with a
   browsable week-by-week history.
+- **Notifiers** — water reminders on an interval, workout-time reminder,
+  22:30 sleep wind-down, and unlimited custom daily reminders (creatine,
+  casein, stretch breaks…). All ring with sound + vibration in-app and as
+  system notifications where the platform allows (service-worker path on
+  Android, Notification API elsewhere). Test button in Settings.
 - **Settings** — goals, units (kg/lb), default rest time, reminders,
   export/import JSON backup, full reset.
 
