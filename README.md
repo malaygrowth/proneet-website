@@ -23,6 +23,13 @@ browser storage**. Built as a single-file progressive web app (PWA).
   wind-down reminder (default 22:30) to be in bed by 11pm.
 - **Cardio distance** — exercises in the Cardio group log km × minutes
   instead of kg × reps; PRs show longest distance and best pace.
+- **Steps** — manual daily entry (copy from the phone's health app) with
+  goal, progress bar and 7-day trend.
+- **Measurements** — chest/waist/hips/biceps/thigh/calf in cm with deltas
+  since the previous measurement.
+- **Weekly report** — this week vs last across training volume, PRs,
+  cardio distance, steps, sleep, nutrition, water and weight, with a
+  browsable week-by-week history.
 - **Settings** — goals, units (kg/lb), default rest time, reminders,
   export/import JSON backup, full reset.
 

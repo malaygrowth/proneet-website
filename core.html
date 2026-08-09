@@ -7,7 +7,7 @@
     --wa:#56b8e8; --wa-dim:#56b8e833;
     --fd:#8fd068; --fd-dim:#8fd06833;
     --bd:#b48ee0; --bd-dim:#b48ee033;
-    --sl:#8ea0e8;
+    --sl:#8ea0e8; --stp:#5ecfb5;
     --bad:#e8695e; --good:#4fc98a;
     --r:14px;
   }
@@ -157,6 +157,8 @@
   .mini{display:flex; gap:4px; align-items:flex-end; height:36px; margin-top:10px}
   .mini i{flex:1; background:var(--sl); border-radius:3px 3px 0 0; min-height:2px; opacity:.85}
   .mini i.off{background:var(--raised)}
+  .mini.stp i{background:var(--stp)}
+  .mini.stp i.off{background:var(--raised)}
   a{color:var(--wa)}
 </style>
 
@@ -297,10 +299,10 @@ function defaults(){
   return {
     settings:{name:'', unit:'kg', waterGoal:3000, calGoal:2600, proteinGoal:120, carbGoal:340, fatGoal:75,
       rest:90, height:'176', goalWeight:'68', waterRemind:true, waterEvery:75, workoutRemind:'',
-      sleepRemind:'22:30', sleepGoal:8},
+      sleepRemind:'22:30', sleepGoal:8, stepGoal:8000},
     exercises: DEF_EX.map(function(e,i){ return {id:'ex'+i, name:e[0], group:e[1]}; }),
     routines:[], sessions:[], active:null,
-    water:{}, food:{}, quick:[], weights:[], sleep:{}
+    water:{}, food:{}, quick:[], weights:[], sleep:{}, steps:{}, measures:[]
   };
 }
 let S;
@@ -537,6 +539,122 @@ function saveSleep(){
   toast(hrs+'h logged'+(hrs<(+S.settings.sleepGoal||8)-1?' — try for an earlier night today':''));
 }
 function delSleep(){ delete S.sleep[today()]; save(); closeSheet(); renderToday(); }
+function stepsForm(){
+  openSheet('<h3>Today’s steps</h3>'+
+    '<div class="field"><label for="stpN">Total steps (from your phone’s counter)</label>'+
+    '<input id="stpN" type="number" inputmode="numeric" value="'+(S.steps[today()]||'')+'" placeholder="e.g. 7500"></div>'+
+    '<button class="btn wide" style="background:var(--stp); border-color:var(--stp); color:#0a1f19" onclick="saveSteps()">Save</button>');
+}
+function saveSteps(){
+  const n=Math.round(+$('#stpN').value||0);
+  if(n<=0){ delete S.steps[today()]; } else S.steps[today()]=n;
+  save(); closeSheet(); renderToday();
+  if(n>=(+S.settings.stepGoal||8000)) toast('Step goal hit 🎯');
+}
+
+/* ============ weekly report ============ */
+function wkMonday(iso){ const d=new Date(iso+'T12:00:00'); return dShift(iso, -((d.getDay()+6)%7)); }
+function weekStats(ws){
+  const we=dShift(ws,6);
+  function inR(d){ return d>=ws && d<=we; }
+  const ses=S.sessions.filter(function(s){ return inR(s.date); });
+  let vol=0, dur=0, km=0;
+  ses.forEach(function(s){ vol+=s.vol||0; dur+=s.dur||0;
+    s.ex.forEach(function(e){ if(exGroupOf(e.exId)==='Cardio') e.sets.forEach(function(t){ km+=+t.w||0; }); }); });
+  let pr=0;
+  S.exercises.forEach(function(ex){
+    if(ex.group==='Cardio'||ex.group==='Mobility') return;
+    let inBest=0, preBest=0;
+    S.sessions.forEach(function(s){
+      const e=s.ex.find(function(x){return x.exId===ex.id;}); if(!e) return;
+      e.sets.forEach(function(t){
+        const est=(+t.w||0)*(1+(+t.r||0)/30);
+        if(inR(s.date)){ if(est>inBest) inBest=est; }
+        else if(s.date<ws && est>preBest) preBest=est;
+      });
+    });
+    if(inBest>0 && preBest>0 && inBest>preBest) pr++;
+  });
+  let slS=0,slN=0, waS=0,waN=0,waHit=0, stS=0,stN=0,stHit=0, kcS=0,ptS=0,fdN=0;
+  for(let i=0;i<7;i++){
+    const d=dShift(ws,i);
+    const sl=S.sleep[d]; if(sl){ slS+=sl.hrs; slN++; }
+    const w=S.water[d]||0; if(w>0){ waS+=w; waN++; if(w>=S.settings.waterGoal) waHit++; }
+    const sp=S.steps[d]||0; if(sp>0){ stS+=sp; stN++; if(sp>=(+S.settings.stepGoal||8000)) stHit++; }
+    const ft=foodTotals(d); if(ft.kcal>0){ kcS+=ft.kcal; ptS+=ft.p; fdN++; }
+  }
+  const wts=S.weights.filter(function(x){return inR(x.date);}).sort(function(a,b){return a.date<b.date?-1:1;});
+  return {ses:ses.length, vol:vol, dur:dur, km:Math.round(km*10)/10, pr:pr,
+    sleep: slN? Math.round(slS/slN*10)/10 :0, slN:slN,
+    water: waN? Math.round(waS/waN) :0, waHit:waHit,
+    steps: stS, stHit:stHit,
+    kcal: fdN? Math.round(kcS/fdN) :0, prot: fdN? Math.round(ptS/fdN) :0, fdN:fdN,
+    wDelta: wts.length>1? Math.round((wts[wts.length-1].kg-wts[0].kg)*10)/10 : null,
+    wLast: wts.length? wts[wts.length-1].kg : null};
+}
+function dif(c,p,unitTxt,goodUp){
+  if(!p && !c) return '';
+  const d=Math.round((c-p)*10)/10;
+  if(!d) return '<span class="muted">same as last wk</span>';
+  const up=d>0, good=(goodUp===false)? !up : up;
+  return '<span style="color:var(--'+(good?'good':'bad')+')">'+(up?'▲':'▼')+Math.abs(d)+(unitTxt||'')+' vs last wk</span>';
+}
+function openReport(ws){
+  ws = ws || wkMonday(today());
+  const curWk = wkMonday(today());
+  const cur=weekStats(ws), prv=weekStats(dShift(ws,-7));
+  function row(l,v,d){ return '<div class="listrow"><span class="small">'+l+'</span><span class="small num" style="text-align:right">'+v+(d?'<div class="tiny">'+d+'</div>':'')+'</span></div>'; }
+  function sect(t){ return '<div class="tiny muted" style="margin:14px 0 2px; font-weight:700; letter-spacing:.07em; text-transform:uppercase">'+t+'</div>'; }
+  let h='<h3 style="margin-bottom:4px">Weekly report</h3>'+
+    '<div class="datebar" style="margin-bottom:4px"><button class="btn sm" onclick="openReport(\''+dShift(ws,-7)+'\')">‹</button>'+
+    '<b class="num">'+fmtD(ws)+' – '+fmtD(dShift(ws,6))+(ws===curWk?' (this week)':'')+'</b>'+
+    '<button class="btn sm" onclick="openReport(\''+dShift(ws,7)+'\')" '+(ws>=curWk?'disabled style="opacity:.35"':'')+'>›</button></div>';
+  h+=sect('Training')+
+    row('Workouts', cur.ses, dif(cur.ses,prv.ses,''))+
+    row('Volume', Math.round(cur.vol).toLocaleString()+' '+unit(), dif(Math.round(cur.vol),Math.round(prv.vol),''))+
+    row('Time training', Math.round(cur.dur/60)+' min','')+
+    row('New PRs', cur.pr,'');
+  h+=sect('Cardio & steps')+
+    row('Distance', cur.km+' km', dif(cur.km,prv.km,' km'))+
+    row('Steps', cur.steps.toLocaleString(), dif(cur.steps,prv.steps,''))+
+    row('Step-goal days', cur.stHit+' / 7','');
+  h+=sect('Sleep')+
+    row('Average', cur.slN? cur.sleep+' h':'—', dif(cur.sleep,prv.sleep,' h'))+
+    row('Nights logged', cur.slN+' / 7','');
+  h+=sect('Nutrition & water')+
+    row('Avg calories', cur.fdN? cur.kcal+' kcal':'—', dif(cur.kcal,prv.kcal,''))+
+    row('Avg protein', cur.fdN? cur.prot+' g':'—', dif(cur.prot,prv.prot,' g'))+
+    row('Water goal days', cur.waHit+' / 7','')+
+    row('Avg water', cur.water? Math.round(cur.water/100)/10+' L':'—','');
+  h+=sect('Body')+
+    row('Weight', cur.wLast? cur.wLast+' '+unit():'—',
+        cur.wDelta!==null? '<span class="muted">'+(cur.wDelta>0?'+':'')+cur.wDelta+' '+unit()+' within week</span>':'');
+  h+='<p class="tiny muted" style="margin-top:14px">Deltas compare with the previous week. Green = moving the right way for your goals.</p>';
+  openSheet(h);
+}
+
+/* ============ measurements ============ */
+const MEAS=[['chest','Chest'],['waist','Waist'],['hips','Hips'],['biceps','Biceps'],['thigh','Thigh'],['calf','Calf']];
+function measForm(){
+  const last=S.measures[S.measures.length-1]||{m:{}};
+  let h='<h3>Body measurements (cm)</h3><div class="fields3">';
+  MEAS.forEach(function(k){
+    h+='<div class="field"><label for="ms_'+k[0]+'">'+k[1]+'</label>'+
+      '<input id="ms_'+k[0]+'" type="number" inputmode="decimal" step="0.5" value="'+(last.m[k[0]]||'')+'" placeholder="—"></div>';
+  });
+  h+='</div><button class="btn body wide" onclick="saveMeas()">Save measurements</button>'+
+    '<p class="tiny muted" style="margin-top:12px">Measure relaxed, same time of day, tape snug not tight. Every 2 weeks is plenty.</p>';
+  openSheet(h);
+}
+function saveMeas(){
+  const m={}; let any=false;
+  MEAS.forEach(function(k){ const v=+$('#ms_'+k[0]).value; if(v>0){ m[k[0]]=v; any=true; } });
+  if(!any){ toast('Enter at least one measurement'); return; }
+  S.measures=S.measures.filter(function(x){ return x.date!==today(); });
+  S.measures.push({date:today(), m:m});
+  S.measures.sort(function(a,b){ return a.date<b.date?-1:1; });
+  save(); closeSheet(); renderBody(); toast('Measurements saved');
+}
 function ring(pct,color,size,text,sub){
   size=size||118; const r=(size-12)/2, C=2*Math.PI*r, off=C*(1-Math.min(1,pct));
   return '<div class="ring" style="width:'+size+'px;height:'+size+'px">'+
@@ -585,6 +703,19 @@ function renderToday(){
         : '<b>Last night not logged</b><div class="tiny muted">Aim: in bed by 11pm, '+sg+'h goal'+(st.sleepRemind?' · wind-down ping at '+st.sleepRemind:'')+'</div>')+
     '</div><button class="btn" style="background:var(--sl); border-color:var(--sl); color:#101526" onclick="logSleepForm()">Log sleep</button></div>'+
     '<div class="mini" aria-label="last 7 nights">'+bars+'</div></div>';
+  /* steps */
+  const stp=S.steps[today()]||0, sgoal=+st.stepGoal||8000;
+  let sbars='';
+  for(let i=6;i>=0;i--){
+    const v=S.steps[dShift(today(),-i)]||0;
+    sbars+='<i class="'+(v?'':'off')+'" style="height:'+(v?Math.max(6,Math.min(1,v/sgoal)*36):4)+'px" title="'+v.toLocaleString()+'"></i>';
+  }
+  h+='<div class="card"><h2><span class="dot" style="background:var(--stp)"></span>Steps</h2>'+
+    '<div class="spread"><div><span class="big num" style="font-size:26px">'+stp.toLocaleString()+'</span>'+
+    '<div class="tiny muted num">of '+sgoal.toLocaleString()+' · copy from your phone’s health app</div></div>'+
+    '<button class="btn" style="background:var(--stp); border-color:var(--stp); color:#0a1f19" onclick="stepsForm()">Enter steps</button></div>'+
+    '<div class="bar" style="margin-top:10px"><i style="width:'+(Math.min(1,stp/sgoal)*100)+'%; background:var(--stp)"></i></div>'+
+    '<div class="mini stp" aria-label="last 7 days of steps">'+sbars+'</div></div>';
   /* workout */
   h+='<div class="card"><h2><span class="dot" style="background:var(--wk)"></span>Workout</h2>';
   if(S.active){
@@ -613,6 +744,10 @@ function renderToday(){
     ? '<div><span class="big num" style="font-size:26px">'+lastW.kg+' '+unit()+'</span><div class="tiny muted">last logged '+fmtD(lastW.date)+'</div></div>'
     : '<div class="muted small">No weight logged yet</div>';
   h+='<button class="btn body" onclick="go(\'body\')">Log weight</button></div></div>';
+  /* weekly report */
+  h+='<button class="card" style="width:100%; text-align:left; display:block" onclick="openReport()">'+
+    '<div class="spread"><b>Weekly report</b><span class="muted">›</span></div>'+
+    '<div class="tiny muted">Training, cardio, steps, sleep, food, water and weight — this week vs last</div></button>';
   if(S.sessions.length>=3 && (!S.lastBackup || S.lastBackup<dShift(today(),-14))){
     h+='<button class="card" style="width:100%; text-align:left; display:block" onclick="openSettings()">'+
       '<span class="small muted">Your data lives only on this phone — export a backup from Settings (tap here). Last backup: '+(S.lastBackup?fmtD(S.lastBackup):'never')+'.</span></button>';
@@ -1063,6 +1198,21 @@ function renderBody(){
     '<div class="field" style="grid-column:span 1"><label for="wKg">'+unit()+'</label><input id="wKg" type="number" inputmode="decimal" step="0.1" placeholder="'+(last?last.kg:'70')+'"></div>'+
     '<div class="field" style="grid-column:span 2"><label for="wDate">Date</label><input id="wDate" type="date" value="'+today()+'" max="'+today()+'"></div></div>'+
     '<button class="btn body wide" onclick="addWeight()">Log weight</button></div>';
+  /* measurements */
+  const mAll=S.measures, mLast=mAll[mAll.length-1], mPrev=mAll[mAll.length-2];
+  h+='<div class="card"><h2><span class="dot" style="background:var(--bd)"></span>Measurements</h2>';
+  if(mLast){
+    h+='<div class="fields3" style="gap:12px">';
+    MEAS.forEach(function(k){
+      const v=mLast.m[k[0]], pv=mPrev? mPrev.m[k[0]] : null;
+      let d='';
+      if(v!=null && pv!=null){ const dd=Math.round((v-pv)*10)/10;
+        if(dd) d=' <span class="tiny muted num">'+(dd>0?'+':'')+dd+'</span>'; }
+      h+='<div><div class="tiny muted">'+k[1]+'</div><div class="small num">'+(v!=null? '<b>'+v+'</b> cm'+d : '<span class="muted">—</span>')+'</div></div>';
+    });
+    h+='</div><div class="tiny muted" style="margin-top:10px">Updated '+fmtD(mLast.date)+'</div>';
+  } else h+='<div class="empty">Chest, waist, arms and more — the scale misses what the tape sees.</div>';
+  h+='<button class="btn wide" style="margin-top:12px" onclick="measForm()">Update measurements</button></div>';
   if(ws.length){
     h+='<div class="card"><h2><span class="dot" style="background:var(--bd)"></span>Entries</h2>';
     ws.slice().reverse().slice(0,30).forEach(function(w){
@@ -1143,6 +1293,7 @@ function openSettings(){
     '<div class="fields2">'+
     '<div class="field"><label for="sSlRemind">Sleep wind-down time</label><input id="sSlRemind" type="time" value="'+esc(st.sleepRemind)+'"></div>'+
     '<div class="field"><label for="sSlGoal">Sleep goal (hours)</label><input id="sSlGoal" type="number" inputmode="decimal" step="0.5" value="'+(+st.sleepGoal||8)+'"></div></div>'+
+    '<div class="field"><label for="sStpGoal">Step goal (per day)</label><input id="sStpGoal" type="number" inputmode="numeric" value="'+(+st.stepGoal||8000)+'"></div>'+
     (notifState!=='granted' && notifState!=='unsupported'
       ? '<button class="btn wide" style="margin-bottom:10px" onclick="askNotify()">Allow notifications</button>' : '')+
     (notifState==='granted' ? '<p class="tiny muted" style="margin-bottom:10px">Notifications: allowed ✓ (they fire while the app is open)</p>':'')+
@@ -1163,6 +1314,7 @@ function saveSettings(){
   st.waterRemind=$('#sWaterRemind').checked; st.waterEvery=Math.max(10,+$('#sWaterEvery').value||60);
   st.workoutRemind=$('#sWkRemind').value;
   st.sleepRemind=$('#sSlRemind').value; st.sleepGoal=+$('#sSlGoal').value||8;
+  st.stepGoal=+$('#sStpGoal').value||8000;
   save(); closeSheet(); render(); toast('Saved');
   if(st.waterRemind && ('Notification' in window) && Notification.permission==='default') askNotify();
 }
