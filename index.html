@@ -264,7 +264,12 @@ const DEF_EX=[
   ['Overhead press','Shoulders'],['Lateral raise','Shoulders'],['Face pull','Shoulders'],
   ['Barbell curl','Arms'],['Dumbbell curl','Arms'],['Triceps pushdown','Arms'],['Skull crushers','Arms'],
   ['Plank','Core'],['Crunches','Core'],['Hanging leg raise','Core'],
-  ['Treadmill run','Cardio'],['Cycling','Cardio'],['Jump rope','Cardio'],
+  ['Treadmill run','Cardio'],['Cycling','Cardio'],['Jump rope','Cardio'],['Running (outdoor)','Cardio'],
+  ['Chest fly (dumbbell)','Chest'],['Cable crossover','Chest'],
+  ['One-arm dumbbell row','Back'],['Reverse fly','Shoulders'],['Arnold press','Shoulders'],
+  ['Front squat','Legs'],['Hip thrust','Legs'],['Bulgarian split squat','Legs'],
+  ['Leg extension','Legs'],['Leg curl','Legs'],['Seated calf raise','Legs'],
+  ['Close-grip bench press','Arms'],['Triceps dip','Arms'],['Hammer curl','Arms'],['Incline curl','Arms'],
   ['Deep squat hold','Mobility'],['90/90 hip switch','Mobility'],['Couch stretch','Mobility'],
   ["World's greatest stretch",'Mobility'],['Cat-cow','Mobility'],['Downward dog to cobra','Mobility'],
   ['Standing hamstring fold','Mobility'],['Shoulder dislocates (stick)','Mobility'],['Dead hang','Mobility'],
@@ -275,8 +280,9 @@ const DEF_EX=[
 ];
 /* starter routines (by exercise name) and lacto-veg quick foods */
 const SEED_RT=[
-  {name:'Full body A — strength', ex:['Squat','Bench press','Barbell row','Overhead press','Plank','Dead hang']},
-  {name:'Full body B — strength', ex:['Romanian deadlift','Pull-ups','Incline dumbbell press','Lunges','Lateral raise','Hanging leg raise']},
+  {name:'Push day', ex:['Bench press','Overhead press','Incline dumbbell press','Chest fly (dumbbell)','Lateral raise','Triceps pushdown']},
+  {name:'Pull day', ex:['Deadlift','Pull-ups','Seated cable row','Face pull','Barbell curl','Hammer curl']},
+  {name:'Legs day', ex:['Squat','Romanian deadlift','Leg press','Leg curl','Bulgarian split squat','Calf raise']},
   {name:'Mobility & flexibility (~20 min)', ex:['Cat-cow','Downward dog to cobra',"World's greatest stretch",'90/90 hip switch','Deep squat hold','Couch stretch','Standing hamstring fold','Shoulder dislocates (stick)','Cossack squat','Dead hang']},
   {name:'Agility & conditioning', ex:['Jumping jacks','High knees','Mountain climbers','Cossack squat','Bear crawl','Burpees','Kettlebell swing']}
 ];
@@ -285,7 +291,8 @@ const SEED_QK=[
   {name:'Milk 250ml',kcal:150,p:8,c:12,f:8},{name:'Curd (bowl, 200g)',kcal:120,p:7,c:9,f:6},
   {name:'Paneer 100g',kcal:265,p:18,c:4,f:20},{name:'Dal (bowl)',kcal:150,p:9,c:22,f:3},
   {name:'Roti (1)',kcal:100,p:3,c:18,f:2},{name:'Rice (bowl)',kcal:200,p:4,c:44,f:1},
-  {name:'Soya chunks 50g dry',kcal:173,p:26,c:15,f:1},{name:'Tofu 100g',kcal:90,p:10,c:2,f:5},
+  {name:'Hung curd 150g',kcal:130,p:15,c:6,f:5},{name:'Moong sprouts (bowl)',kcal:120,p:9,c:18,f:1},
+  {name:'Peanuts 30g',kcal:170,p:8,c:5,f:14},
   {name:'Rajma/chole (bowl)',kcal:210,p:11,c:33,f:4},{name:'Oats 50g + milk',kcal:330,p:14,c:45,f:9},
   {name:'Peanut butter (tbsp)',kcal:95,p:4,c:3,f:8},{name:'Banana',kcal:105,p:1,c:27,f:0}
 ];
@@ -325,6 +332,30 @@ S.settings = Object.assign(defaults().settings, S.settings||{});
   up('height','','176'); up('goalWeight','','68');
   up('calGoal',2200,2600); up('proteinGoal',130,120);
   up('carbGoal',250,340); up('fatGoal',70,75);
+  save();
+})();
+/* v3: PPL routines modeled on the user's real training history; no soya/tofu */
+(function seedV3(){
+  if(S.seedV3) return; S.seedV3=true;
+  DEF_EX.forEach(function(e){
+    if(!S.exercises.some(function(x){return x.name===e[0];}))
+      S.exercises.push({id:uid(), name:e[0], group:e[1]});
+  });
+  ['Full body A — strength','Full body B — strength'].forEach(function(n){
+    S.routines=S.routines.filter(function(r){return r.name!==n;});
+  });
+  SEED_RT.forEach(function(r){
+    if(S.routines.some(function(x){return x.name===r.name;})) return;
+    const ids=r.ex.map(function(n){ const e=S.exercises.find(function(x){return x.name===n;}); return e&&e.id; }).filter(Boolean);
+    if(ids.length) S.routines.push({id:uid(), name:r.name, exIds:ids});
+  });
+  ['Soya chunks 50g dry','Tofu 100g'].forEach(function(n){
+    S.quick=S.quick.filter(function(q){return q.name!==n;});
+  });
+  SEED_QK.forEach(function(q){
+    if(!S.quick.some(function(x){return x.name===q.name;}))
+      S.quick.push(Object.assign({id:uid()}, q));
+  });
   save();
 })();
 function save(){ try{ localStorage.setItem(K, JSON.stringify(S)); }catch(e){ toast('Could not save — storage unavailable'); } }
