@@ -104,12 +104,88 @@
   .paceNote { font-size: 12.5px; line-height: 1.6; color: var(--acc); }
   .sourceNote { font-size: 12.5px; line-height: 1.65; color: var(--faint); max-width: 52ch; }
 
+  /* ---------- Tab bar: the spine. Hidden the moment practice starts. ---------- */
+  .tabbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+    display: flex; justify-content: center; gap: 4px;
+    padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(to top, rgba(10,14,23,.96) 55%, rgba(10,14,23,0));
+    backdrop-filter: blur(8px);
+    transition: opacity .35s ease, transform .35s ease;
+  }
+  .tabbar.hidden { display: flex !important; opacity: 0; transform: translateY(100%); pointer-events: none; }
+  .tab {
+    font-family: var(--sans); background: none; border: 0; cursor: pointer;
+    flex: 1 1 0; max-width: 120px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 6px 4px; color: var(--faint);
+    font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+    transition: color .2s ease;
+  }
+  .tab svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .tab[aria-current="page"] { color: var(--acc); }
+  .tab:hover { color: var(--ink); }
+
+  /* Room for the bar so the last band is never trapped under it */
+  body.tabbed .app { padding-bottom: 104px; }
+
+  /* ---------- Today: SOS ---------- */
+  .sosBtn {
+    font-family: var(--sans); text-align: left; cursor: pointer; width: 100%;
+    display: flex; flex-direction: column; gap: 4px;
+    background: rgba(238, 136, 115, .09);
+    border: 1px solid rgba(238, 136, 115, .38); border-radius: 16px;
+    padding: 16px 18px; color: var(--ink);
+    transition: background .25s ease, border-color .25s ease;
+  }
+  .sosBtn:hover { background: rgba(238, 136, 115, .16); border-color: rgba(238, 136, 115, .6); }
+  .sosName { font-family: var(--serif); font-style: italic; font-size: 22px; line-height: 1.1; }
+  .sosSub { font-size: 13px; color: var(--muted); }
+
+  .exportOut {
+    margin-top: 12px; max-height: 220px; overflow: auto;
+    background: rgba(242,241,236,.04); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px; font-size: 11px; line-height: 1.5; color: var(--muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    white-space: pre-wrap; word-break: break-word; user-select: all;
+  }
+  .dangerBtn { color: #EE8873; border-color: rgba(238, 136, 115, .4); }
+  .dangerBtn:hover { color: #EE8873; border-color: rgba(238, 136, 115, .75); }
+
+  .skipLink {
+    align-self: flex-start; font-family: var(--sans); font-size: 13px; color: var(--faint);
+    background: none; border: 0; cursor: pointer; padding: 2px 0; text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .skipLink:hover { color: var(--ink); }
+
+  /* ---------- Session controls: a toggle and a destructive action must not look alike ---------- */
+  .iconToggles { position: absolute; top: 2px; right: 0; display: flex; gap: 6px; }
+  .iconToggle {
+    font-family: var(--sans); background: none; border: 1px solid var(--line);
+    border-radius: 999px; width: 36px; height: 36px; cursor: pointer;
+    color: var(--faint); display: grid; place-items: center;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .iconToggle svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .iconToggle[aria-pressed="true"] { color: var(--acc); border-color: var(--acc); }
+  .iconToggle[disabled] { opacity: .35; cursor: default; }
+  .endLink {
+    font-family: var(--sans); font-size: 13px; letter-spacing: .04em; color: var(--faint);
+    background: none; border: 0; cursor: pointer; padding: 8px 4px;
+  }
+  .endLink:hover { color: var(--ink); }
+
   .checkin { border: 1px solid var(--line); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 16px; background: rgba(10, 14, 23, .45); backdrop-filter: blur(6px); }
   .checkin .q { font-size: 15.5px; line-height: 1.45; }
   .scale input[type="range"] { width: 100%; accent-color: var(--acc); cursor: pointer; }
   .scale .ends { display: flex; justify-content: space-between; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-top: 8px; }
 
   .chipRow { display: flex; flex-wrap: wrap; gap: 8px; }
+  .spotDetails summary { cursor: pointer; list-style: none; }
+  .spotDetails summary::-webkit-details-marker { display: none; }
+  .spotDetails summary::after { content: " +"; color: var(--acc); }
+  .spotDetails[open] summary::after { content: " −"; }
   .chip {
     font-family: var(--sans); font-size: 12.5px; color: var(--muted);
     background: rgba(10, 14, 23, .5); border: 1px solid var(--line); border-radius: 999px;
@@ -220,19 +296,81 @@
 
 <div class="shell"><div class="app">
 
-  <!-- ================= HOME ================= -->
-  <section class="screen active" id="home">
+  <!-- ================= ONBOARDING (first run) ================= -->
+  <section class="screen" id="welcome">
+    <div id="wStep1">
+      <div style="display:flex;flex-direction:column;gap:26px;padding-top:8vh">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <p class="eyebrow">A coach, not an app</p>
+          <h1 class="poster">Your breath is<br>already <em>working.</em></h1>
+        </div>
+        <p class="lede">We just help you point it somewhere. No account, no email —
+          everything stays on this phone.</p>
+        <button class="primaryBtn" id="wNext1">Start</button>
+      </div>
+    </div>
+    <div id="wStep2" class="hidden">
+      <div style="display:flex;flex-direction:column;gap:26px;padding-top:6vh">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <p class="eyebrow">So we know where to start</p>
+          <h2 class="poster">What brings you <em>here?</em></h2>
+        </div>
+        <div class="bands" id="goalBands"></div>
+      </div>
+    </div>
+    <div id="wStep3" class="hidden">
+      <div style="display:flex;flex-direction:column;gap:26px;padding-top:6vh">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <p class="eyebrow">Before you begin</p>
+          <h2 class="poster">Breathing is <em>safe.</em> Overdoing it isn't.</h2>
+        </div>
+        <div class="notice-list">
+          <div class="item">Sit or lie down. Never practice while driving or in water.</div>
+          <div class="item">Stop if you feel dizzy or unwell — that's information, not failure.</div>
+          <div class="item">Skip the breath-holds if you're pregnant, or have heart or blood-pressure conditions.</div>
+          <div class="item">This is a wellbeing tool, not medical advice or treatment.</div>
+        </div>
+        <button class="primaryBtn" id="wAccept">I understand — let's begin</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TODAY ================= -->
+  <section class="screen active" id="today">
     <header>
       <div class="wordmark">Breath<em>·</em>Coach</div>
-      <div class="proto-tag">Prototype 04</div>
+      <div class="proto-tag">Prototype 05</div>
     </header>
     <div style="display:flex;flex-direction:column;gap:14px">
-      <p class="eyebrow">A coach, not an app</p>
-      <h1 class="poster">How do you<br>want to <em>feel?</em></h1>
+      <p class="eyebrow" id="todayGreeting">Good evening</p>
+      <h1 class="poster" id="todayHeadline">How do you<br>want to <em>feel?</em></h1>
     </div>
+    <div>
+      <p class="eyebrow sectionLabel">Suggested for now</p>
+      <div class="bands"><button class="band" id="heroBand"></button></div>
+    </div>
+    <button class="sosBtn" id="sosBtn">
+      <span class="sosName">Too much right now?</span>
+      <span class="sosSub">Ninety seconds. Starts immediately.</span>
+    </button>
     <button class="memoryStrip" id="memoryStrip">
       <span id="threadLine"></span><span class="go">Your shifts &rarr;</span>
     </button>
+    <div class="bands hidden" id="boltNudgeWrap">
+      <button class="band" id="boltNudge" style="--c1:#3FA893;--c2:#4A7FB5;--bandAcc:#63C2AF">
+        <span class="moment">The check-up · 2 minutes</span>
+        <span class="name">Time to re-test</span>
+        <span class="promise" id="boltNudgeNote"></span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ================= PRACTICES ================= -->
+  <section class="screen" id="practices">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <p class="eyebrow">The library</p>
+      <h2 class="poster">All <em>practices</em></h2>
+    </div>
     <div class="bands">
       <button class="band" id="guideBand">
         <span class="moment" style="--acc:#74C7B8;color:var(--acc)">Don't want to choose?</span>
@@ -240,24 +378,53 @@
         <span class="promise">One question, and the coach picks for you.</span>
       </button>
     </div>
+    <div class="hidden" id="recentWrap">
+      <p class="eyebrow sectionLabel">Recent</p>
+      <div class="chipRow" id="recentRow" style="margin-top:22px"></div>
+    </div>
     <p class="eyebrow sectionLabel">Right now</p>
     <div class="bands" id="bands"></div>
     <p class="eyebrow sectionLabel">Practice</p>
     <div class="bands" id="practiceBands"></div>
-    <div class="bands">
-      <button class="band" id="boltBand" style="--c1:#3FA893;--c2:#4A7FB5;--bandAcc:#63C2AF">
-        <span class="moment">The check-up · 2 minutes</span>
-        <span class="name">How well do you breathe?</span>
-        <span class="promise" id="boltBandNote">A gentle breath-hold test that scores your everyday breathing — and shows it improving as you practice.</span>
-      </button>
+  </section>
+
+  <!-- ================= YOU ================= -->
+  <section class="screen" id="you">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <p class="eyebrow">Settings</p>
+      <h2 class="poster"><em>You</em></h2>
     </div>
-    <footer>
-      Sit or lie down comfortably; breathe through the nose where you can. Stop if
-      you feel dizzy. Skip breath-holds if you're pregnant or have heart or
-      blood-pressure conditions. Never practice while driving or in water.
-      Prototype for concept testing — not medical advice. Everything is stored
-      only on this device.
-    </footer>
+    <div>
+      <p class="eyebrow" style="margin-bottom:12px">During a session</p>
+      <div class="chipRow">
+        <button class="chip" id="soundPref" aria-pressed="true">Sound</button>
+        <button class="chip" id="hapticPref" aria-pressed="true">Haptics</button>
+      </div>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom:12px">Your data</p>
+      <p class="lede" style="font-size:14.5px;margin-bottom:14px" id="dataSummary"></p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button class="ghostBtn" id="exportBtn">Export everything (JSON)</button>
+        <button class="ghostBtn dangerBtn" id="deleteBtn">Delete everything</button>
+      </div>
+      <pre class="exportOut hidden" id="exportOut"></pre>
+      <p class="sourceNote" style="margin-top:12px">Nothing leaves this device. There is no
+        account, no server, and no analytics — deleting here deletes it everywhere.</p>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom:12px">Safety</p>
+      <p class="sourceNote">Sit or lie down comfortably; breathe through the nose where you
+        can. Stop if you feel dizzy. Skip breath-holds if you're pregnant or have heart or
+        blood-pressure conditions. Never practice while driving or in water. This is a
+        wellbeing tool, not medical advice.</p>
+    </div>
+    <div>
+      <p class="eyebrow" style="margin-bottom:12px">About</p>
+      <p class="sourceNote">Breath·Coach prototype 05. Every practice is drawn from a named
+        classical text, teacher or study — you'll find the source on each one. We
+        deliberately don't include hyperventilation protocols.</p>
+    </div>
   </section>
 
   <!-- ================= ARRIVAL (Breathe me) ================= -->
@@ -283,10 +450,10 @@
       <p class="eyebrow" style="margin-bottom:12px">What you'll notice</p>
       <div class="notice-list" id="introNotices"></div>
     </div>
-    <div>
-      <p class="eyebrow" style="margin-bottom:12px">Where is it sitting? <span style="text-transform:none;letter-spacing:0">(optional)</span></p>
-      <div class="chipRow" id="spotRow"></div>
-    </div>
+    <details class="spotDetails">
+      <summary class="eyebrow">Where is it sitting? <span style="text-transform:none;letter-spacing:0">(optional)</span></summary>
+      <div class="chipRow" id="spotRow" style="margin-top:14px"></div>
+    </details>
     <div class="checkin">
       <p class="q" id="preQuestion"></p>
       <div class="scale">
@@ -294,6 +461,7 @@
                aria-label="How you feel right now, from 0 to 10">
         <div class="ends"><span id="preLow"></span><span id="preHigh"></span></div>
       </div>
+      <button class="skipLink" id="skipCheckin">Skip this — just start</button>
     </div>
     <button class="primaryBtn" id="beginBtn"></button>
     <p class="paceNote hidden" id="paceNote"></p>
@@ -306,7 +474,15 @@
 
   <!-- ================= SESSION ================= -->
   <section class="screen" id="session">
-    <div class="sess-top">
+    <div class="sess-top" style="position:relative">
+      <div class="iconToggles">
+        <button class="iconToggle" id="soundChip" aria-pressed="true" aria-label="Sound" title="Sound">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9v6h4l5 4V5L9 9H5z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></svg>
+        </button>
+        <button class="iconToggle" id="hapticChip" aria-pressed="true" aria-label="Haptics" title="Haptics">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M4.5 9v6M19.5 9v6"/></svg>
+        </button>
+      </div>
       <div class="sess-name" id="sessName"></div>
       <div class="coach" id="coach" aria-live="polite"></div>
     </div>
@@ -316,9 +492,7 @@
     <div class="sess-bottom">
       <div class="progressBar"><div class="fill" id="sessFill"></div></div>
       <div class="sess-controls">
-        <button class="chip" id="soundChip" aria-pressed="true">Sound</button>
-        <button class="chip" id="hapticChip" aria-pressed="true">Haptics</button>
-        <button class="chip" id="endChip">End early</button>
+        <button class="endLink" id="endChip">End early</button>
       </div>
     </div>
   </section>
@@ -427,6 +601,25 @@
   </section>
 
 </div></div>
+
+<nav class="tabbar" id="tabbar" aria-label="Main">
+  <button class="tab" data-tab="today" aria-current="page">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg>
+    <span>Today</span>
+  </button>
+  <button class="tab" data-tab="practices">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+    <span>Practices</span>
+  </button>
+  <button class="tab" data-tab="progress">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-6M22 19H2"/></svg>
+    <span>Progress</span>
+  </button>
+  <button class="tab" data-tab="you">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
+    <span>You</span>
+  </button>
+</nav>
 
 <script>
 (() => {
@@ -922,14 +1115,17 @@
 
   // ================= Device-local memory =================
   const store = {
-    data: { sessions: [], bolts: [], progress: {} },
+    data: { sessions: [], bolts: [], progress: {}, onboarded: false, goal: null },
     ok: true,
     load() {
       try {
         const raw = localStorage.getItem('breathcoach.v1');
         if (raw) {
           const d = JSON.parse(raw);
-          this.data = { sessions: d.sessions || [], bolts: d.bolts || [], progress: d.progress || {} };
+          this.data = {
+            sessions: d.sessions || [], bolts: d.bolts || [], progress: d.progress || {},
+            onboarded: !!d.onboarded, goal: d.goal || null,
+          };
         }
       } catch (e) { this.ok = false; }
     },
@@ -945,7 +1141,8 @@
     },
     saveBolt(secs) { this.data.bolts.push({ ts: Date.now(), secs: secs }); this.persist(); },
     // any session the user scored afterwards counts — ending early is still showing up
-    scored() { return this.data.sessions.filter((s) => s.post != null); },
+    // A session only counts toward shifts if it was scored at both ends.
+    scored() { return this.data.sessions.filter((s) => s.pre != null && s.post != null); },
   };
   store.load();
 
@@ -1072,18 +1269,48 @@
   requestAnimationFrame(loop);
 
   // ================= Screens =================
-  const screens = ['home', 'arrival', 'intro', 'session', 'reflect', 'insights', 'bolt'];
+  const screens = ['welcome', 'today', 'practices', 'you', 'arrival', 'intro', 'session', 'reflect', 'insights', 'bolt'];
+  // Screens that are tabs, and the tab each non-tab flow belongs under — so the spine
+  // stays lit no matter how deep the user is.
+  const TAB_OF = {
+    today: 'today', practices: 'practices', you: 'you',
+    insights: 'progress', bolt: 'progress',
+    arrival: 'practices', intro: 'practices',
+  };
+  const TAB_SCREEN = { today: 'today', practices: 'practices', progress: 'insights', you: 'you' };
+  const tabbar = $('tabbar');
+
   function show(id) {
     screens.forEach((s) => $(s).classList.toggle('active', s === id));
+    // The tab bar is the spine of the app, but practice is immersive — it leaves.
+    const immersive = (id === 'session' || id === 'reflect' || id === 'welcome');
+    tabbar.classList.toggle('hidden', immersive);
+    document.body.classList.toggle('tabbed', !immersive);
+    const activeTab = TAB_OF[id];
+    document.querySelectorAll('.tab').forEach((t) => {
+      if (activeTab) t.setAttribute('aria-current', t.dataset.tab === activeTab ? 'page' : 'false');
+    });
     window.scrollTo(0, 0);
   }
+
+  function showTab(tab) {
+    if (tab === 'today') renderToday();
+    if (tab === 'practices') renderPractices();
+    if (tab === 'progress') renderInsights();
+    if (tab === 'you') renderYou();
+    setPalette(null);
+    show(TAB_SCREEN[tab]);
+  }
+  document.querySelectorAll('.tab').forEach((t) => {
+    t.addEventListener('click', () => showTab(t.dataset.tab));
+  });
   function setPalette(exp) {
     auraColors = exp ? exp.aura : HOME_AURA;
     document.documentElement.style.setProperty('--acc', exp ? exp.accent : '#74C7B8');
   }
-  function goHome() { setPalette(null); renderHome(); show('home'); }
+  function goHome() { showTab('today'); }
 
-  // ================= Home =================
+  // ================= Practices library =================
   const bandsEl = $('bands');
   const practiceBandsEl = $('practiceBands');
   EXPERIENCES.forEach((exp) => {
@@ -1102,13 +1329,81 @@
     (exp.section === 'practice' ? practiceBandsEl : bandsEl).appendChild(b);
   });
 
-  function renderHome() {
+  // Recently practised, most recent first
+  function renderPractices() {
+    const seen = [];
+    for (let i = store.data.sessions.length - 1; i >= 0 && seen.length < 4; i--) {
+      const id = store.data.sessions[i].expId;
+      if (!seen.includes(id) && byId(id)) seen.push(id);
+    }
+    const wrap = $('recentWrap'), row = $('recentRow');
+    wrap.classList.toggle('hidden', !seen.length);
+    row.innerHTML = '';
+    seen.forEach((id) => {
+      const exp = byId(id);
+      const c = document.createElement('button');
+      c.className = 'chip';
+      c.textContent = exp.name;
+      c.style.borderColor = exp.accent;
+      c.addEventListener('click', () => openIntro(exp));
+      row.appendChild(c);
+    });
+  }
+
+  // ================= Today =================
+  const DAYPART_DEFAULT = { morning: 'firstlight', afternoon: 'steady', evening: 'unwind', night: 'drift' };
+  const GOAL_DEFAULT = { calm: 'unwind', sleep: 'drift', focus: 'steady', train: 'lessair' };
+  const daypartOf = (h) => h >= 5 && h < 11 ? 'morning' : h >= 11 && h < 17 ? 'afternoon' : h >= 17 && h < 22 ? 'evening' : 'night';
+  const GREETING = { morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening', night: 'Late one' };
+
+  /** Time of day picks a default; your own history overrides it once there's enough of it. */
+  function recommendFor(now) {
+    const part = daypartOf(new Date(now).getHours());
+    let pick = byId(DAYPART_DEFAULT[part]);
+    // A stated goal beats the clock until the user has built any history.
+    const scored = store.scored();
+    if (!scored.length && store.data.goal && GOAL_DEFAULT[store.data.goal]) {
+      return { exp: byId(GOAL_DEFAULT[store.data.goal]), part, reason: 'Because of what brought you here.' };
+    }
+    const inPart = scored.filter((s) => daypartOf(new Date(s.ts).getHours()) === part);
+    if (inPart.length >= 3) {
+      let bestId = null, bestAvg = -Infinity;
+      EXPERIENCES.forEach((e) => {
+        const mine = inPart.filter((s) => s.expId === e.id);
+        if (mine.length >= 2) {
+          const avg = mine.reduce((a, s) => a + (s.pre - s.post), 0) / mine.length;
+          if (avg > bestAvg) { bestAvg = avg; bestId = e.id; }
+        }
+      });
+      if (bestId && bestAvg > 0) {
+        return { exp: byId(bestId), part, reason: 'This is the one that moves you most at this hour.' };
+      }
+    }
+    return { exp: pick, part, reason: null };
+  }
+
+  function renderToday() {
+    const now = Date.now();
+    const { exp, part, reason } = recommendFor(now);
+    $('todayGreeting').textContent = GREETING[part];
+
+    const hero = $('heroBand');
+    hero.style.setProperty('--c1', exp.aura[0]);
+    hero.style.setProperty('--c2', exp.aura[1]);
+    hero.style.setProperty('--bandAcc', exp.accent);
+    const durLabel = exp.mins < 2 ? Math.round(exp.mins * 60) + ' seconds' : exp.mins + ' minutes';
+    hero.innerHTML =
+      '<span class="moment">' + exp.moment + '</span>' +
+      '<span class="name">' + exp.name + '</span>' +
+      '<span class="promise">' + (reason || exp.promise) + '</span>' +
+      '<span class="dur">' + durLabel + (exp.paced === false ? ' · unguided' : ' · guided') + '</span>';
+    hero.onclick = () => openIntro(exp);
+
     // memory strip — gentle thread, never a broken streak
     const strip = $('memoryStrip');
     if (!store.data.sessions.length) { strip.classList.remove('on'); }
     else {
       const dayKeys = new Set();
-      const now = Date.now();
       for (let i = 0; i < 7; i++) {
         const key = new Date(now - i * 864e5).toDateString();
         if (store.data.sessions.some((s) => new Date(s.ts).toDateString() === key)) dayKeys.add(key);
@@ -1119,17 +1414,27 @@
         : 'You’ve shown up ' + n + ' of the last 7 days — the thread holds.';
       strip.classList.add('on');
     }
-    // check-up nudge
+
+    // The check-up only asks for attention when it's actually due.
     const bolts = store.data.bolts;
-    if (bolts.length && Date.now() - bolts[bolts.length - 1].ts > 28 * 864e5) {
-      $('boltBandNote').textContent = 'It’s been a month since your last score — time for a check-up.';
-    } else if (bolts.length) {
-      $('boltBandNote').textContent = 'Last score: ' + bolts[bolts.length - 1].secs + 's. The trend is the truth — re-test in a few weeks.';
-    }
+    const due = !bolts.length || (now - bolts[bolts.length - 1].ts > 28 * 864e5);
+    $('boltNudgeWrap').classList.toggle('hidden', !due);
+    $('boltNudgeNote').textContent = bolts.length
+      ? 'It’s been a month since your last score of ' + bolts[bolts.length - 1].secs + 's.'
+      : 'Score how well you breathe when you’re not trying. Two minutes, and it gives the practice something to move.';
   }
-  $('memoryStrip').addEventListener('click', () => { renderInsights(); show('insights'); });
+
+  $('memoryStrip').addEventListener('click', () => showTab('progress'));
   $('guideBand').addEventListener('click', () => { setPalette(null); show('arrival'); });
-  $('boltBand').addEventListener('click', () => openBolt());
+  $('boltNudge').addEventListener('click', () => openBolt());
+  // One tap, no check-in, straight into ninety seconds.
+  $('sosBtn').addEventListener('click', () => {
+    state.exp = byId('release');
+    state.spot = null;
+    state.preScore = null;
+    setPalette(state.exp);
+    startSession();
+  });
 
   // ================= Arrival ("Breathe me") =================
   const arrivalBandsEl = $('arrivalBands');
@@ -1209,10 +1514,100 @@
     } else pace.classList.add('hidden');
     show('intro');
   }
-  $('introBack').addEventListener('click', goHome);
+  $('introBack').addEventListener('click', () => showTab('practices'));
   $('beginBtn').addEventListener('click', () => {
     state.preScore = Number($('preScale').value);
     startSession();
+  });
+  // Skipping is a first-class choice, not a failure — the reflection adapts.
+  $('skipCheckin').addEventListener('click', () => {
+    state.preScore = null;
+    startSession();
+  });
+
+  // ================= Onboarding =================
+  const GOALS = [
+    { id: 'calm',  label: 'Calm down',            sub: 'Stress, tension, too much going on' },
+    { id: 'sleep', label: 'Sleep better',         sub: 'Wind down, switch off, drift' },
+    { id: 'focus', label: 'Steady myself',        sub: 'Before something that matters' },
+    { id: 'train', label: 'Train my breathing',   sub: 'Build capacity over weeks' },
+  ];
+  const goalBandsEl = $('goalBands');
+  GOALS.forEach((g) => {
+    const b = document.createElement('button');
+    b.className = 'band';
+    b.dataset.goal = g.id;
+    const exp = byId(GOAL_DEFAULT[g.id]);
+    b.style.setProperty('--c1', exp.aura[0]);
+    b.style.setProperty('--c2', exp.aura[1]);
+    b.innerHTML = '<span class="name" style="font-size:clamp(26px,7vw,34px)">' + g.label + '</span>' +
+                  '<span class="promise">' + g.sub + '</span>';
+    b.addEventListener('click', () => {
+      store.data.goal = g.id;
+      store.persist();
+      $('wStep2').classList.add('hidden');
+      $('wStep3').classList.remove('hidden');
+      window.scrollTo(0, 0);
+    });
+    goalBandsEl.appendChild(b);
+  });
+  $('wNext1').addEventListener('click', () => {
+    $('wStep1').classList.add('hidden');
+    $('wStep2').classList.remove('hidden');
+    window.scrollTo(0, 0);
+  });
+  $('wAccept').addEventListener('click', () => {
+    store.data.onboarded = true;
+    store.persist();
+    showTab('today');
+  });
+
+  // ================= You =================
+  function renderYou() {
+    $('soundPref').setAttribute('aria-pressed', String(state.soundOn));
+    $('hapticPref').setAttribute('aria-pressed', String(state.hapticsOn));
+    const s = store.data.sessions.length, b = store.data.bolts.length;
+    $('dataSummary').textContent = s || b
+      ? s + (s === 1 ? ' session' : ' sessions') + ' and ' + b + (b === 1 ? ' check-up score' : ' check-up scores') + ' stored on this device.'
+      : 'Nothing stored yet.';
+  }
+  $('soundPref').addEventListener('click', (e) => {
+    state.soundOn = flip(e.currentTarget);
+    $('soundChip').setAttribute('aria-pressed', String(state.soundOn));
+  });
+  $('hapticPref').addEventListener('click', (e) => {
+    state.hapticsOn = flip(e.currentTarget);
+    $('hapticChip').setAttribute('aria-pressed', String(state.hapticsOn));
+  });
+  // Show the data rather than offering a download — a file link is dead inside an
+  // embedded viewer, and "copy" works in every context this prototype runs in.
+  $('exportBtn').addEventListener('click', async (e) => {
+    const btn = e.currentTarget; // currentTarget is null once we await, so hold on to it
+    const json = JSON.stringify(store.data, null, 2);
+    const out = $('exportOut');
+    out.textContent = json;
+    out.classList.remove('hidden');
+    let copied = false;
+    try { await navigator.clipboard.writeText(json); copied = true; } catch (err) {}
+    btn.textContent = copied ? 'Copied to clipboard' : 'Select the text below to copy';
+    setTimeout(() => { btn.textContent = 'Export everything (JSON)'; }, 3000);
+  });
+  $('deleteBtn').addEventListener('click', (e) => {
+    const btn = e.currentTarget;
+    if (btn.dataset.confirm !== 'yes') {
+      btn.dataset.confirm = 'yes';
+      btn.textContent = 'Tap again to permanently delete';
+      setTimeout(() => {
+        if (btn.dataset.confirm === 'yes') { btn.dataset.confirm = ''; btn.textContent = 'Delete everything'; }
+      }, 5000);
+      return;
+    }
+    store.data = { sessions: [], bolts: [], progress: {}, onboarded: true, goal: store.data.goal };
+    store.persist();
+    btn.dataset.confirm = '';
+    btn.textContent = 'Deleted';
+    setTimeout(() => { btn.textContent = 'Delete everything'; }, 2500);
+    renderYou();
   });
 
   function buildPhases(exp) {
@@ -1440,11 +1835,34 @@
     $('postQuestion').textContent = 'And now — ' + exp.scaleQ.replace(/^Before we start — /, '').toLowerCase();
     $('postLow').textContent = exp.scaleEnds[0];
     $('postHigh').textContent = exp.scaleEnds[1];
-    $('postScale').value = Math.max(0, state.preScore - 2);
     $('wordInput').value = '';
+    // No score on the way in means no shift to show — go straight to the closing,
+    // rather than asking for half a measurement.
+    if (state.preScore == null) {
+      $('reflectAsk').classList.add('hidden');
+      $('reflectResult').classList.remove('hidden');
+      $('shiftFrom').textContent = '';
+      $('shiftTo').textContent = '';
+      document.querySelector('.shift').classList.add('hidden');
+      $('shiftLine').textContent = 'You didn’t score this one, so there’s no number to show — which is fine. Notice your breath instead: it’s slower than when you arrived.';
+      applySpotFollow();
+      $('closingLine').textContent = '“' + exp.closing + '”';
+      show('reflect');
+      return;
+    }
+    document.querySelector('.shift').classList.remove('hidden');
+    $('postScale').value = Math.max(0, state.preScore - 2);
     $('reflectAsk').classList.remove('hidden');
     $('reflectResult').classList.add('hidden');
     show('reflect');
+  }
+
+  function applySpotFollow() {
+    const sf = $('spotFollow');
+    if (state.spot && state.spot !== 'everywhere') {
+      sf.textContent = 'And the ' + state.spot + '? Check it now.';
+      sf.classList.remove('hidden');
+    } else sf.classList.add('hidden');
   }
 
   $('shiftBtn').addEventListener('click', () => {
@@ -1466,11 +1884,7 @@
       line = 'Some days it doesn’t drop — that’s honest data, not failure. A second round, or a longer exhale, usually finds the release.';
     }
     $('shiftLine').textContent = line;
-    const sf = $('spotFollow');
-    if (state.spot && state.spot !== 'everywhere') {
-      sf.textContent = 'And the ' + state.spot + '? Check it now.';
-      sf.classList.remove('hidden');
-    } else sf.classList.add('hidden');
+    applySpotFollow();
     $('closingLine').textContent = '“' + exp.closing + '”';
     $('reflectAsk').classList.add('hidden');
     $('reflectResult').classList.remove('hidden');
@@ -1642,7 +2056,6 @@
         : 'Down ' + (-d) + ' seconds since ' + fmtDate(prev.ts) + '. Sleep and stress move this — the trend is what counts.';
       bd.classList.remove('hidden');
     } else bd.classList.add('hidden');
-    renderHome();
   }
   $('boltStop').addEventListener('click', () => {
     finishBolt(Math.max(1, Math.round((performance.now() - state.boltStartTs) / 1000)));
@@ -1676,6 +2089,8 @@
     }
   });
 
-  renderHome();
+  // Boot: first run gets the frame and the safety acknowledgement before anything else.
+  if (store.data.onboarded) showTab('today');
+  else show('welcome');
 })();
 </script>
