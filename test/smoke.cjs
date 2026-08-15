@@ -255,6 +255,7 @@ function check(name, cond, detail) {
       setsProtocol: /10-20 hard sets/i.test(txt),
       rirProtocol: /reps in reserve/i.test(txt),
       observational: /observational/i.test(txt),
+      steamHonest: /steam/i.test(txt) && /do not transfer/i.test(txt) && /DRY sauna/.test(txt),
       disclaimer: /not medical advice/i.test(txt),
     };
   });
@@ -263,13 +264,14 @@ function check(name, cond, detail) {
   check('too few nights returns nothing rather than a fake score', lev.thin === null, lev.thin);
   check('caffeine cutoff is bedtime minus 8.8h', lev.cut === '13:42', lev.cut);
   check('caffeine totals, and flags what is past the cutoff', lev.mg === 145 && lev.late === 1, lev);
-  check('sauna counts the week, not older sessions', lev.sauna.n === 2 && lev.sauna.mins === 45, lev.sauna);
+  check('steam bath counts the week, not older sessions', lev.sauna.n === 2 && lev.sauna.mins === 45, lev.sauna);
   check('daylight streak counts back from today', lev.streak === 2, lev.streak);
   check('weekly sets exclude warm-ups and count frequency', lev.chestSets === 3 && lev.chestFreq === 2, lev);
   check('cardio and mobility are not counted as lifting volume', !lev.hasCardio);
   check('the cold plunge warning is present and unambiguous', lev.coldWarning);
   check('training protocols are graded too', lev.setsProtocol && lev.rirProtocol, lev);
   check('observational evidence is labelled as such', lev.observational);
+  check('steam is not sold as the dry-sauna result', lev.steamHonest);
   check('the not-medical-advice line is on the protocols screen', lev.disclaimer);
 
   console.log('section navigation');

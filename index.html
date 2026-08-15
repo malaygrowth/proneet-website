@@ -2087,7 +2087,7 @@ function saunaWeek(){
 function logSauna(){
   const d=today();
   const cur=+S.sauna[d]||0;
-  const v=prompt('Sauna minutes today', cur||'20');
+  const v=prompt('Steam bath minutes today', cur||'20');
   if(v===null) return;
   const m=+v||0;
   if(m>0) S.sauna[d]=m; else delete S.sauna[d];
@@ -2106,8 +2106,8 @@ function lightStreak(){
 const PROTOCOLS=[
   ['Sleep regularity','strong','Same bed and wake time daily, within about half an hour.',
    'The strongest finding here. In 61,000 UK Biobank participants, regularity of sleep timing predicted all-cause mortality better than sleep duration did: the least regular quintile carried 20-48% higher risk, independent of how long they slept. Worth more than an extra hour in bed.'],
-  ['Sauna, 2-3+ times a week','strong','19 minutes or more, hot enough to be uncomfortable.',
-   'In a Finnish cohort of 2,000+ men followed for decades, 2-3 sessions a week versus one was associated with 24-63% lower sudden cardiac death, fatal cardiovascular disease and all-cause mortality, holding after adjustment for fitness and risk factors. Observational, so not proof of cause, but consistent and large.'],
+  ['Steam bath, 2-3+ times a week','moderate','15-20 minutes, as hot as is comfortable.',
+   'Worth doing, but the headline numbers you will have read do not transfer. The 24-63% mortality reductions come from a Finnish cohort using DRY sauna at 70-100C, where core temperature climbs enough to mimic light cardiovascular work. A steam room runs 40-50C at 100% humidity: heart rate rises, but core temperature rises much more modestly, and the direct research on steam is thin by comparison. Treat it as good heat exposure and good for the airways, not as the Finnish result.'],
   ['Zone 2 and VO2max','strong','150-300 min a week easy, plus something hard.',
    'Cardiorespiratory fitness tracks all-cause mortality more closely than blood pressure, cholesterol or smoking status. Moving off the bottom quartile is where most of the benefit sits.'],
   ['10-20 hard sets per muscle, weekly','strong','Spread over 2-3 sessions, not one.',
@@ -2148,7 +2148,7 @@ function protocolsSheet(){
       'A proxy: the published index needs minute-level actigraphy, this uses the times you log.</div></div>';
   }
   h+=PROTOCOLS.map(function(p){
-    const you = p[0]==='Sauna, 2-3+ times a week'
+    const you = p[0]==='Steam bath, 2-3+ times a week'
       ? '<div class="tiny num" style="color:var(--wk); margin-top:3px">You: '+sa.n+' session'+(sa.n===1?'':'s')+' this week</div>' : '';
     return '<div style="border-bottom:1px solid var(--line); padding:11px 0">'+
       '<div class="spread"><b class="small">'+p[0]+'</b>'+tier(p[1])+'</div>'+
@@ -2579,7 +2579,7 @@ function renderToday(){
     '</div>'+
     '<div class="tline"><span class="small">Morning daylight</span>'+
       '<button class="chip'+(S.light[today()]?' on':'')+'" onclick="toggleLight()">'+(S.light[today()]?'✓ done'+(lightStreak()>1?' · '+lightStreak()+'d':''):'tick when out')+'</button></div>'+
-    '<div class="tline" style="border:0"><span class="small">Sauna this week</span>'+
+    '<div class="tline" style="border:0"><span class="small">Steam bath this week</span>'+
       '<button class="chip'+(sa.n>=2?' on':'')+'" onclick="logSauna()">'+sa.n+' of 2-3'+(sa.mins?' · '+sa.mins+'min':'')+'</button></div>'+
     '</div>';
   /* ===== quick links ===== */
