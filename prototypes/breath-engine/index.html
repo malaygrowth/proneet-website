@@ -36,6 +36,8 @@
   .proto-tag { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
 
   .eyebrow { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+  /* Section headings sit tight against the band list they introduce */
+  .sectionLabel { margin-bottom: -18px; }
 
   /* Poster-scale editorial type */
   .poster {
@@ -100,6 +102,7 @@
   .notice-list .item::before { content: ""; flex: 0 0 6px; height: 6px; border-radius: 50%; background: var(--acc); margin-top: 8px; }
   .footnote { font-size: 12.5px; line-height: 1.6; color: var(--faint); border-top: 1px solid var(--line); padding-top: 14px; max-width: 52ch; }
   .paceNote { font-size: 12.5px; line-height: 1.6; color: var(--acc); }
+  .sourceNote { font-size: 12.5px; line-height: 1.65; color: var(--faint); max-width: 52ch; }
 
   .checkin { border: 1px solid var(--line); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 16px; background: rgba(10, 14, 23, .45); backdrop-filter: blur(6px); }
   .checkin .q { font-size: 15.5px; line-height: 1.45; }
@@ -237,7 +240,10 @@
         <span class="promise">One question, and the coach picks for you.</span>
       </button>
     </div>
+    <p class="eyebrow sectionLabel">Right now</p>
     <div class="bands" id="bands"></div>
+    <p class="eyebrow sectionLabel">Practice</p>
+    <div class="bands" id="practiceBands"></div>
     <div class="bands">
       <button class="band" id="boltBand" style="--c1:#3FA893;--c2:#4A7FB5;--bandAcc:#63C2AF">
         <span class="moment">The check-up · 2 minutes</span>
@@ -292,6 +298,10 @@
     <button class="primaryBtn" id="beginBtn"></button>
     <p class="paceNote hidden" id="paceNote"></p>
     <p class="footnote" id="introFootnote"></p>
+    <div>
+      <p class="eyebrow" style="margin-bottom:8px">Where this comes from</p>
+      <p class="sourceNote" id="introSource"></p>
+    </div>
   </section>
 
   <!-- ================= SESSION ================= -->
@@ -626,7 +636,224 @@
       },
       closing: 'The day gets to join your rhythm today — not the other way round.',
     },
+    {
+      id: 'crossing',
+      moment: 'When your head is everywhere',
+      name: 'The Crossing',
+      promise: 'One nostril at a time. Scattered attention gets something to hold on to.',
+      notices: [
+        'Your hands giving the mind a job to do',
+        'The scatter narrowing to one channel at a time',
+        'A cleaner, more even breath by the end',
+      ],
+      accent: '#A78BC8', aura: ['#8A6FC0', '#4A7FB5'],
+      mins: 4,
+      scaleQ: 'How scattered do you feel right now?',
+      scaleEnds: ['Single-minded', 'All over the place'],
+      tensionWord: 'scatter',
+      footnote: 'Right thumb closes the right nostril, ring finger closes the left. Breathe in one side, out the other, and swap at the top. If your nose is blocked, do it in your imagination — it still works.',
+      begin: 'Start crossing',
+      lead: 'Bring your right hand up to your nose. Thumb on the right side, ring finger on the left.',
+      phases: [
+        { kind: 'in',  word: 'in — left',   secs: 4 },
+        { kind: 'out', word: 'out — right', secs: 6 },
+        { kind: 'in',  word: 'in — right',  secs: 4 },
+        { kind: 'out', word: 'out — left',  secs: 6 },
+      ],
+      script: {
+        settle: [
+          'Close one side, breathe through the other. That’s the whole thing.',
+          'Let the fingers be light. No pressing.',
+        ],
+        deepen: [
+          'Your hands have a job now. The mind can borrow it.',
+          'One channel at a time — nothing else to attend to.',
+          'Notice one side flows easier than the other. That’s normal, and it changes.',
+          'The swap at the top is the practice. Unhurried.',
+        ],
+        close: [
+          'One more crossing each way.',
+          'Last one. Then let the hand fall.',
+        ],
+      },
+      closing: 'Both sides open. Notice how even the breath got.',
+    },
+    {
+      id: 'hum',
+      moment: 'When the loop won’t stop',
+      name: 'The Hum',
+      promise: 'You can’t think over a hum. It fills the space the thought was using.',
+      notices: [
+        'A buzz in the roof of your mouth and behind your eyes',
+        'The inner monologue losing its footing',
+        'An exhale that lasts twice as long without any effort',
+      ],
+      accent: '#D98BA8', aura: ['#C4638F', '#7C5BC0'],
+      mins: 3,
+      scaleQ: 'How loud is your head right now?',
+      scaleEnds: ['Quiet', 'Deafening'],
+      tensionWord: 'noise',
+      footnote: 'You’ll be making sound out loud — find somewhere you can. Lips together, teeth slightly apart, hum on every out-breath at whatever pitch is comfortable. Match the tone if you like.',
+      begin: 'Start humming',
+      lead: 'Lips together, teeth apart. You’re going to make noise — that’s the point.',
+      phases: [
+        { kind: 'in',  word: 'breathe in', secs: 4 },
+        { kind: 'hum', word: 'hummm',      secs: 8 },
+      ],
+      script: {
+        settle: [
+          'Any pitch. Low is easier to sustain.',
+          'Let the hum do the exhale for you — you won’t have to time it.',
+        ],
+        deepen: [
+          'Feel where it buzzes. Lips, teeth, the bones behind your eyes.',
+          'Send the buzz higher — into the space behind your forehead.',
+          'You can’t hold a thought and a hum at once. Let the hum win.',
+          'Softer and longer. Let it run out rather than stopping it.',
+        ],
+        close: [
+          'Two more. Longest hums yet.',
+          'Last one. Then sit in the silence it leaves.',
+        ],
+      },
+      closing: 'Notice the quiet the hum left behind. That’s the part worth keeping.',
+    },
+    {
+      id: 'cooling',
+      moment: 'When you’re hot and short-tempered',
+      name: 'The Cooling',
+      promise: 'Cool air over the tongue. The oldest trick for taking the heat out of a mood.',
+      notices: [
+        'Genuinely cool air across your tongue and throat',
+        'The edge coming off the irritation',
+        'A body that feels a degree less urgent',
+      ],
+      accent: '#7FC6D9', aura: ['#4FA8C7', '#5E9FD8'],
+      mins: 3,
+      scaleQ: 'How hot under the collar are you?',
+      scaleEnds: ['Cool', 'Boiling'],
+      tensionWord: 'heat',
+      footnote: 'Curl your tongue into a tube and sip air through it. Can’t curl your tongue? About a third of people can’t — clench your teeth lightly and sip through them instead. Both are in the classical texts.',
+      begin: 'Cool it down',
+      lead: 'Curl your tongue into a tube — or if it won’t curl, just close your teeth and part your lips.',
+      phases: [
+        { kind: 'in',  word: 'sip it in',  secs: 4 },
+        { kind: 'out', word: 'out, nose',  secs: 6 },
+      ],
+      script: {
+        settle: [
+          'Sip the air like it’s cold water. Slowly.',
+          'In through the tongue, out through the nose. Always.',
+        ],
+        deepen: [
+          'Feel the cool land on the back of your throat.',
+          'Being angry is exhausting. Put it down for two more minutes.',
+          'The heat is leaving on the out-breath. Let it.',
+          'Nothing has to be resolved right now. Just cooler.',
+        ],
+        close: [
+          'Two more sips.',
+          'Last one. Let the tongue relax.',
+        ],
+      },
+      closing: 'Whatever set you off is still there. You’re just no longer on fire about it.',
+    },
+    {
+      id: 'watcher',
+      moment: 'When you don’t want to be managed',
+      name: 'The Watcher',
+      promise: 'No pacing, no counting, nothing to follow. You watch your breath and change nothing.',
+      notices: [
+        'How irregular a natural breath actually is',
+        'The urge to fix it — and what happens when you don’t',
+        'Long gaps where you forget you were watching',
+      ],
+      accent: '#9FB3A8', aura: ['#4A6B5C', '#3A4A78'],
+      mins: 5,
+      paced: false,
+      scaleQ: 'How much are you fighting yourself right now?',
+      scaleEnds: ['At ease', 'Fighting'],
+      tensionWord: 'struggle',
+      footnote: 'The one practice here that isn’t a technique. Nothing to perform, nothing to get right — which is exactly why it’s the hardest.',
+      begin: 'Just watch',
+      lead: 'Nothing to follow this time. Let your breath do whatever it was already doing.',
+      script: {
+        settle: [
+          'Find where you feel it most. The nose, the chest, the belly. Stay there.',
+          'You’re not steering. You’re watching something that was already happening.',
+        ],
+        deepen: [
+          'Is this breath longer than the last one? Don’t fix it. Just know.',
+          'Notice the small pause at the end of the out-breath.',
+          'The urge to make it deeper — see it, and let it pass.',
+          'Your mind wandered. That’s not failure, that’s the practice. Come back.',
+          'A breath doesn’t need you to do anything. It never has.',
+          'Nothing to achieve for the next minute.',
+        ],
+        close: [
+          'A little longer. Nothing to do.',
+          'Stay with the last few. However they come.',
+        ],
+      },
+      closing: 'You just spent five minutes not managing yourself. That was the whole point.',
+    },
+    {
+      id: 'lessair',
+      moment: 'Training, not calming',
+      name: 'Less Air',
+      promise: 'Deliberately breathe less than you want to. This is the practice that moves your check-up score.',
+      notices: [
+        'A mild, tolerable hunger for air',
+        'Warmth in the face or hands as it builds',
+        'A slower, quieter breath that stays after you stop',
+      ],
+      accent: '#A9C08A', aura: ['#6E8F55', '#3FA893'],
+      mins: 4,
+      scaleQ: 'How hard are you breathing right now?',
+      scaleEnds: ['Barely', 'Heavily'],
+      tensionWord: 'effort',
+      footnote: 'Take in slightly less air than you want on every breath. Aim for air hunger you could hold a conversation through — never breathlessness. If you finish gasping, it was too strong. Skip this one if you’re pregnant or have heart or blood-pressure conditions.',
+      begin: 'Train it',
+      lead: 'This one is work, not comfort. Take in a little less than feels natural.',
+      phases: [
+        { kind: 'in',  word: 'a little less', secs: 4 },
+        { kind: 'out', word: 'soft, slow',    secs: 6 },
+      ],
+      script: {
+        settle: [
+          'Smaller breath in than you want. That’s the whole method.',
+          'Shoulders and chest stay still. Only the belly moves.',
+        ],
+        deepen: [
+          'You should feel you’d like more air. That feeling is the training.',
+          'Tolerable, not desperate. You could still hold a conversation.',
+          'Quieter. If you can hear yourself breathing, it’s too much air.',
+          'This is what raises your check-up score. Not comfort — this.',
+        ],
+        close: [
+          'Two more. Hold the hunger steady.',
+          'Last one, then let your breath return to normal on its own.',
+        ],
+      },
+      closing: 'Don’t gulp now. Let it come back by itself — that’s part of it.',
+    },
   ];
+
+  // Where each practice comes from, and where it sits on the home screen.
+  // Sources are shown in-app: naming the text or the researcher is the cheapest credibility we have.
+  const META = {
+    unwind:     { section: 'now', source: 'Extended-exhale breathing. The vagal brake on a long out-breath is one of the best-established findings in the field.' },
+    drift:      { section: 'now', source: '4-7-8 — a modern formulation popularised by Dr Andrew Weil, rooted in yogic ratio breathing. Not itself an ancient technique.' },
+    steady:     { section: 'now', source: 'Sama vritti, “even breath” — the beginner’s form in the Hatha Yoga Pradipika. Adopted by militaries as box breathing.' },
+    release:    { section: 'now', source: 'The physiological sigh. Balban, Spiegel et al., Stanford — Cell Reports Medicine, 2023. The best-designed breathwork trial to date.' },
+    firstlight: { section: 'now', source: 'Resonance-frequency breathing at ~5.5 breaths a minute, from the HRV biofeedback work of Lehrer and Lagos.' },
+    crossing:   { section: 'now', source: 'Nadi shodhana — named in the Hatha Yoga Pradipika, the Gheranda Samhita and the Upanishads. We teach the beginner form, without retention, as those texts instruct.' },
+    hum:        { section: 'now', source: 'Bhramari, one of the eight classical kumbhakas. Humming raises nasal nitric oxide roughly fifteenfold (Weitzberg & Lundberg, 2002).' },
+    cooling:    { section: 'now', source: 'Shitali and Sitkari — two of the eight classical kumbhakas. The texts give both, so that people who can’t curl the tongue aren’t left out.' },
+    watcher:    { section: 'practice', source: 'Anapanasati — the Buddha’s sixteen-step instruction on mindfulness of breathing (MN 118). Note what it is not: breath control.' },
+    lessair:    { section: 'practice', source: 'Buteyko, carried forward by Patrick McKeown as “breathe light to breathe right.” This is the practice that moves your check-up score.' },
+  };
+  EXPERIENCES.forEach((e) => Object.assign(e, META[e.id]));
 
   const HOME_AURA = ['#3A4A78', '#2E5F5A'];
   const BOLT_AURA = ['#3FA893', '#4A7FB5'];
@@ -670,6 +897,10 @@
     { text: 'Something big is coming', expId: 'steady' },
     { text: 'It’s all too much, right now', expId: 'release' },
     { text: 'I’m foggy and the day hasn’t started', expId: 'firstlight' },
+    { text: 'My head is everywhere at once', expId: 'crossing' },
+    { text: 'I can’t stop the loop in my head', expId: 'hum' },
+    { text: 'I’m hot and short-tempered', expId: 'cooling' },
+    { text: 'I don’t want to be told what to do', expId: 'watcher' },
     { text: 'I just want a reset', expId: 'auto' },
   ];
 
@@ -743,6 +974,10 @@
     boltTimers: [],
     boltTick: 0,
     boltStartTs: 0,
+    watching: false,
+    watchDone: false,
+    watchTimer: 0,
+    watchLineTimer: 0,
   };
 
   // ================= The aura =================
@@ -798,7 +1033,8 @@
   const phaseWord = $('phaseWord'), sessFill = $('sessFill');
 
   function targetFullness(kind) {
-    return (kind === 'in' || kind === 'in2') ? 1 : kind === 'out' ? 0 : state.fullness;
+    if (kind === 'in' || kind === 'in2') return 1;
+    return (kind === 'out' || kind === 'hum') ? 0 : state.fullness;
   }
 
   function loop(now) {
@@ -823,7 +1059,10 @@
         enterPhase(nextIdx, now);
       }
     }
+    // While watching, the aura drifts slower than any breathing rate — so it reads as
+    // atmosphere, not as something to follow.
     const wanted = state.running ? state.fullness
+                 : state.watching ? 0.42 + 0.14 * Math.sin(now * (REDUCED ? 0 : 0.00022))
                  : state.inSession ? 0.35
                  : 0.4 + 0.18 * Math.sin(now * (REDUCED ? 0 : 0.0005));
     auraLevel += (wanted - auraLevel) * 0.08;
@@ -846,6 +1085,7 @@
 
   // ================= Home =================
   const bandsEl = $('bands');
+  const practiceBandsEl = $('practiceBands');
   EXPERIENCES.forEach((exp) => {
     const b = document.createElement('button');
     b.className = 'band';
@@ -857,9 +1097,9 @@
       '<span class="moment">' + exp.moment + '</span>' +
       '<span class="name">' + exp.name + '</span>' +
       '<span class="promise">' + exp.promise + '</span>' +
-      '<span class="dur">' + durLabel + ' · guided</span>';
+      '<span class="dur">' + durLabel + (exp.paced === false ? ' · unguided' : ' · guided') + '</span>';
     b.addEventListener('click', () => openIntro(exp));
-    bandsEl.appendChild(b);
+    (exp.section === 'practice' ? practiceBandsEl : bandsEl).appendChild(b);
   });
 
   function renderHome() {
@@ -959,10 +1199,11 @@
     $('preScale').value = 6;
     $('beginBtn').textContent = exp.begin;
     $('introFootnote').textContent = exp.footnote;
-    // grown pace note
-    const grown = buildPhases(exp);
+    $('introSource').textContent = exp.source || '';
+    // grown pace note — unpaced practices have no pace to grow
+    const grown = exp.paced === false ? [] : buildPhases(exp);
     const pace = $('paceNote');
-    if (fmtPace(grown) !== fmtPace(exp.phases)) {
+    if (exp.paced !== false && fmtPace(grown) !== fmtPace(exp.phases)) {
       pace.textContent = 'Your pace has grown: ' + fmtPace(grown) + ' (started at ' + fmtPace(exp.phases) + ').';
       pace.classList.remove('hidden');
     } else pace.classList.add('hidden');
@@ -1037,7 +1278,10 @@
     freq.cancelScheduledValues(now);
     freq.setValueAtTime(freq.value, now);
     if (ph.kind === 'in' || ph.kind === 'in2') freq.linearRampToValueAtTime(215, now + ph.secs);
+    else if (ph.kind === 'hum') freq.setValueAtTime(130, now); // steady pitch to hum against
     else if (ph.kind === 'out') freq.linearRampToValueAtTime(135, now + ph.secs);
+    // the hum needs an audible pitch to match, not a background drone
+    if (audio.gain) audio.gain.gain.setTargetAtTime(ph.kind === 'hum' ? DRONE_LEVEL * 2.4 : DRONE_LEVEL, now, 0.25);
     ping(ph.kind);
   }
   function ping(kind) {
@@ -1045,7 +1289,7 @@
     const now = audio.ctx.currentTime;
     const o = audio.ctx.createOscillator();
     o.type = 'sine';
-    o.frequency.value = kind === 'out' ? 392 : kind === 'hold' ? 494 : 587;
+    o.frequency.value = (kind === 'out' || kind === 'hum') ? 392 : kind === 'hold' ? 494 : 587;
     const g = audio.ctx.createGain();
     g.gain.setValueAtTime(0.0001, now);
     g.gain.exponentialRampToValueAtTime(0.08, now + 0.02);
@@ -1062,7 +1306,7 @@
   // ================= Haptics =================
   function buzz(kind) {
     if (!state.hapticsOn || !('vibrate' in navigator)) return;
-    navigator.vibrate(kind === 'out' ? [40, 60, 40] : kind === 'hold' ? 20 : 40);
+    navigator.vibrate((kind === 'out' || kind === 'hum') ? [40, 60, 40] : kind === 'hold' ? 20 : 40);
   }
 
   // ================= Session lifecycle =================
@@ -1076,8 +1320,50 @@
     buzz(ph.kind);
   }
 
+  // Anapanasati: the app pauses being a metronome. No pacing, no phase words —
+  // just the aura on its own tide and a coach line every half-minute or so.
+  const WATCH_LINE_MS = 28000;
+  async function startWatch() {
+    const exp = state.exp;
+    ensureAudio();
+    state.running = false;
+    state.inSession = true;
+    state.watching = true;
+    state.watchDone = false;
+    state.breaths = 0;
+    state.totalBreaths = 0;
+
+    const lines = [...exp.script.settle, ...exp.script.deepen, ...exp.script.close];
+    const totalMs = exp.mins * 60000;
+    const startedAt = performance.now();
+
+    $('sessName').textContent = exp.name;
+    setCoach(exp.lead, true);
+    setWord('', true);
+    sessFill.style.width = '0%';
+    show('session');
+
+    droneTo(DRONE_LEVEL * 0.6);
+    try { state.wakeLock = await navigator.wakeLock.request('screen'); } catch (e) {}
+
+    let i = -1;
+    const advance = () => {
+      i++;
+      if (i < lines.length) setCoach(lines[i]);
+    };
+    clearTimeout(state.leadTimer);
+    state.leadTimer = setTimeout(advance, LEAD_MS);
+    state.watchLineTimer = setInterval(advance, WATCH_LINE_MS);
+    state.watchTimer = setInterval(() => {
+      const elapsed = performance.now() - startedAt;
+      sessFill.style.width = Math.min(100, (elapsed / totalMs) * 100) + '%';
+      if (elapsed >= totalMs) { state.watchDone = true; endSession(); }
+    }, 250);
+  }
+
   async function startSession() {
     const exp = state.exp;
+    if (exp.paced === false) return startWatch();
     ensureAudio();
     state.phases = buildPhases(exp);
     state.cycleSecs = state.phases.reduce((a, x) => a + x.secs, 0);
@@ -1121,11 +1407,15 @@
   }
 
   function endSession() {
+    const wasWatching = state.watching;
     state.running = false;
     state.inSession = false;
+    state.watching = false;
     clearTimeout(state.leadTimer);
     clearTimeout(state.coachTimer);
     clearTimeout(state.wordTimer);
+    clearInterval(state.watchTimer);
+    clearInterval(state.watchLineTimer);
     droneTo(0);
     if (state.wakeLock) { state.wakeLock.release().catch(() => {}); state.wakeLock = null; }
 
@@ -1135,7 +1425,7 @@
       pre: state.preScore,
       post: null,
       breaths: state.breaths,
-      completed: state.breaths >= state.totalBreaths,
+      completed: wasWatching ? state.watchDone : state.breaths >= state.totalBreaths,
     };
     if (state.spot) state.lastRec.spot = state.spot;
     store.saveSession(state.lastRec);
