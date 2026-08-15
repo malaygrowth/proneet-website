@@ -1,0 +1,151 @@
+{
+  "_readme": "Every spoken line in Breath Coach, marked up for ElevenLabs. Line IDs match the recording script. Edit text here, re-run scripts/generate-voice.mjs, get new files with the same names. Never use more than two <break> tags in one line, and never end a line with one.",
+
+  "voice_id": "REPLACE_WITH_YOUR_VOICE_ID",
+  "model_id": "eleven_multilingual_v2",
+  "output_format": "mp3_44100_192",
+  "seed": 20260815,
+
+  "profiles": {
+    "unwind":    { "stability": 0.55, "similarity_boost": 0.80, "style": 0.15, "speed": 0.88, "use_speaker_boost": true },
+    "firstlight":{ "stability": 0.55, "similarity_boost": 0.80, "style": 0.20, "speed": 0.92, "use_speaker_boost": true },
+    "steady":    { "stability": 0.70, "similarity_boost": 0.85, "style": 0.10, "speed": 0.95, "use_speaker_boost": true },
+    "release":   { "stability": 0.65, "similarity_boost": 0.85, "style": 0.15, "speed": 0.92, "use_speaker_boost": true },
+    "drift":     { "stability": 0.45, "similarity_boost": 0.75, "style": 0.25, "speed": 0.80, "use_speaker_boost": true },
+    "cue":       { "stability": 0.80, "similarity_boost": 0.85, "style": 0.05, "speed": 0.95, "use_speaker_boost": true },
+    "universal": { "stability": 0.55, "similarity_boost": 0.80, "style": 0.15, "speed": 0.88, "use_speaker_boost": true }
+  },
+
+  "groups": [
+    {
+      "id": "unwind",
+      "name": "The Unwind",
+      "profile": "unwind",
+      "cycleSecs": 10,
+      "lineBudget": 8,
+      "lines": [
+        { "id": "UNW-LEAD", "text": "Nothing to fix for the next four minutes. <break time=\"0.7s\" /> We'll begin on your next breath." },
+        { "id": "UNW-S1",   "text": "Let the chair take your full weight." },
+        { "id": "UNW-S2",   "text": "You don't have to breathe well. <break time=\"0.6s\" /> Just breathe along." },
+        { "id": "UNW-D1",   "text": "Make the exhale a slow pour, <break time=\"0.5s\" /> not a push." },
+        { "id": "UNW-D2",   "text": "Somewhere on this breath out, let your jaw unclench." },
+        { "id": "UNW-D3",   "text": "Each exhale drops your shoulders a little further." },
+        { "id": "UNW-D4",   "text": "The day is over. <break time=\"0.7s\" /> Tell your body — it's the last to hear." },
+        { "id": "UNW-C1",   "text": "Two more. <break time=\"0.6s\" /> Make this one the softest yet." },
+        { "id": "UNW-C2",   "text": "Last one. <break time=\"0.6s\" /> Empty all the way out." },
+        { "id": "UNW-CLOSE","text": "Whatever's left of the day <break time=\"0.6s\" /> it can wait until tomorrow." },
+        { "id": "UNW-CUE-IN",  "text": "Breathe in", "profile": "cue", "budget": 1.5 },
+        { "id": "UNW-CUE-OUT", "text": "Let it go",  "profile": "cue", "budget": 1.5 }
+      ]
+    },
+
+    {
+      "id": "firstlight",
+      "name": "First Light",
+      "profile": "firstlight",
+      "cycleSecs": 11,
+      "lineBudget": 9,
+      "lines": [
+        { "id": "FL-LEAD", "text": "Before the phone, before the list. <break time=\"0.7s\" /> We'll begin on your next breath.", "budget": 8 },
+        { "id": "FL-S1",   "text": "Even in, even out. <break time=\"0.6s\" /> Like drawing a slow circle." },
+        { "id": "FL-S2",   "text": "No pushing. The rhythm does the work." },
+        { "id": "FL-D1",   "text": "This pace is yours. <break time=\"0.6s\" /> The day will try to change it." },
+        { "id": "FL-D2",   "text": "Notice the turn at the top of the breath. <break time=\"0.6s\" /> Smooth it." },
+        { "id": "FL-D3",   "text": "Awake is not the same as wired. <break time=\"0.6s\" /> This is awake." },
+        { "id": "FL-D4",   "text": "One thing at a time today, <break time=\"0.5s\" /> starting with this breath." },
+        { "id": "FL-C1",   "text": "A few more. <break time=\"0.6s\" /> Memorise this tempo." },
+        { "id": "FL-C2",   "text": "Last one. <break time=\"0.6s\" /> Carry it out the door with you." },
+        { "id": "FL-CLOSE","text": "The day gets to join your rhythm today — not the other way round." },
+        { "id": "FL-CUE-IN",  "text": "Breathe in",  "profile": "cue", "budget": 1.5 },
+        { "id": "FL-CUE-OUT", "text": "Breathe out", "profile": "cue", "budget": 1.5 }
+      ]
+    },
+
+    {
+      "id": "steady",
+      "name": "Steady Ground",
+      "profile": "steady",
+      "cycleSecs": 16,
+      "lineBudget": 14,
+      "lines": [
+        { "id": "SG-LEAD", "text": "Sit tall. Feet on the floor. <break time=\"0.7s\" /> We'll begin on your next breath.", "budget": 8 },
+        { "id": "SG-S1",   "text": "Four equal sides. <break time=\"0.6s\" /> Nothing rushed, nothing dragged." },
+        { "id": "SG-S2",   "text": "Feel your feet. <break time=\"0.6s\" /> That's the ground you're standing on." },
+        { "id": "SG-D1",   "text": "The holds are where the steadiness is built." },
+        { "id": "SG-D2",   "text": "Same pace in, same pace out. <break time=\"0.6s\" /> You set the tempo now." },
+        { "id": "SG-D3",   "text": "Whatever's coming, <break time=\"0.6s\" /> it gets this version of you." },
+        { "id": "SG-D4",   "text": "Square by square, the noise loses interest." },
+        { "id": "SG-C1",   "text": "Two more squares. <break time=\"0.6s\" /> Keep them clean." },
+        { "id": "SG-C2",   "text": "Last one. <break time=\"0.6s\" /> Walk out of it steady." },
+        { "id": "SG-CLOSE","text": "The room hasn't changed. <break time=\"0.6s\" /> You have." },
+        { "id": "SG-CUE-IN",    "text": "Breathe in", "profile": "cue", "budget": 1.5 },
+        { "id": "SG-CUE-HOLD",  "text": "Hold",       "profile": "cue", "budget": 1.2 },
+        { "id": "SG-CUE-OUT",   "text": "Let it go",  "profile": "cue", "budget": 1.5 },
+        { "id": "SG-CUE-HOLD2", "text": "Stay empty", "profile": "cue", "budget": 1.2 }
+      ]
+    },
+
+    {
+      "id": "release",
+      "name": "The Release Valve",
+      "profile": "release",
+      "cycleSecs": 9,
+      "lineBudget": 7,
+      "lines": [
+        { "id": "RV-LEAD", "text": "This takes ninety seconds. You have ninety seconds. <break time=\"0.6s\" /> We'll begin on your next breath.", "budget": 8 },
+        { "id": "RV-S1",   "text": "Two sips of air in, one long pour out." },
+        { "id": "RV-D1",   "text": "That second sip pops your lungs open. <break time=\"0.5s\" /> That's the trick." },
+        { "id": "RV-D2",   "text": "The exhale is the valve. <break time=\"0.5s\" /> Open it slowly." },
+        { "id": "RV-D3",   "text": "You're not solving anything right now. Just releasing the grip." },
+        { "id": "RV-C1",   "text": "Two more. <break time=\"0.5s\" /> Longest exhales yet." },
+        { "id": "RV-C2",   "text": "Last one. <break time=\"0.5s\" /> Let everything leave with it." },
+        { "id": "RV-CLOSE","text": "Still a lot on your plate — but you're holding it with looser hands." },
+        { "id": "RV-CUE-IN",      "text": "Breathe in",    "profile": "cue", "budget": 1.2 },
+        { "id": "RV-CUE-SIP",     "text": "A little more", "profile": "cue", "budget": 1.0, "speedOverride": 1.05,
+          "note": "Tightest timing in the product. If over budget, ship RV-CUE-SIP-ALT instead." },
+        { "id": "RV-CUE-SIP-ALT", "text": "More",          "profile": "cue", "budget": 1.0 },
+        { "id": "RV-CUE-OUT",     "text": "Let it all go", "profile": "cue", "budget": 1.5 }
+      ]
+    },
+
+    {
+      "id": "drift",
+      "name": "The Drift",
+      "profile": "drift",
+      "cycleSecs": 19,
+      "lineBudget": 17,
+      "lines": [
+        { "id": "DR-LEAD", "text": "Lie down. Let the bed do the holding. <break time=\"0.7s\" /> We'll begin on your next breath.", "budget": 8 },
+        { "id": "DR-S1",   "text": "Sink. <break time=\"0.8s\" /> The bed can carry all of it." },
+        { "id": "DR-S2",   "text": "Eyes closed, <break time=\"0.8s\" /> if they want to close." },
+        { "id": "DR-D1",   "text": "On the hold, do nothing. <break time=\"1.0s\" /> Floating counts." },
+        { "id": "DR-D2",   "text": "Let the exhale sound like a sigh. <break time=\"1.0s\" /> No one's listening." },
+        { "id": "DR-D3",   "text": "Each wave takes you a little further from shore." },
+        { "id": "DR-D4",   "text": "You don't need to fall asleep. <break time=\"1.2s\" /> Just stop holding yourself awake." },
+        { "id": "DR-C1",   "text": "Nearly there. <break time=\"0.8s\" /> Heavier now." },
+        { "id": "DR-C2",   "text": "Last one. <break time=\"0.8s\" /> Let it lower you all the way down." },
+        { "id": "DR-CLOSE","text": "If sleep comes, let it. <break time=\"0.8s\" /> You're done here." },
+        { "id": "DR-CUE-IN",   "text": "Breathe in",  "profile": "cue", "budget": 1.5 },
+        { "id": "DR-CUE-HOLD", "text": "Rest here",   "profile": "cue", "budget": 1.2 },
+        { "id": "DR-CUE-OUT",  "text": "Sigh it out", "profile": "cue", "budget": 1.5 }
+      ]
+    },
+
+    {
+      "id": "universal",
+      "name": "Universal",
+      "profile": "universal",
+      "cycleSecs": 0,
+      "lineBudget": 6,
+      "lines": [
+        { "id": "UNI-RELEASE", "text": "And now <break time=\"0.6s\" /> let your breath come back to its own rhythm." },
+        { "id": "UNI-RETURN",  "text": "Take one normal breath. <break time=\"0.6s\" /> Nothing guided. Just yours." }
+      ]
+    }
+  ],
+
+  "_notGenerated": {
+    "breathSounds": "Record for real — see §3.2 of the voice-and-sound-production-guide. TTS cannot hit exact durations and synthetic breathing is uncanny in a breathing app.",
+    "cueTones": "G4 392Hz / B4 494Hz / D5 587Hz from a sampled instrument or synth — see §3.3."
+  }
+}
